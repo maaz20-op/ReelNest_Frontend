@@ -1,0 +1,77 @@
+@import "tailwindcss";
+
+[data-mode="Light"] {
+  --bg-primary: #ffffff; /* main app bg */
+  --bg-secondary: #dedede; /* cards */
+  --bg-tertiary: #f1f1f1; /* hover / soft sections */
+
+  --text-primary: #0f0f0f; /* main text */
+  --text-secondary: #606060; /* subtitles */
+  --text-muted: #909090; /* timestamps / low importance */
+
+  --border-color: #e5e5e5;
+
+  --accent: #ff0000; /* red for brand name */
+
+  --hover-bg: #eaeaea;
+  --active-bg: #dcdcdc;
+
+  --follow-btn-bg: #ff2d2d;
+  --view-Profile-btn-bg: transparent;
+
+  --success: #22c55e;
+  --error: #ef4444;
+  --warning: #f59e0b;
+}
+
+[data-mode="Dark"] {
+  --bg-primary: #0f0f0f; /* main bg */
+  --bg-secondary: #181818; /* cards */
+  --bg-tertiary: #272727; /* hover */
+
+  --text-primary: #ffffff;
+  --text-secondary: #aaaaaa;
+  --text-muted: #717171;
+
+  --border-color: #303030;
+
+  --accent: #ff0000;
+
+  --hover-bg: #2a2a2a;
+  --active-bg: #3a3a3a;
+
+  --follow-btn-bg: #ff2d2d;
+  --view-Profile-btn-bg: transparent;
+
+  --success: #22c55e;
+  --error: #ef4444;
+  --warning: #f59e0b;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+
+.other-profile-container::-webkit-scrollbar {
+  width: 4px;
+}
+
+.other-profile-container::-webkit-scrollbar-thumb {
+  background-color: #5b5959;
+  border-radius: 10px;
+}
+
+.app::-webkit-scrollbar {
+  display: none;
+}
+
+.account-settings::-webkit-scrollbar {
+  width: 10px;
+}
+
+.account-settings::-webkit-scrollbar-thumb {
+  background-color: #7b7676;
+  border-radius: 10px;
+}
