@@ -6,6 +6,7 @@ function App() {
   return (
     <div className="app ">
       {/* All the Routes of App */}
+
       <MainLayout>
         <AppRouting />
       </MainLayout>

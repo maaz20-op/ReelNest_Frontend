@@ -8,7 +8,7 @@ export const Left_FriendsPanel_Desktop = () => {
     setActive(indx);
   };
   return (
-    <div className="lg:flex lg:flex-col hidden px-4 py-4 min-h-0 ">
+    <div className="lg:flex lg:flex-col hidden px-1 py-4 min-h-0 ">
       <div className="sections text-(--text-secondary)   flex justify-between gap-2">
         {["Friends", "Followers", "Following"].map((sec, indx) => (
           <h1
@@ -20,11 +20,11 @@ export const Left_FriendsPanel_Desktop = () => {
           </h1>
         ))}
       </div>
-      <div className="other-profile-container  flex flex-col gap-2 flex-1 min-h-0 overflow-y-auto mt-5 px-2 py-5 ">
+      <div className="other-profile-container  flex flex-col gap-2 flex-1 min-h-0 overflow-y-auto mt-5  py-5 ">
         {[...Array(12)].map((_, indx) => (
           <div
             key={indx}
-            className="friend-div flex items-center gap-3  px-2 py-3 rounded"
+            className="friend-div flex items-center justify-center gap-2 px-2 py-3 rounded"
           >
             <div className="profile-img h-10 flex shrink-0 w-10 rounded-full ">
               <img

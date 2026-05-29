@@ -2,10 +2,15 @@ import { useNavigate } from "react-router-dom";
 import { Icons } from "../../../assets/icons";
 import { BorderDiv } from "../../../utils/BorderDiv";
 import { contextThemeSetup } from "../../../utils/contextSetup";
+import { useRef, useState } from "react";
+import { useAuth } from "../../auth/hooks/useAuth";
 
 export const Profile = () => {
   const { iconsColor } = contextThemeSetup();
   const navigate = useNavigate();
+  const inputRef = useRef();
+  const { user } = useAuth();
+  const [profileImgSrc, setImgSrc] = useState();
 
   return (
     <div className="w-full min-h-0 overflow-y-auto  md:flex gap-12">
@@ -22,12 +27,38 @@ export const Profile = () => {
           <div className="profile-img lg:h-40  h-30 w-30  relative lg:w-40 rounded-full">
             <img
               className="h-full w-full rounded-full object-cover"
-              src="https://iili.io/BZuCZ57.jpg"
+              src={user?.profileImage}
               alt="your profile Img"
             />
 
             <p className="absolute bg-white rounded px-0.5 py-0.5  top-0 right-5">
-              <Icons.pencil size={17} />
+              <Icons.pencil
+                onClick={(e) => {
+                  e.preventDefault();
+                  console.log("clicked");
+                  inputRef.current.click();
+                }}
+                size={17}
+              />
+              <input
+                className="hidden"
+                ref={inputRef}
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files[0];
+
+                  if (!file) return;
+
+                  const reader = new FileReader();
+
+                  reader.onload = (e) => {
+                    setImgSrc(e.target.result);
+                  };
+
+                  reader.readAsDataURL(file);
+                }}
+              />
             </p>
           </div>
 
@@ -35,24 +66,21 @@ export const Profile = () => {
           <div className="content flex flex-col  items-center">
             <h1 className="text-xl md:text-2xl font-md text-(--text-primary)">
               {" "}
-              Malaika Qamar
+              {user?.fullname}
             </h1>
             <h2 className="text-md md:text-xl text-(--text-secondary) lg:text-sm">
-              @angel-20
+              {user?.username}
             </h2>
           </div>
-          <p className="line-clamp-2 lg:line-clamp-3 mt-2 md:mt-4 text-md text-center text-(--text-secondary)">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab esse
-            fugiat, molestiae vitae voluptates nobis dignissimos eaque quia amet
-            assumenda, aperiam tempore optio animi? Ipsa quam possimus dolore
-            nam minus.
+          <p className="user-bio line-clamp-2 lg:line-clamp-3 mt-2 md:mt-4 text-md text-center text-(--text-secondary)">
+            {user?.bio}
           </p>
 
           <div className="followers mt-2 md:mt-4 flex gap-4">
             {[
-              { label: "Friends", count: 1 },
-              { label: "Following", count: 1 },
-              { label: "Followers", count: 12 },
+              { label: "Friends", count: user?.followers.length },
+              { label: "Following", count: user?.following.length },
+              { label: "Followers", count: user?.following.length },
             ].map(({ label, count }, indx) => (
               <div key={indx} className="flex flex-col items-center gap-2">
                 <h2 className="text-(--text-primary)">{label}</h2>

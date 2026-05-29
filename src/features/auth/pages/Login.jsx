@@ -1,8 +1,22 @@
 import { useNavigate } from "react-router-dom";
 import { Icons } from "../../../assets/icons";
+import { useEffect, useState } from "react";
+import { LoginUser } from "../api/loginApi";
 
 export const LoginPage = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
   const navigate = useNavigate();
+
+  const HandleSubmit = async (e) => {
+    e.preventDefault();
+    if (!email || !password) return;
+    const data = await LoginUser(email, password);
+    if (data) navigate("/");
+    console.log(data);
+  };
+
   const inputStyling =
     "border ouline-none text-(--text-secondary) rounded-xl focus:border-red-600 px-2 py-1 border-gray-600";
   return (
@@ -13,19 +27,28 @@ export const LoginPage = () => {
       </h1>
       <form className="flex flex-col gap-3 justify-center mt-10" action="">
         <input
+          onChange={(e) => setEmail(e.target.value)}
           className={`${inputStyling}`}
           type="email"
           placeholder="Enter your Email"
           name="email"
+          value={email}
+          required
         />
         <input
           className={`${inputStyling}`}
           type="password"
+          onChange={(e) => setPassword(e.target.value)}
           placeholder="Enter your password"
           name="password"
+          value={password}
+          required
         />
-        <button className="px-3 rounded-xl text-(--text-primary) bg-red-400 py-2">
-          LoggedIn Me
+        <button
+          onClick={HandleSubmit}
+          className="px-3 rounded-xl text-(--text-primary) bg-red-400 py-2"
+        >
+          Login
         </button>
         <p
           onClick={() => navigate("/signup")}

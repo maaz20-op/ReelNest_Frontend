@@ -3,19 +3,22 @@ import { Icons } from "../assets/icons.jsx";
 import { FriendSection } from "./mobile/FriendsHeaderSection.jsx";
 import { contextThemeSetup } from "../utils/contextSetup.js";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../features/auth/hooks/useAuth.js";
 
 export const Header = () => {
   const { isDark, toggle, iconsColor } = contextThemeSetup();
   const SearchIcon = Icons.search;
-
+  const { user } = useAuth();
   const navigate = useNavigate();
 
   return (
     <header className="  w-full  bg-text-xl">
       <nav className="flex justify-between h-14 lg:h-18 items-center px-3 py-2 ">
-        <h1 className="text-(--accent) font-bold text-2xl lg:text-2xl">
-          ReelNest
-        </h1>
+        <div>
+          <h1 className="text-(--accent) font-bold text-2xl lg:text-2xl">
+            ReelNest
+          </h1>
+        </div>
 
         {/* Search Div show desktop */}
         <div className="wrapper sm:block hidden">
@@ -44,7 +47,7 @@ export const Header = () => {
           >
             <img
               className="w-full object-cover h-full rounded-full"
-              src="https://iili.io/BZuCZ57.jpg"
+              src={user?.profileImage}
               alt="your profile"
             />
           </div>

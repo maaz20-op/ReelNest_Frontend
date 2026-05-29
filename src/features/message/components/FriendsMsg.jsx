@@ -1,10 +1,10 @@
-export const Friends_Msg_UI = () => {
+export const FriendsMsgUI = () => {
   return (
     <div className="flex  flex-col gap-2 mt-5 px-2 py-3">
       {[...Array(20)].map((_, indx) => (
         <div
           key={indx}
-          className="msg-div  flex items-center justify-between hover:bg-(--bg-secondary) gap-3 px-1 py-3 rounded"
+          className="msg-div cursor-pointer  flex items-center justify-between hover:bg-(--bg-secondary) gap-3 px-1 py-3 rounded"
         >
           <div className="profile-img h-10 w-10 shrink-0 rounded-full">
             <img
