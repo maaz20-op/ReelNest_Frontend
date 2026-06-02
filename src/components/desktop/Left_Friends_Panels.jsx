@@ -46,7 +46,7 @@ export const Left_FriendsPanel_Desktop = () => {
             </div>
             <div className="div-content lg:w-40 xl:w-45 overflow-hidden flex  flex-col">
               <h1 className="text-sm line-clamp-1 text-(--text-primary) ">
-                Malaika Qamar dnfdkjfdkjd
+                Malaika Qamar
               </h1>
               <h2 className="text-sm  line-clamp-1 text-(--text-secondary)">
                 @angel-20
