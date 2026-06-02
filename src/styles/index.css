@@ -1,5 +1,17 @@
 @import "tailwindcss";
 
+:root {
+  --page-left-padding: 80px;
+  --page-x-padding: 40px;
+}
+
+@media (max-width: 780px) {
+  :root {
+    --page-left-padding: 16px;
+    --page-x-padding: 8px;
+  }
+}
+
 [data-mode="Light"] {
   --bg-primary: #ffffff; /* main app bg */
   --bg-secondary: #dedede; /* cards */
@@ -54,6 +66,9 @@ body {
   height: 100%;
 }
 
+.other-profile-container {
+  scrollbar-gutter: stable !important;
+}
 .other-profile-container::-webkit-scrollbar {
   width: 4px;
 }
@@ -67,6 +82,9 @@ body {
   display: none;
 }
 
+.account-settings {
+  scrollbar-gutter: stable;
+}
 .account-settings::-webkit-scrollbar {
   width: 10px;
 }

@@ -18,6 +18,7 @@ import { FaRegCommentDots } from "react-icons/fa";
 import { LuSend } from "react-icons/lu";
 import { CiSaveUp2 } from "react-icons/ci";
 import { IoMdArrowBack } from "react-icons/io";
+import { Home } from "lucide-react";
 
 export const Icons = {
   search: Search,

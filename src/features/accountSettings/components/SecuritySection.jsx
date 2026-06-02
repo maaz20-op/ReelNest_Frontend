@@ -1,3 +1,5 @@
+import { Button } from "../../../components/reusable/Button";
+
 export const SecuritySection = () => {
   return (
     <form action="" className="flex flex-col gap-15  mt-10">
@@ -42,9 +44,12 @@ export const SecuritySection = () => {
           changes are saved before continuing. You can log back in at any time
           using your account credentials.
         </p>
-        <button className="px-3 py-2 w-30 bg-red-600 rounded text-(--text-primary)">
-          Logout Now
-        </button>
+        <Button
+          background="bg-red-600"
+          padding="md"
+          border="rounded"
+          content="Logout Now"
+        />
       </div>
       <div className="flex flex-col gap-2">
         <p className="text-(--text-secondary)">
@@ -55,9 +60,12 @@ export const SecuritySection = () => {
           platform. Please make sure you really want to continue before
           confirming this action.
         </p>
-        <button className="px-3 py-2 w-40 rounded bg-red-600 text-(--text-primary)">
-          Delete Account
-        </button>
+        <Button
+          background="bg-red-600"
+          padding="md"
+          border="rounded"
+          content="Delete Account"
+        />
       </div>
     </form>
   );

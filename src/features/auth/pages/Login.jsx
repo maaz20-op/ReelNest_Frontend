@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { Icons } from "../../../assets/icons";
 import { useEffect, useState } from "react";
 import { LoginUser } from "../api/loginApi";
+import { Button } from "../../../components/reusable/Button";
 
 export const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -44,12 +45,16 @@ export const LoginPage = () => {
           value={password}
           required
         />
-        <button
-          onClick={HandleSubmit}
-          className="px-3 rounded-xl text-(--text-primary) bg-red-400 py-2"
-        >
-          Login
-        </button>
+
+        <Button
+          fnc={HandleSubmit}
+          padding="md"
+          background="bg-red-400"
+          border="rounded-xl"
+          content="Login"
+          width="w-full"
+        />
+
         <p
           onClick={() => navigate("/signup")}
           className="text-(--text-primary)"

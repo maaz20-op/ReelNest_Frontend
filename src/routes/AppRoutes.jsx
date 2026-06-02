@@ -1,16 +1,63 @@
 import { Routes, Route, BrowserRouter } from "react-router-dom";
-import { LoginPage } from "../features/auth/pages/Login";
-import { SignupPage } from "../features/auth/pages/Signup";
-import { Children } from "react";
-import { FeedPage } from "../features/feed/pages/Feed";
-import { Profile } from "../features/profile/pages/Profile";
-import { AccountSettings } from "../features/accountSettings/pages/accountPage";
-import { Message_Users_Page } from "../features/message/pages/Message_Users_Page";
-import { OthersProfile } from "../features/othersprofile/pages/OtherProfile";
-import { Upgrade } from "../features/upgrade/pages/UpgradePage";
-import { PostCreationPage } from "../features/postCreation/pages/postCreationPage";
-import { Save } from "lucide-react";
-import { SavedPost } from "../features/savedPosts/pages/savedPosts";
+import React from "react";
+const LoginPage = React.lazy(() =>
+  import("../features/auth/pages/Login").then((module) => ({
+    default: module.LoginPage,
+  })),
+);
+const SignupPage = React.lazy(() =>
+  import("../features/auth/pages/Signup").then((module) => ({
+    default: module.SignupPage,
+  })),
+);
+
+const FeedPage = React.lazy(() =>
+  import("../features/feed/pages/Feed").then((module) => ({
+    default: module.FeedPage,
+  })),
+);
+
+const Profile = React.lazy(() =>
+  import("../features/profile/pages/Profile").then((module) => ({
+    default: module.Profile,
+  })),
+);
+
+const AccountSettings = React.lazy(() =>
+  import("../features/accountSettings/pages/accountPage").then((module) => ({
+    default: module.AccountSettings,
+  })),
+);
+
+const Message_Users_Page = React.lazy(() =>
+  import("../features/message/pages/Message_Users_Page").then((module) => ({
+    default: module.Message_Users_Page,
+  })),
+);
+
+const OthersProfile = React.lazy(() =>
+  import("../features/othersprofile/pages/OtherProfile").then((module) => ({
+    default: module.OthersProfile,
+  })),
+);
+
+const Upgrade = React.lazy(() =>
+  import("../features/upgrade/pages/UpgradePage").then((module) => ({
+    default: module.Upgrade,
+  })),
+);
+
+const PostCreationPage = React.lazy(() =>
+  import("../features/postCreation/pages/postCreationPage").then((module) => ({
+    default: module.PostCreationPage,
+  })),
+);
+
+const SavedPost = React.lazy(() =>
+  import("../features/savedPosts/pages/savedPosts").then((module) => ({
+    default: module.SavedPost,
+  })),
+);
 
 export const AppRouting = () => {
   return (

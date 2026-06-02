@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Icons } from "../../../assets/icons";
+import { Button } from "../../../components/reusable/Button";
 
 export const SignupPage = () => {
   const navigate = useNavigate();
@@ -25,9 +26,15 @@ export const SignupPage = () => {
           placeholder="Enter your password"
           name="password"
         />
-        <button className="px-3 rounded-xl text-(--text-primary) bg-red-400 py-2">
-          Signup Now
-        </button>
+
+        <Button
+          padding="md"
+          background="bg-red-400"
+          border="rounded-xl"
+          content="Login"
+          width="w-full"
+        />
+
         <p onClick={() => navigate("/login")} className="text-(--text-primary)">
           Already have an Account?{" "}
           <span className="font-bold text-red-400 underline">

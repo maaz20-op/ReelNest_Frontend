@@ -1,3 +1,5 @@
+import { Button } from "../../../components/reusable/Button";
+
 export const Upgrade = () => {
   const packages = [
     {
@@ -118,23 +120,14 @@ export const Upgrade = () => {
             </div>
 
             {/* Button */}
-            <button
-              className="
-                mt-8
-                w-full
-                rounded-full
-                bg-blue-600
-                hover:bg-blue-700
-                text-white
-                py-3
-                text-sm
-                sm:text-base
-                font-medium
-                transition-colors
-              "
-            >
-              Upgrade Now
-            </button>
+            <Button
+              content="Upgrade Now"
+              padding="lg"
+              background="bg-blue-600"
+              border="rounded-full"
+              font="font-medium"
+              otherStyles="w-full hover:bg-blue-700 mt-8 transition-colors"
+            />
           </div>
         ))}
       </div>

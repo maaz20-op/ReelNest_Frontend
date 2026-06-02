@@ -4,6 +4,7 @@ import { FriendSection } from "./mobile/FriendsHeaderSection.jsx";
 import { contextThemeSetup } from "../utils/contextSetup.js";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../features/auth/hooks/useAuth.js";
+import { Button } from "./reusable/Button.jsx";
 
 export const Header = () => {
   const { isDark, toggle, iconsColor } = contextThemeSetup();
@@ -35,12 +36,12 @@ export const Header = () => {
         </div>
 
         <div className="flex gap-2">
-          <button
-            className="px-2 py-1 rounded-2xl text-(--text-primary) bg-(--bg-secondary) text-sm"
-            onClick={toggle}
-          >
-            {isDark ? "Light" : "Dark"}
-          </button>
+          <Button
+            content={isDark ? "Light" : "Dark"}
+            fnc={toggle}
+            padding="md"
+            border="rounded-xl"
+          />
           <div
             onClick={() => navigate("/profile")}
             className="h-10 w-10 rounded-full bg-black"

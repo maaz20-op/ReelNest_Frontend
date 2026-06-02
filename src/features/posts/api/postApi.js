@@ -10,9 +10,13 @@ export const postApi = createApi({
 
   endpoints: (builder) => ({
     getPosts: builder.query({
-      query: () => "/posts/videos",
+      query: (queryParams) => ({
+        url: "/posts/videos",
+        method: "GET",
+        params: queryParams,
+      }),
     }),
   }),
 });
 
-export const { useGetPostsQuery } = postApi;
+export const { useLazyGetPostsQuery } = postApi;

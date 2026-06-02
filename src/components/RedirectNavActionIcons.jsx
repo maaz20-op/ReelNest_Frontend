@@ -1,5 +1,6 @@
 import { Icons } from "../assets/icons";
 import { contextThemeSetup } from "../utils/contextSetup";
+
 import { redirect, useNavigate } from "react-router-dom";
 
 const IconsContent = [
@@ -15,15 +16,17 @@ export const Nav_Actions = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="w-full h-15   bg-(--bg-primary)  flex   gap-4 px-2 py-3 justify-between  lg:flex-col lg:border-l lg:py-30 lg:min-h-0 lg:border-(--border-color)  lg:justify-start">
+    <div className="w-full h-15  bg-(--bg-primary)  flex   gap-4 px-2  justify-between items-center  lg:flex-col lg:border-l lg:py-30 lg:min-h-0 lg:border-(--border-color)  lg:justify-start">
       {IconsContent.map(({ text, icon: Icon, redirect }, indx) => (
         <div
           onClick={() => navigate(redirect)}
-          className="flex flex-col items-center px-2 py-3 gap-1 rounded-xl hover:bg-(--bg-tertiary)"
+          className="flex flex-col  items-center px-3 lg:py-2  gap-1 rounded-xl hover:bg-(--bg-tertiary)"
           key={indx}
         >
-          <Icon color={iconsColor} size={35} />
-          <h1 className="text-[10px] text-(--text-primary)">{text}</h1>
+          <Icon color={iconsColor} className="h-7 w-7 lg:h-10 h:w-10" />
+          <h1 className="text-[10px]  lg:text-[12px] text-(--text-primary)">
+            {text}
+          </h1>
         </div>
       ))}
     </div>

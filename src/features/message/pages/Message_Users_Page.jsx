@@ -1,26 +1,36 @@
+import { useRef } from "react";
 import { Icons } from "../../../assets/icons";
 import { contextThemeSetup } from "../../../utils/contextSetup";
 import { Chat_Msg } from "../components/Chat_Msg";
 import { FriendsMsgUI } from "../components/FriendsMsg";
+import { showScrollBarOnHover } from "../../../utils/showSideBarOnHover";
 
 export const Message_Users_Page = () => {
-  const { iconsColor } = contextThemeSetup();
+  const msgUpdateRef = useRef(null);
+  const mainMsgContainerRef = useRef(null);
+
+  const { iconsColor, isDark } = contextThemeSetup();
+  const isMsgUpdateContHoverd = showScrollBarOnHover(msgUpdateRef);
+  const ismainMsgContHoverd = showScrollBarOnHover(mainMsgContainerRef);
 
   return (
-    <div className="w-full flex flex-col min-h-0  ">
+    <div className="w-full flex flex-col px-(--page-x-padding) min-h-0  ">
       {/* Header */}
       <div className="py-4 ">
         <h1 className="text-center text-2xl text-(--text-primary)">My Chats</h1>
       </div>
 
       {/* Messages Area */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 flex-1 min-h-0    border-t-2 border-(--border-color)">
+      <div className="grid grid-cols-1 lg:grid-cols-2 flex-1 min-h-0 gap-20   border-t-2 border-(--border-color)">
         {/* Friends Msg UI */}
-        <div className="all-messages flex flex-col  min-h-0  account-settings overflow-y-auto rounded-xl">
+        <div
+          ref={msgUpdateRef}
+          className={`${isMsgUpdateContHoverd ? "overflow-y-auto" : "overflow-y-hidden"} all-messages flex flex-col border-x-2 border-(--border-color)  min-h-0  account-settings  rounded-xl`}
+        >
           <FriendsMsgUI />
         </div>
         {/* Main Chat Screen */}
-        <div className="main-chat-screen hidden lg:flex lg:flex-col min-h-0">
+        <div className="main-chat-screen hidden rounded  border-x-2 border-(--border-color) lg:flex lg:flex-col min-h-0">
           <div className="header-chat-screen bg-(--bg-primary)  w-full h-17 ">
             <div className="user-info flex  items-center justify-between px-2 py-3 rounded">
               <div className="flex gap-3 items-center">
@@ -41,14 +51,25 @@ export const Message_Users_Page = () => {
                 </div>
               </div>
               <div className="flex lg:gap-5 xl:gap-10 pr-5">
-                <Icons.call size={23} color={iconsColor} />
-                <Icons.videoCall size={23} color={iconsColor} />
+                <div
+                  className={`${isDark ? "hover:bg-red-500 " : "hover:bg-red-300 "} p-2  flex justify-center items-center  rounded-full`}
+                >
+                  <Icons.call size={23} color={iconsColor} />
+                </div>
+                <div
+                  className={`${isDark ? "hover:bg-red-500 " : "hover:bg-red-300 "} p-2  flex justify-center items-center  rounded-full`}
+                >
+                  <Icons.videoCall size={23} color={iconsColor} />
+                </div>
               </div>
             </div>
           </div>
 
           {/* Main Msg Screen */}
-          <div className="main-msg-screen relative  flex-1 min-h-0 overflow-y-auto p-2 account-settings">
+          <div
+            ref={mainMsgContainerRef}
+            className={`${ismainMsgContHoverd ? "overflow-y-auto" : "overflow-y-hidden"} main-msg-screen relative   flex-1 min-h-0  p-2 account-settings`}
+          >
             <Chat_Msg />
           </div>
           <div className="send-msg-input w-full h-22 p-2 ">

@@ -11,7 +11,7 @@ export const MainLayout = ({ children }) => {
     <div className=" flex flex-col max-h-screen overflow-x-hidden h-screen select-none max-w-screen   bg-(--bg-primary)">
       {!isAuthPage && <Header />}
       <div
-        className={`${isAuthPage ? "flex justify-center overflow-hidden items-center w-full  flex-1" : "min-h-0 flex-1 w-full grid grid-cols-1 md:grid-cols-1 lg:grid-cols-[300px_minmax(0,1fr)_100px]"}`}
+        className={`${isAuthPage ? "flex justify-center overflow-hidden items-center w-full  flex-1" : "min-h-0 flex-1 w-full grid grid-cols-1 md:grid-cols-1 lg:grid-cols-[250px_minmax(0,1fr)_90px] xl:grid-cols-[290px_minmax(0,1fr)_100px]"}`}
       >
         {!isAuthPage && <Left_FriendsPanel_Desktop />}
         {children}

@@ -3,17 +3,37 @@ import { Icons } from "../../../assets/icons";
 import { contextThemeSetup } from "../../../utils/contextSetup";
 import { Comments } from "../../comments/components/Comments";
 import { Media } from "../../posts/components/Media";
-import { useGetPostsQuery } from "../../posts/api/postApi";
+
+import { Button } from "../../../components/reusable/Button";
+import { showScrollBarOnHover } from "../../../utils/showSideBarOnHover";
 
 export const FeedPage = () => {
-  const { iconsColor } = contextThemeSetup();
+  const { iconsColor, isDark } = contextThemeSetup();
+
+  const [isPostsEnd, setEndOfPosts] = useState(false);
 
   const [isCommentsOpen, setCommentsOpen] = useState(false);
   const [translateCommentsX, setTranslateCommentsX] = useState(0);
   const [commentsContainerWidth, setCommentsContainerWidth] = useState(0);
 
+  // For scroll Loader
+  const [isBottomOfContainer, setBtmContainer] = useState(false);
+
   // post container Refrence
-  const postContainerRef = useRef();
+  const suggestionContainerRef = useRef(null);
+  const postContainerRef = useRef(null);
+
+  const isHoverd = showScrollBarOnHover(suggestionContainerRef);
+
+  const handleScroll = (e) => {
+    const totalHeight = e.currentTarget.scrollHeight;
+    const scrolledView = e.currentTarget.scrollTop;
+    const clientHeight = e.currentTarget.clientHeight;
+
+    if (totalHeight <= Math.round(scrolledView + clientHeight)) {
+      setBtmContainer(true);
+    }
+  };
 
   useEffect(() => {
     const updateTranslateWidth = () => {
@@ -30,61 +50,94 @@ export const FeedPage = () => {
   }, []);
 
   return (
-    <div className="min-h-0 px-2  py-3 md:grid md:grid-cols-[500px_1fr] lg:grid-cols-[400px_1fr] xl:grid-cols-[550px_1fr] flex flex-col gap-4 ">
+    <div className="min-h-0 pl-2 lg:pl-5 xl:pl-10  py-3 md:grid md:grid-cols-[400px_1fr] lg:grid-cols-[340px_1fr] 2xl:grid-cols-[480px_1fr] xl:grid-cols-[450px_1fr] flex flex-col gap-4 ">
       <div
+        onScroll={handleScroll}
         ref={postContainerRef}
         className={`${isCommentsOpen ? "overflow-hidden" : "overflow-y-auto "} min-h-0    account-settings`}
       >
-        {/* Images */}
-        <Media iconsColor={iconsColor} setCommentsOpen={setCommentsOpen} />
-        <Comments
-          isCommentsOpen={isCommentsOpen}
-          setCommentsOpen={setCommentsOpen}
+        {/* Media */}
+        <Media
+          isBottomOfContainer={isBottomOfContainer}
           iconsColor={iconsColor}
-          translateCommentsX={translateCommentsX}
-          commentsContainerWidth={commentsContainerWidth}
+          setBtmContainer={setBtmContainer}
+          setCommentsOpen={setCommentsOpen}
+          isPostsEnd={isPostsEnd}
+          setEndOfPosts={setEndOfPosts}
+          isCommentsOpen={isCommentsOpen}
         />
+        {!isPostsEnd && isBottomOfContainer && (
+          <div className="flex items-center justify-center space-x-2">
+            {/* The Spinner Circle */}
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-red-500 border-t-(--bg-primary)" />
+            <span className="text-gray-500 font-medium">Loading...</span>
+          </div>
+        )}
       </div>
 
-      {/* Discover More Users */}
-      <div className="justify-center lg:hidden hidden md:flex w-full xl:flex items-start pt-12">
-        <div className="flex flex-col p-2 rounded-2xl border-2 border-(--border-color) h-125">
-          <div className="p-2">
-            <h1 className="text-(--text-primary) text-center ">
-              Suggestions For You
-            </h1>
-          </div>
+      {isCommentsOpen && (
+        <div className="comments-box h-full flex justify-end p-2">
+          <Comments
+            isCommentsOpen={isCommentsOpen}
+            setCommentsOpen={setCommentsOpen}
+            iconsColor={iconsColor}
+            translateCommentsX={translateCommentsX}
+            commentsContainerWidth={commentsContainerWidth}
+            isDark={isDark}
+            iconsColor={iconsColor}
+          />
+        </div>
+      )}
 
-          <div className="other-profile-container  flex flex-col gap-2 flex-1 min-h-0 overflow-y-auto mt-5 px-2 py-5 ">
-            {[...Array(12)].map((_, indx) => (
-              <div
-                key={indx}
-                className="friend-div flex items-center gap-3  px-2 py-3 rounded"
-              >
-                <div className="profile-img h-10 flex shrink-0 w-10 rounded-full ">
-                  <img
-                    className="h-full w-full rounded-full"
-                    src="https://iili.io/BZuCZ57.jpg"
-                    alt=""
-                  />
-                </div>
-                <div className="div-content w-45  overflow-hidden flex  flex-col">
-                  <h1 className="text-sm line-clamp-1 text-(--text-primary) ">
-                    Malaika Qamar dnfdkjfdkjd
-                  </h1>
-                  <h2 className="text-sm  line-clamp-1 text-(--text-secondary)">
-                    @angel-20
-                  </h2>
-                </div>
-
-                <button className="px-1 py-1 text-sm border text-(--text-primary) bg-(--bg-tertiary)  border-(--border-color) rounded-2xl ">
-                  Message
-                </button>
+      {!isCommentsOpen && (
+        <div className="justify-center hidden md:flex w-full items-start pt-12">
+          <div className="2xl:w-85 xl:w-80 lg:w-70">
+            <div className="flex flex-col w-full p-2 rounded-2xl border-2 border-(--border-color) h-125">
+              <div className="p-2 border-b-2 border-(--border-color)">
+                <h1 className="text-(--text-primary) text-center ">
+                  Suggestions For You
+                </h1>
               </div>
-            ))}
+
+              <div
+                ref={suggestionContainerRef}
+                className={`${isHoverd ? "overflow-y-auto" : "overflow-y-hidden"} other-profile-container  scrollbar-gutter-stable flex flex-col gap-2 flex-1 min-h-0 mt-5  py-5 `}
+              >
+                {[...Array(12)].map((_, indx) => (
+                  <div
+                    key={indx}
+                    className="friend-div md:gap-4 lg:gap-2 flex items-center justify-between hover:bg-(--bg-secondary) lg:px-1 lg:py-1 2xl:px-2 2xl:py-3 rounded"
+                  >
+                    <div className="flex gap-4 lg:w-6/7  xl:w-5/6  rounded-full ">
+                      <img
+                        className="profile-img h-10 w-10 rounded-full"
+                        src="https://iili.io/BZuCZ57.jpg"
+                        alt=""
+                      />
+                      <div className="div-content md:text-base xl:text-sm text-xs overflow-hidden flex  flex-col">
+                        <h1 className=" line-clamp-1 text-(--text-primary) ">
+                          Malaika Qamar
+                        </h1>
+                        <h2 className="text-sm  line-clamp-1 text-(--text-secondary)">
+                          @angel-20
+                        </h2>
+                      </div>
+                    </div>
+
+                    <Button
+                      background={isDark ? "bg-pink-400" : "bg-pink-100"}
+                      content="Add Friend"
+                      font="font-medium"
+                      textSize="sm"
+                      otherStyles={`${isDark ? "hover:bg-pink-600" : "hover:bg-pink-300"} lg:text-xs xl:text-sm `}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
