@@ -13,6 +13,7 @@ import { useGetUserByIdQuery } from "../../../services/users/user";
 import { GiTrumpet } from "react-icons/gi";
 import { useEffect } from "react";
 import { GridVideoLayoutSkeleton } from "../../../skeleton/video/GridVideoSkeleton";
+import { useGetPostsByuserIdQuery } from "../../../services/posts/post";
 
 export const Profile = () => {
   const { iconsColor, isDark } = contextThemeSetup();
@@ -23,14 +24,29 @@ export const Profile = () => {
   const location = useLocation();
   const obj = location.state;
 
+  const [profileImgSrc, setImgSrc] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  // get Profile User
   const { data, isLoading, error } = useGetUserByIdQuery(
     obj?.userId || user?._id,
     {
       skip: !user?._id,
     },
   );
-  const [profileImgSrc, setImgSrc] = useState("");
-  const [loading, setLoading] = useState(true);
+
+  // get profile User Videos
+  const { data: userPosts, isLoading: isUserPostsLoading } =
+    useGetPostsByuserIdQuery(data?.data[0]?._id, {
+      skip: !data?.data[0]?._id,
+    });
+
+  useEffect(() => {
+    if (data?.data[0]?._id.toString() !== user?._id.toString())
+      setLoggedInUser(false);
+    else if (data?.data[0]?._id.toString() === user?._id.toString())
+      setLoggedInUser(true);
+  }, [data?.data[0]]);
 
   const handleChange = (e) => {
     const file = e.target.files[0];
@@ -47,30 +63,16 @@ export const Profile = () => {
     reader.readAsDataURL(file);
   };
 
-  console.log("$$$$$$$$$$$$SIFHSUFS", data?.data[0]);
-
-  useEffect(() => {
-    if (data?.data[0]?._id.toString() !== user?._id.toString())
-      setLoggedInUser(false);
-    else if (data?.data[0]?._id.toString() === user?._id.toString())
-      setLoggedInUser(true);
-
-    console.log(
-      data?.data[0]?._id.toString(),
-      user?._id.toString(),
-      data?.data[0]?._id.toString() === user?._id.toString(),
-    );
-  }, [data?.data[0]]);
-
   return (
     <div className="w-full min-h-0 account-settings overflow-y-auto flex flex-col ">
       {/* user info Card top */}
-      {isLoading || error ? (
+      {isLoading || error || !data ? (
         <UserInfoCardSkeleton />
       ) : (
         <UserInfoCard
           user={data?.data[0]}
           inputRef={inputRef}
+          userPosts={userPosts}
           handleChange={handleChange}
           iconsColor={iconsColor}
           profileImgSrc={profileImgSrc}
@@ -102,10 +104,17 @@ export const Profile = () => {
 
         {/* grid video Layout*/}
 
-        {isLoading || error ? (
+        {isUserPostsLoading || !userPosts ? (
           <GridVideoLayoutSkeleton />
+        ) : userPosts?.data[0].length > 0 ? (
+          <GridVideoLayout user={data?.data[0]} posts={userPosts?.data[0]} />
         ) : (
-          <GridVideoLayout user={data?.data[0]} />
+          <div className="flex flex-col justify-center h-100 items-center gap-6">
+            <img className="h-30 w-30" src="/no-posts.svg" alt="no-friends" />
+            <p className="w-50 text-center text-(--text-primary)">
+              No Posts Uploaded By You!
+            </p>
+          </div>
         )}
       </div>
     </div>

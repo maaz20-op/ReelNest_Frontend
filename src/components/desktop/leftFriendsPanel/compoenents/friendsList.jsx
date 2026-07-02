@@ -1,20 +1,48 @@
 import { Button } from "../../../reusableComponents/Button";
 import { Avatar } from "../../../Avatar";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+
+const msgs = {
+  Friends: {
+    text: "Discover Friends & Start Conversation!",
+    src: "/no-friends.svg",
+  },
+  Followers: {
+    text: "Make Followers by Follwing Peoples!",
+    src: "/no-followers.svg",
+  },
+  Following: {
+    text: "Find Friends & Follow Them",
+    src: "/no-following.svg",
+  },
+};
 
 export const FriendsList = ({
   elementRef,
   isHoverd,
   isDark,
   followersList,
+  selectedSection,
 }) => {
   const navigate = useNavigate();
+  const [noFollowers, setNoFollowers] = useState(false);
+
+  useEffect(() => {
+    if (followersList?.length === 0) {
+      setNoFollowers(true);
+    } else if (followersList?.length > 0) {
+      setNoFollowers(false);
+    }
+  }, [followersList]);
+
+  console.log(noFollowers);
   return (
     <div
       ref={elementRef}
-      className={`${isHoverd ? "overflow-y-auto" : "overflow-y-hidden"} other-profile-container  flex flex-col gap-2 flex-1 min-h-0  mt-5  py-5 `}
+      className={`${noFollowers ? "flex  items-center justify-center" : isHoverd ? "overflow-y-auto" : "overflow-y-hidden"} other-profile-container  flex flex-col gap-2 flex-1 min-h-0  mt-5  py-5 `}
     >
-      {followersList?.length > 0 &&
+      {followersList?.length > 0 ? (
         followersList.map((data, indx) => (
           <div
             key={indx}
@@ -49,7 +77,19 @@ export const FriendsList = ({
               otherStyles={`${isDark ? "hover:bg-red-500" : "hover:bg-red-300"} hover:scale-[1.04] duration-300 border border-(--border-color)`}
             />
           </div>
-        ))}
+        ))
+      ) : (
+        <div className="flex flex-col items-center gap-6">
+          <img
+            className="h-30 w-30"
+            src={msgs[selectedSection]?.src}
+            alt="no-friends"
+          />
+          <p className="w-30 text-center text-(--text-primary)">
+            {msgs[selectedSection]?.text}
+          </p>
+        </div>
+      )}
     </div>
   );
 };

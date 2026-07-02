@@ -51,6 +51,7 @@ export const LeftFriendsPanelDesktop = () => {
           isDark={isDark}
           followersList={setList[selectedSection]}
           isHoverd={isHoverd}
+          selectedSection={selectedSection}
         />
       )}
     </div>

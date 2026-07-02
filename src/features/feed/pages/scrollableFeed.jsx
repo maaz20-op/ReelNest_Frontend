@@ -10,6 +10,7 @@ import { useGetPostsCommentsQuery } from "../../../services/comments/comment";
 import { useLikePostMutation } from "../../../services/posts/post";
 import { useAuth } from "../../../features/auth/hooks/useAuth";
 import { debounce } from "../../../utils/debounce";
+import { checkIsFollowed } from "../../../utils/checkisFollowed";
 
 export const ScrollableFeed = () => {
   const { user } = useAuth();
@@ -27,14 +28,14 @@ export const ScrollableFeed = () => {
   const [hidePlayPauseIcon, setHide] = useState(false);
   const [isCommentsOpen, setComments] = useState(false);
   const data = location?.state;
-
+  const { isFollow } = checkIsFollowed(data?.userId);
   const { data: commentData, isLoading } = useGetPostsCommentsQuery(
     nextPost ? nextPost?._id : data?._id,
     {
-      skip: !data?._id || !isCommentsOpen || !nextPost,
+      skip: !data?._id || !isCommentsOpen,
     },
   );
-  console.log(commentData);
+  console.log("commets", commentData);
   const [isLike, setLike] = useState(false);
   const [setLikes, setLikesLength] = useState(
     nextPost ? nextPost?.likes.length : data?.likes,
@@ -111,7 +112,7 @@ export const ScrollableFeed = () => {
             </div>
             <Button
               content={
-                user?.following.includes(data?.userId) ? (
+                isFollow ? (
                   <div className="flex gap-2 items-center">
                     <h1>Followed </h1>
                     <Icons.followedIcon color="white" size={19} />{" "}
@@ -186,7 +187,9 @@ export const ScrollableFeed = () => {
                 size: 25,
               },
               {
-                name: nextPost ? nextPost?.comments?.length : data?.comments,
+                name: nextPost?.comments
+                  ? nextPost?.comments?.length
+                  : data?.comments,
                 icon: Icons?.comments,
                 fnc: () => setComments((prev) => !prev),
                 size: 26,
@@ -228,10 +231,12 @@ export const ScrollableFeed = () => {
           isDark={isDark}
           loading={isLoading}
           title={data?.title}
+          isFollow={isFollow}
           comments={commentData?.data[0]?.comments}
           createrInfo={{
             avatar: data?.avatar,
             fullname: data?.fullname,
+            createrId: data?.userId,
             username: data?.username,
             followers: data?.followers,
           }}

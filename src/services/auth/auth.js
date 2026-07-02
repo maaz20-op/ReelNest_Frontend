@@ -5,7 +5,15 @@ export const authApi = apiSlice.injectEndpoints({
     getAuthMe: builder.query({
       query: () => "/auth/local/me",
     }),
+
+    signupUser: builder.mutation({
+      query: (body) => ({
+        url: "/auth/local/signup",
+        method: "POST",
+        body: body,
+      }),
+    }),
   }),
 });
 
-export const { useGetAuthMeQuery } = authApi;
+export const { useGetAuthMeQuery, useSignupUserMutation } = authApi;

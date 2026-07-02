@@ -6,6 +6,7 @@ import {
   MobileCommentBoxSkeleton,
 } from "../../../skeleton/comments/commentsBoxSkeleton";
 import { Avatar } from "../../../components/Avatar";
+import { useAuth } from "../../auth/hooks/useAuth";
 
 export const Comments = ({
   isCommentsOpen,
@@ -16,7 +17,9 @@ export const Comments = ({
   loading,
   createrInfo,
   title,
+  isFollow,
 }) => {
+  const { user } = useAuth();
   return (
     <>
       {/* Comments box  Desktop*/}
@@ -61,7 +64,20 @@ export const Comments = ({
                 </span>
               </h1>
               <Button
-                content="Follow"
+                content={
+                  createrInfo?.userId !== user?._id ? (
+                    isFollow ? (
+                      <div className="flex gap-2 items-center">
+                        <p>Followed</p>
+                        <Icons.followedIcon color="white" size={19} />
+                      </div>
+                    ) : (
+                      "Follow"
+                    )
+                  ) : (
+                    "You"
+                  )
+                }
                 padding="md"
                 background={isDark ? "bg-pink-800" : "bg-pink-300"}
                 border="rounded-xl"

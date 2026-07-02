@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { Avatar } from "../../../components/Avatar";
 import { Button } from "../../../components/reusableComponents/Button";
 import { Icons } from "../../../assets/icons";
+import { checkIsFollowed } from "../../../utils/checkisFollowed";
 
 export const UserInfoCard = ({
   iconsColor,
@@ -12,7 +13,11 @@ export const UserInfoCard = ({
   isDark,
   isLoggedInUser,
 }) => {
+  const obj = checkIsFollowed(user?._id);
   const navigate = useNavigate();
+
+  console.log(obj);
+  const isFollow = obj?.isFollow;
   return (
     <div className="profile-Card rounded   md:flex md:flex-row-reverse md:justify-end h-6/7 md:h-40 px-6 py-4 w-14/15 md:w-9/10  mx-auto mt-4 bg-(--bg-secondary)">
       {isLoggedInUser && (
@@ -87,7 +92,18 @@ export const UserInfoCard = ({
           padding="md"
           background={isDark ? "bg-pink-800" : "bg-pink-400"}
           border="rounded-2xl"
-          content={isLoggedInUser ? "My Collection" : "Follow"}
+          content={
+            isLoggedInUser ? (
+              "My Collection"
+            ) : isFollow ? (
+              <div className="flex gap-2 items-center">
+                <p>Followed</p>
+                <Icons.followedIcon color="white" size={19} />
+              </div>
+            ) : (
+              "Follow"
+            )
+          }
           fnc={() => navigate("/profile/collection")}
           otherStyles="md:text-sm"
         />
