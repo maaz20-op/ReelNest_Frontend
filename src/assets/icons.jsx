@@ -15,29 +15,49 @@ import { FaWandMagicSparkles } from "react-icons/fa6";
 import { FaUpload } from "react-icons/fa6";
 import { FaRegHeart } from "react-icons/fa";
 import { FaRegCommentDots } from "react-icons/fa";
+import { FaHeart } from "react-icons/fa";
 import { LuSend } from "react-icons/lu";
 import { CiSaveUp2 } from "react-icons/ci";
 import { IoMdArrowBack } from "react-icons/io";
 import { Home } from "lucide-react";
+import { FaComment } from "react-icons/fa6";
+import { IoIosShareAlt } from "react-icons/io";
+import { FaPlay } from "react-icons/fa";
+import { IoMdPause } from "react-icons/io";
+import { ImLoop } from "react-icons/im";
+import { FaArrowUp } from "react-icons/fa";
+import { FaArrowDown } from "react-icons/fa";
+import { RiUserFollowFill } from "react-icons/ri";
+import { IoPersonAdd } from "react-icons/io5";
 
 export const Icons = {
   search: Search,
+  share: IoIosShareAlt,
   HomeIcon: GoVideo,
   profile: CgProfile,
+  loop: ImLoop,
+  arrowUp: FaArrowUp,
+  arrowDown: FaArrowDown,
   message: MdOutlineMessage,
+  play: FaPlay,
+  pause: IoMdPause,
   plusCircle: GoPlusCircle,
   google: FcGoogle,
   password: RiLockPasswordLine,
+
   settings: IoSettings,
   pencil: FaPencilAlt,
   call: IoCallSharp,
+  followIcon: IoPersonAdd,
+  followedIcon: RiUserFollowFill,
   videoCall: FaVideo,
   upgrade: GiUpgrade,
   File: FaFile,
   MagicStick: FaWandMagicSparkles,
   upload: FaUpload,
-  heart: FaRegHeart,
+  heart: FaHeart,
   comments: FaRegCommentDots,
+  comments2: FaComment,
   send: LuSend,
   save: CiSaveUp2,
   back: IoMdArrowBack,

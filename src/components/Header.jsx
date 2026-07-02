@@ -4,16 +4,17 @@ import { FriendSection } from "./mobile/FriendsHeaderSection.jsx";
 import { contextThemeSetup } from "../utils/contextSetup.js";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../features/auth/hooks/useAuth.js";
-import { Button } from "./reusable/Button.jsx";
+import { Button } from "./reusableComponents/Button.jsx";
+import { Avatar } from "./Avatar.jsx";
 
 export const Header = () => {
   const { isDark, toggle, iconsColor } = contextThemeSetup();
   const SearchIcon = Icons.search;
-  const { user } = useAuth();
+  const { user, isLoading, error } = useAuth();
   const navigate = useNavigate();
 
   return (
-    <header className="  w-full  bg-text-xl">
+    <header className="w-full  bg-text-xl">
       <nav className="flex justify-between h-14 lg:h-18 items-center px-3 py-2 ">
         <div>
           <h1 className="text-(--accent) font-bold text-2xl lg:text-2xl">
@@ -42,16 +43,15 @@ export const Header = () => {
             padding="md"
             border="rounded-xl"
           />
-          <div
-            onClick={() => navigate("/profile")}
-            className="h-10 w-10 rounded-full bg-black"
-          >
-            <img
-              className="w-full object-cover h-full rounded-full"
+          {isLoading || error ? (
+            <Avatar size="md" skeleton={true} />
+          ) : (
+            <Avatar
+              fn={() => navigate("/profile")}
+              size="md"
               src={user?.profileImage}
-              alt="your profile"
             />
-          </div>
+          )}
         </div>
       </nav>
       <BorderDiv />

@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { Icons } from "../../../assets/icons";
 import { useEffect, useState } from "react";
 import { LoginUser } from "../api/loginApi";
-import { Button } from "../../../components/reusable/Button";
+import { Button } from "../../../components/reusableComponents/Button";
 
 export const LoginPage = () => {
   const [email, setEmail] = useState("");

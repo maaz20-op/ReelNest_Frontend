@@ -4,7 +4,7 @@ export const postApi = createApi({
   reducerPath: "postApi",
 
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:3000/api/v1",
+    baseUrl: import.meta.env.VITE_REELNEST_BACKEND_URL,
     credentials: "include",
   }),
 

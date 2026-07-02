@@ -4,8 +4,11 @@ import { contextThemeSetup } from "../../../utils/contextSetup";
 import { Comments } from "../../comments/components/Comments";
 import { Media } from "../../posts/components/Media";
 
-import { Button } from "../../../components/reusable/Button";
+import { Button } from "../../../components/reusableComponents/Button";
 import { showScrollBarOnHover } from "../../../utils/showSideBarOnHover";
+import { Avatar } from "../../../components/Avatar";
+import { FriendsList } from "../../../components/desktop/leftFriendsPanel/compoenents/friendsList";
+import { FriendsListSkeleton } from "../../../skeleton/leftDesktopPanel";
 
 export const FeedPage = () => {
   const { iconsColor, isDark } = contextThemeSetup();
@@ -22,6 +25,8 @@ export const FeedPage = () => {
   // post container Refrence
   const suggestionContainerRef = useRef(null);
   const postContainerRef = useRef(null);
+
+  const [loading, setLoading] = useState(false);
 
   const isHoverd = showScrollBarOnHover(suggestionContainerRef);
 
@@ -84,7 +89,6 @@ export const FeedPage = () => {
             translateCommentsX={translateCommentsX}
             commentsContainerWidth={commentsContainerWidth}
             isDark={isDark}
-            iconsColor={iconsColor}
           />
         </div>
       )}
@@ -103,36 +107,40 @@ export const FeedPage = () => {
                 ref={suggestionContainerRef}
                 className={`${isHoverd ? "overflow-y-auto" : "overflow-y-hidden"} other-profile-container  scrollbar-gutter-stable flex flex-col gap-2 flex-1 min-h-0 mt-5  py-5 `}
               >
-                {[...Array(12)].map((_, indx) => (
-                  <div
-                    key={indx}
-                    className="friend-div md:gap-4 lg:gap-2 flex items-center justify-between hover:bg-(--bg-secondary) lg:px-1 lg:py-1 2xl:px-2 2xl:py-3 rounded"
-                  >
-                    <div className="flex gap-4 lg:w-6/7  xl:w-5/6  rounded-full ">
-                      <img
-                        className="profile-img h-10 w-10 rounded-full"
-                        src="https://iili.io/BZuCZ57.jpg"
-                        alt=""
-                      />
-                      <div className="div-content md:text-base xl:text-sm text-xs overflow-hidden flex  flex-col">
-                        <h1 className=" line-clamp-1 text-(--text-primary) ">
-                          Malaika Qamar
-                        </h1>
-                        <h2 className="text-sm  line-clamp-1 text-(--text-secondary)">
-                          @angel-20
-                        </h2>
+                {loading ? (
+                  <FriendsListSkeleton
+                    isDark={isDark}
+                    elementRef={suggestionContainerRef}
+                    isHoverd={isHoverd}
+                  />
+                ) : (
+                  [...Array(12)].map((_, indx) => (
+                    <div
+                      key={indx}
+                      className="friend-div md:gap-4 lg:gap-2 flex items-center justify-between hover:bg-(--bg-secondary) lg:px-1 lg:py-1 2xl:px-2 2xl:py-3 rounded"
+                    >
+                      <div className="flex gap-4 lg:w-6/7  xl:w-5/6  rounded-full ">
+                        <Avatar size="md" />
+                        <div className="div-content md:text-base xl:text-sm text-xs overflow-hidden flex  flex-col">
+                          <h1 className=" line-clamp-1 text-(--text-primary) ">
+                            Malaika Qamar
+                          </h1>
+                          <h2 className="text-sm  line-clamp-1 text-(--text-secondary)">
+                            @angel-20
+                          </h2>
+                        </div>
                       </div>
-                    </div>
 
-                    <Button
-                      background={isDark ? "bg-pink-400" : "bg-pink-100"}
-                      content="Add Friend"
-                      font="font-medium"
-                      textSize="sm"
-                      otherStyles={`${isDark ? "hover:bg-pink-600" : "hover:bg-pink-300"} lg:text-xs xl:text-sm `}
-                    />
-                  </div>
-                ))}
+                      <Button
+                        background={isDark ? "bg-pink-400" : "bg-pink-100"}
+                        content="Add Friend"
+                        font="font-medium"
+                        textSize="sm"
+                        otherStyles={`${isDark ? "hover:bg-pink-600" : "hover:bg-pink-300"} lg:text-xs xl:text-sm `}
+                      />
+                    </div>
+                  ))
+                )}
               </div>
             </div>
           </div>

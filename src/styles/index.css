@@ -16,6 +16,7 @@
   --bg-primary: #ffffff; /* main app bg */
   --bg-secondary: #dedede; /* cards */
   --bg-tertiary: #f1f1f1; /* hover / soft sections */
+  --bg-heavy-secondary: #9f9f9f;
 
   --text-primary: #0f0f0f; /* main text */
   --text-secondary: #606060; /* subtitles */
@@ -40,6 +41,7 @@
   --bg-primary: #0f0f0f; /* main bg */
   --bg-secondary: #181818; /* cards */
   --bg-tertiary: #272727; /* hover */
+  --bg-heavy-secondary: #404040;
 
   --text-primary: #ffffff;
   --text-secondary: #aaaaaa;

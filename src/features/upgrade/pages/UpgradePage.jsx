@@ -1,4 +1,4 @@
-import { Button } from "../../../components/reusable/Button";
+import { Button } from "../../../components/reusableComponents/Button";
 
 export const Upgrade = () => {
   const packages = [

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { AppRouting } from "../routes/AppRoutes";
-import { MainLayout } from "../layouts/Main_Layout";
+import { MainLayout } from "../layouts/mainLayout";
 
 function App() {
   return (

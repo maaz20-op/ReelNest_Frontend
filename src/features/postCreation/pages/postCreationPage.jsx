@@ -3,18 +3,36 @@ import { Icons } from "../../../assets/icons";
 import { contextThemeSetup } from "../../../utils/contextSetup";
 import { useState } from "react";
 import { BorderDiv } from "../../../utils/BorderDiv";
+import { useCreatePostMutation } from "../../../services/posts/post";
 
 export const PostCreationPage = () => {
-  const inputRef = useRef();
+  const inputRef = useRef(null);
+  const submitBtnRef = useRef(null);
   const { iconsColor } = contextThemeSetup();
-  const [titleLength, setTitleLength] = useState(0);
+  console.log(import.meta.env.VITE_REELNEST_BACKEND_URL);
 
+  const [title, setTitle] = useState("");
+  const [imgUrl, setImgSrc] = useState("");
+  const [videoUrl, setVideoSrc] = useState("");
+  const [file, setFile] = useState({});
+
+  const [createPost, { isLoading, data, error }] = useCreatePostMutation();
   const ActionBtnStyle =
     "flex w-60 justify-center text-(--text-primary) items-center bg-blue-600 p-2 rounded-2xl gap-4";
 
-  const handleClick = (e) => {
+  const handleOpenGallery = async (e) => {
     e.preventDefault();
     inputRef.current.click();
+  };
+
+  const handleSubmit = async () => {
+    const formData = new FormData();
+    console.log("cliked submit");
+    formData.append("media", file);
+    formData.append("title", title);
+
+    await createPost(formData);
+    console.log(data);
   };
 
   return (
@@ -22,37 +40,63 @@ export const PostCreationPage = () => {
       {/* Upload Preview */}
       <div className=" lg:h-full lg:w-full  flex gap-3 flex-col items-center p-2">
         <h1 className="text-xl text-(--text-primary)">Upload Post</h1>
-        <div className="h-80 w-60 sm:h-100 sm:w-60 lg:h-120 lg:w-60 rounded-xl bg-(--bg-tertiary) animate-pulse"></div>
+        <div
+          className={`${!imgUrl && "animate-pulse"} h-80 w-60 flex justify-center items-center sm:h-100 sm:w-60 lg:h-120 lg:w-60 rounded-xl bg-(--bg-tertiary) `}
+        >
+          {imgUrl && <img src={imgUrl} className="object-cover" />}
+          {videoUrl && <video src={videoUrl} controls />}
+        </div>
       </div>
 
       {/* Upload Actions */}
       <div className="lg:h-full lg:w-full  flex gap-3 flex-col items-start p-4">
-        <form className="flex flex-col gap-5 " action="">
+        <div className="flex flex-col gap-5 ">
           <label className="text-(--text-primary)" htmlFor="choosefile">
             Choose From Gallery
           </label>
           <input
             ref={inputRef}
+            onChange={(e) => {
+              const file = e.target.files[0];
+              if (!file) return;
+              if (
+                file.type.startsWith("image/") ||
+                file.type.startsWith("video/")
+              ) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                  console.log(e.target.result);
+                  file.type.startsWith("video/")
+                    ? setVideoSrc(e.target.result)
+                    : setImgSrc(e.target.result);
+
+                  setFile(file);
+                };
+
+                reader.readAsDataURL(file);
+              }
+            }}
             className="hidden"
             type="file"
             id="choosefile"
             required
           />
           {/* Select File From Gallery */}
-          <button onClick={handleClick} className={`${ActionBtnStyle}`}>
+          <button onClick={handleOpenGallery} className={`${ActionBtnStyle}`}>
             <span>Select the File </span>
             <Icons.File color={iconsColor} />
           </button>
 
           <label htmlFor="title"></label>
           <h2
-            className={`text-sm ${titleLength == 100 ? "text-red-600" : "text-(--text-primary)"}`}
+            className={`text-sm ${title.length == 100 ? "text-red-600" : "text-(--text-primary)"}`}
           >
-            {titleLength}/100
-            <span>{titleLength == 100 ? "   Your React the Limit" : ""}</span>
+            {title.length}/100
+            <span>{title.length == 100 ? "   You Reach the Limit" : ""}</span>
           </h2>
           <textarea
-            onChange={(e) => setTitleLength(e.target.value.length)}
+            onChange={(e) => setTitle(e.target.value)}
             placeholder="Write your Title..."
             rows={3}
             maxLength={100}
@@ -73,14 +117,18 @@ export const PostCreationPage = () => {
             <span>Create with AI</span> <Icons.MagicStick color={iconsColor} />
           </button>
 
-          <button className="px-3 py-3 flex gap-2 justify-center mt-10 items-center bg-red-500 rounded">
+          <button
+            ref={submitBtnRef}
+            onClick={handleSubmit}
+            className="px-3 py-3 flex gap-2 justify-center mt-10 items-center bg-red-500 rounded"
+          >
             <span className="text-(--text-primary) font-bold">
               {" "}
               Upload Post
             </span>
             <Icons.upload color={iconsColor} />
           </button>
-        </form>
+        </div>
       </div>
     </div>
   );

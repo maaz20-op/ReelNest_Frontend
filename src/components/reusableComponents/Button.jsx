@@ -22,8 +22,14 @@ export const Button = ({
   disable = false,
   width = "w-fit",
   font,
+  skeleton = false,
   fnc = function () {},
 }) => {
+  if (skeleton) {
+    return (
+      <div className="h-8 w-23 bg-(--bg-secondary) animate-pulse rounded-2xl"></div>
+    );
+  }
   return (
     <button
       className={`${background} ${border} ${textSizes[textSize]} ${width} ${otherStyles}  ${font} ${paddings[padding]}  text-(--text-primary) `}

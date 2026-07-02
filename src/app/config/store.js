@@ -1,12 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { postApi } from "../../features/posts/api/postApi";
-import { authMeApi } from "../../features/auth/api/authMe";
+import { apiSlice } from "../../services/baseApi";
 
 export const store = configureStore({
   reducer: {
-    [postApi.reducerPath]: postApi.reducer,
-    [authMeApi.reducerPath]: authMeApi.reducer,
+    [apiSlice.reducerPath]: apiSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(postApi.middleware, authMeApi.middleware),
+    getDefaultMiddleware().concat(apiSlice.middleware),
 });

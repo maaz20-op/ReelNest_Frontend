@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useGetAuthMeQuery } from "../api/authMe";
+import { useGetAuthMeQuery } from "../../../services/auth/auth";
 
 export const useAuth = () => {
   const navigate = useNavigate();

@@ -1,10 +1,12 @@
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import React from "react";
+import { ScrollableFeed } from "../features/feed/pages/scrollableFeed";
 const LoginPage = React.lazy(() =>
   import("../features/auth/pages/Login").then((module) => ({
     default: module.LoginPage,
   })),
 );
+
 const SignupPage = React.lazy(() =>
   import("../features/auth/pages/Signup").then((module) => ({
     default: module.SignupPage,
@@ -12,7 +14,7 @@ const SignupPage = React.lazy(() =>
 );
 
 const FeedPage = React.lazy(() =>
-  import("../features/feed/pages/Feed").then((module) => ({
+  import("../features/feed/pages/homeFeed").then((module) => ({
     default: module.FeedPage,
   })),
 );
@@ -30,8 +32,8 @@ const AccountSettings = React.lazy(() =>
 );
 
 const Message_Users_Page = React.lazy(() =>
-  import("../features/message/pages/Message_Users_Page").then((module) => ({
-    default: module.Message_Users_Page,
+  import("../features/message/pages/MessageUsersPage").then((module) => ({
+    default: module.MessageUsersPage,
   })),
 );
 
@@ -69,6 +71,7 @@ export const AppRouting = () => {
 
         {/* App Routes */}
         <Route path="/" element={<FeedPage />} />
+
         <Route path="/profile" element={<Profile />} />
         <Route path="/settings" element={<AccountSettings />} />
         <Route path="/message" element={<Message_Users_Page />}></Route>
@@ -76,6 +79,7 @@ export const AppRouting = () => {
         <Route path="/upgrade" element={<Upgrade />} />
         <Route path="/create/post" element={<PostCreationPage />} />
         <Route path="/profile/collection" element={<SavedPost />} />
+        <Route path="/feed" element={<ScrollableFeed />} />
       </Routes>
     </>
   );

@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Icons } from "../../../assets/icons";
-import { Button } from "../../../components/reusable/Button";
+import { Button } from "../../../components/reusableComponents/Button";
 
 export const SignupPage = () => {
   const navigate = useNavigate();
