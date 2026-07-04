@@ -9,13 +9,14 @@ import { showScrollBarOnHover } from "../../../utils/showSideBarOnHover";
 import { Avatar } from "../../../components/Avatar";
 import { FriendsList } from "../../../components/desktop/leftFriendsPanel/compoenents/friendsList";
 import { FriendsListSkeleton } from "../../../skeleton/leftDesktopPanel";
+import { useCommentsContext } from "../../comments/hooks/useIsCommentsOpen";
 
 export const FeedPage = () => {
   const { iconsColor, isDark } = contextThemeSetup();
 
   const [isPostsEnd, setEndOfPosts] = useState(false);
 
-  const [isCommentsOpen, setCommentsOpen] = useState(false);
+  const { isCommentsOpen } = useCommentsContext();
   const [translateCommentsX, setTranslateCommentsX] = useState(0);
   const [commentsContainerWidth, setCommentsContainerWidth] = useState(0);
 
@@ -66,10 +67,8 @@ export const FeedPage = () => {
           isBottomOfContainer={isBottomOfContainer}
           iconsColor={iconsColor}
           setBtmContainer={setBtmContainer}
-          setCommentsOpen={setCommentsOpen}
           isPostsEnd={isPostsEnd}
           setEndOfPosts={setEndOfPosts}
-          isCommentsOpen={isCommentsOpen}
         />
         {!isPostsEnd && isBottomOfContainer && (
           <div className="flex items-center justify-center space-x-2">
@@ -82,14 +81,7 @@ export const FeedPage = () => {
 
       {isCommentsOpen && (
         <div className="comments-box h-full flex justify-end p-2">
-          <Comments
-            isCommentsOpen={isCommentsOpen}
-            setCommentsOpen={setCommentsOpen}
-            iconsColor={iconsColor}
-            translateCommentsX={translateCommentsX}
-            commentsContainerWidth={commentsContainerWidth}
-            isDark={isDark}
-          />
+          <Comments />
         </div>
       )}
 

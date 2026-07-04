@@ -17,14 +17,12 @@ export const LeftFriendsPanelDesktop = () => {
   const isHoverd = showScrollBarOnHover(elementRef);
   const [loading, setLoading] = useState(false);
   const { data, isLoading, error } = useGetFollowersQuery();
-  console.log(selectedSection);
+
   const setList = {
     Friends: data?.data[2],
     Following: data?.data[1],
     Followers: data?.data[0],
   };
-
-  console.log(data?.data[2]);
 
   const handleClick = (indx, sec) => {
     setSection(sec);

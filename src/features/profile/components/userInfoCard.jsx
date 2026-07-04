@@ -18,6 +18,7 @@ export const UserInfoCard = ({
 
   console.log(obj);
   const isFollow = obj?.isFollow;
+
   return (
     <div className="profile-Card rounded   md:flex md:flex-row-reverse md:justify-end h-6/7 md:h-40 px-6 py-4 w-14/15 md:w-9/10  mx-auto mt-4 bg-(--bg-secondary)">
       {isLoggedInUser && (

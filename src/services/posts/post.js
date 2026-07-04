@@ -26,9 +26,10 @@ export const postApi = apiSlice.injectEndpoints({
         url: `/posts/like/${postId}`,
         method: "PATCH",
       }),
-
-      async onQueryStarted({ postId, userId }, { dispatch, queryFulfilled }) {
-        console.log("query statee");
+      async onQueryStarted(
+        { postId, userId, loggedInUser },
+        { dispatch, queryFulfilled },
+      ) {
         const patch = dispatch(
           apiSlice.util.updateQueryData(
             "getPostsByuserId",
@@ -38,10 +39,10 @@ export const postApi = apiSlice.injectEndpoints({
               const post = draft?.data[0].find(
                 (p) => String(p._id) === String(postId),
               );
-              if (post && !post.likes.includes(userId)) {
+              if (post && !post.likes.includes(loggedInUser)) {
                 console.log("liked push");
 
-                post.likes.push(userId);
+                post.likes.push(loggedInUser);
               } else {
                 console.log("already liked");
               }

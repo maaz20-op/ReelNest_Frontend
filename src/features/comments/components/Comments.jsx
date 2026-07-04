@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Icons } from "../../../assets/icons";
 import { Button } from "../../../components/reusableComponents/Button";
 import {
@@ -7,12 +7,10 @@ import {
 } from "../../../skeleton/comments/commentsBoxSkeleton";
 import { Avatar } from "../../../components/Avatar";
 import { useAuth } from "../../auth/hooks/useAuth";
+import { useCommentsContext } from "../hooks/useIsCommentsOpen";
+import { contextThemeSetup } from "../../../utils/contextSetup";
 
 export const Comments = ({
-  isCommentsOpen,
-  setCommentsOpen,
-  iconsColor,
-  isDark,
   comments,
   loading,
   createrInfo,
@@ -20,13 +18,16 @@ export const Comments = ({
   isFollow,
 }) => {
   const { user } = useAuth();
+  const { isCommentsOpen, setIsCommentsOpen } = useCommentsContext();
+  const { isDark, iconsColor } = contextThemeSetup();
+
   return (
     <>
       {/* Comments box  Desktop*/}
 
       {loading ? (
         <CommentBoxDesktopFeedSkeleton
-          setCommentsOpen={setCommentsOpen}
+          setCommentsOpen={setIsCommentsOpen}
           iconsColor={iconsColor}
           isDark={isDark}
         />
@@ -37,7 +38,7 @@ export const Comments = ({
           <div className="user-info w-full h-35 flex  bg-(--bg-secondary) p-2 rounded-xl">
             <div className="w-1/2  flex flex-col  gap-5">
               <div className="back-btn h-12  flex items-center">
-                <div onClick={() => setCommentsOpen(false)} className="p-3">
+                <div onClick={() => setIsCommentsOpen(false)} className="p-3">
                   <Icons.back className="h-5 w-5" color={iconsColor} />
                 </div>
                 <h1 className="text-red-600 lg:text-xs xl:text-base">
@@ -138,7 +139,7 @@ export const Comments = ({
       {loading ? (
         <MobileCommentBoxSkeleton
           isCommentsOpen={isCommentsOpen}
-          setCommentsOpen={setCommentsOpen}
+          setCommentsOpen={setIsCommentsOpen}
           iconsColor={iconsColor}
           isDark={isDark}
         />

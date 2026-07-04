@@ -23,17 +23,16 @@ export const Profile = () => {
   const [isLoggedInUser, setLoggedInUser] = useState(true);
   const location = useLocation();
   const obj = location.state;
-
+  console.log(obj);
   const [profileImgSrc, setImgSrc] = useState("");
   const [loading, setLoading] = useState(true);
 
+  const userId = obj?.userId ? obj?.userId : user?._id;
+
   // get Profile User
-  const { data, isLoading, error } = useGetUserByIdQuery(
-    obj?.userId || user?._id,
-    {
-      skip: !user?._id,
-    },
-  );
+  const { data, isLoading, error } = useGetUserByIdQuery(userId, {
+    skip: !userId,
+  });
 
   // get profile User Videos
   const { data: userPosts, isLoading: isUserPostsLoading } =
@@ -42,10 +41,8 @@ export const Profile = () => {
     });
 
   useEffect(() => {
-    if (data?.data[0]?._id.toString() !== user?._id.toString())
-      setLoggedInUser(false);
-    else if (data?.data[0]?._id.toString() === user?._id.toString())
-      setLoggedInUser(true);
+    if (data?.data[0]?._id !== user?._id) setLoggedInUser(false);
+    else if (data?.data[0]?._id === user?._id) setLoggedInUser(true);
   }, [data?.data[0]]);
 
   const handleChange = (e) => {

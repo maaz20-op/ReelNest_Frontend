@@ -3,17 +3,17 @@ import { Avatar } from "../../../components/Avatar";
 import { Icons } from "../../../assets/icons";
 import { debounce } from "../../../utils/debounce";
 import { useFollowUserMutation } from "../../../services/users/user";
+import { contextThemeSetup } from "../../../utils/contextSetup";
+import { useAuth } from "../../auth/hooks/useAuth";
+import { useCommentsContext } from "../../comments/hooks/useIsCommentsOpen";
 
-export const PostCard = ({
-  post,
-  user,
-  iconsColor,
-  setCommentsOpen,
-  isCommentsOpen,
-}) => {
+export const PostCard = ({ post }) => {
   const { _id, mediaUrl, postdata, userData, likesUsersData } = post;
+  const { isCommentsOpen, setIsCommentsOpen } = useCommentsContext();
 
+  const { iconsColor } = contextThemeSetup();
   const [isFollow, setFollow] = useState(false);
+  const { user } = useAuth();
   const [isLiked, setLike] = useState(false);
   const [followUser, { isLoading, data }] = useFollowUserMutation();
 
@@ -78,7 +78,7 @@ export const PostCard = ({
             size={23}
           />
           <Icons.comments
-            onClick={() => setCommentsOpen((prev) => !prev)}
+            onClick={() => setIsCommentsOpen((prev) => !prev)}
             color={isCommentsOpen ? "red" : iconsColor}
             size={23}
           />

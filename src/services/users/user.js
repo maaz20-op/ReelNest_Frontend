@@ -4,7 +4,6 @@ export const userApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getFollowers: builder.query({
       query: () => "/users/followers",
-      providesTags: ["Following"],
     }),
 
     getUserById: builder.query({
@@ -22,8 +21,15 @@ export const userApi = apiSlice.injectEndpoints({
         body: {
           id: followedUserId,
         },
-        invalidatesTags: ["Following"],
       }),
+
+      async onQueryStarted(followedUserId, { dispatch, queryFulfilled }) {
+        const patch = dispatch(
+          apiSlice.util.updateQueryData("getFollowers", undefined, (draft) => {
+            console.log(current(draft));
+          }),
+        );
+      },
     }),
   }),
 });

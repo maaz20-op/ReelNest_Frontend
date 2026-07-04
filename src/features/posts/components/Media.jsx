@@ -6,7 +6,6 @@ import { debounce } from "../../../utils/debounce";
 import { PostCard } from "./PostCard";
 
 export const Media = ({
-  iconsColor,
   setCommentsOpen,
   isCommentsOpen,
   setBtmContainer,
@@ -15,7 +14,7 @@ export const Media = ({
 }) => {
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(1);
-  const { user } = useAuth();
+
   const [fetchPosts, { data, isLoading, error, isFetching }] =
     useLazyGetPostsQuery();
 
@@ -55,16 +54,7 @@ export const Media = ({
   return (
     <div className="posts-container">
       {Array.isArray(posts) &&
-        posts.map((post) => (
-          <PostCard
-            key={post._id}
-            post={post}
-            user={user}
-            iconsColor={iconsColor}
-            setCommentsOpen={setCommentsOpen}
-            isCommentsOpen={isCommentsOpen}
-          />
-        ))}
+        posts.map((post) => <PostCard key={post._id} post={post} />)}
     </div>
   );
 };

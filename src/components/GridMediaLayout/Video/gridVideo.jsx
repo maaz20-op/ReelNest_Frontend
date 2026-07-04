@@ -13,19 +13,20 @@ export const GridVideoLayout = ({ user, posts }) => {
   const [postId, setPostId] = useState("");
   const [currentPost, setCurrentPost] = useState({});
 
-  console.log("posts", posts);
+  console.log("posts", posts, user?._id);
   const videoRef = useRef(null);
   const [isFullScreen, setFullScreen] = useState(false);
 
   const navigate = useNavigate();
   console.log(user, "30955949549549549");
   const handleClick = (likes, postdata, _id, mediaUrl, comments) => {
-    console.log("mediAURL", user?.followers?.length);
+    console.log(likes);
+    console.log("mediAURL");
     setPostId(_id);
     navigate("/feed", {
       state: {
         _id: _id,
-        likes: likes?.length,
+        likes: likes,
         userId: user?._id,
         comments: comments?.length,
         nextPosts: posts,

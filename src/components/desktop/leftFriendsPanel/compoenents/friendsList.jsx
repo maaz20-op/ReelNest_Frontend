@@ -36,7 +36,6 @@ export const FriendsList = ({
     }
   }, [followersList]);
 
-  console.log(noFollowers);
   return (
     <div
       ref={elementRef}
@@ -50,6 +49,7 @@ export const FriendsList = ({
               navigate("/profile", {
                 state: {
                   userId: data?.data?._id || data?._id,
+                  name: data?.fullname || data?.data?.fullname,
                 },
               })
             }
