@@ -45,14 +45,14 @@ export const FriendsList = ({
         followersList.map((data, indx) => (
           <div
             key={indx}
-            onClick={() =>
+            onClick={() => {
               navigate("/profile", {
                 state: {
                   userId: data?.data?._id || data?._id,
-                  name: data?.fullname || data?.data?.fullname,
+                  name: data?.data?.fullname || data?.fullname,
                 },
-              })
-            }
+              });
+            }}
             className="friend-div flex items-center justify-center lg:gap-1 xl:gap-2 px-2 py-3 rounded"
           >
             <Avatar

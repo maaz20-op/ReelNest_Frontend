@@ -28,7 +28,7 @@ export const GridVideoLayout = ({ user, posts }) => {
         _id: _id,
         likes: likes,
         userId: user?._id,
-        comments: comments?.length,
+        comments: comments,
         nextPosts: posts,
         videoSrc:
           mediaUrl ||

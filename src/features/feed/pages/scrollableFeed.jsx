@@ -6,14 +6,13 @@ import { Icons } from "../../../assets/icons";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Comments } from "../../comments/components/Comments";
 import { contextThemeSetup } from "../../../utils/contextSetup";
-import { useGetPostsCommentsQuery } from "../../../services/comments/comment";
+
 import { useAuth } from "../../../features/auth/hooks/useAuth";
 import { debounce } from "../../../utils/debounce";
 import { checkIsFollowed } from "../../../utils/checkisFollowed";
 import { useCommentsContext } from "../../comments/hooks/useIsCommentsOpen";
 import { Video } from "../components/scrollFeed/video";
 import { ScrollUpDown } from "../components/scrollFeed/ScrollUpDown";
-import { VideoActions } from "../components/scrollFeed/Actions";
 
 export const ScrollableFeed = () => {
   const { user } = useAuth();
@@ -29,14 +28,9 @@ export const ScrollableFeed = () => {
   const { isCommentsOpen, setIsCommentsOpen } = useCommentsContext();
   const data = location?.state;
   const userId = data?.userId;
+  const postId = nextPost ? nextPost?._id : data?._id;
 
   const { isFollow } = checkIsFollowed(userId);
-  const { data: commentData, isLoading } = useGetPostsCommentsQuery(
-    nextPost ? nextPost?._id : data?._id,
-    {
-      skip: !data?._id || !isCommentsOpen,
-    },
-  );
 
   useEffect(() => {
     return () => setIsCommentsOpen(false);
@@ -47,11 +41,27 @@ export const ScrollableFeed = () => {
       setCount(0);
     }
     setCount((prev) => prev + 1);
-
+    console.log(count, data?.nextPosts[count]);
     setPost(data?.nextPosts[count]);
   };
 
-  const handleGoUp = () => {};
+  const handleGoUp = () => {
+    if (count < 0) {
+      console.log("setting arr");
+      setCount(Number(data?.nextPosts?.length - 1));
+      setPost(data?.nextPosts[count]);
+      return;
+    }
+
+    if (count >= data?.nextPost?.length) {
+      setCount(0);
+    }
+
+    setCount((prev) => prev - 1);
+
+    console.log(count, data?.nextPosts[count]);
+    setPost(data?.nextPosts[count]);
+  };
 
   return (
     <div className="h-full w-full overflow-hidden flex justify-center relative bg-(--bg-secondary)">
@@ -65,10 +75,9 @@ export const ScrollableFeed = () => {
       {/* Toggle comments and scroll up-down buttons */}
       {isCommentsOpen ? (
         <Comments
-          loading={isLoading}
           title={data?.title}
           isFollow={isFollow}
-          comments={commentData?.data[0]?.comments}
+          postId={postId}
           createrInfo={{
             avatar: data?.avatar,
             fullname: data?.fullname,

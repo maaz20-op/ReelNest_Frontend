@@ -10,6 +10,7 @@ export const Avatar = ({
   src,
   fn,
   skeleton,
+  styles,
   bg = "bg-(--bg-secondary)",
 }) => {
   return (
@@ -18,7 +19,9 @@ export const Avatar = ({
       className={`"profile-img rounded-full flex shrink-0  ${avatarsSize[size] && size ? avatarsSize[size] : avatarsSize["sm"]}`}
     >
       {skeleton ? (
-        <div className={`h-full w-full rounded-full ${bg}  animate-pulse`} />
+        <div
+          className={`h-full w-full rounded-full ${bg} ${styles}  animate-pulse`}
+        />
       ) : (
         <img
           className="h-full object-cover w-full rounded-full"

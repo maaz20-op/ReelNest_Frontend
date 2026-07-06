@@ -16,7 +16,6 @@ export const UserInfoCard = ({
   const obj = checkIsFollowed(user?._id);
   const navigate = useNavigate();
 
-  console.log(obj);
   const isFollow = obj?.isFollow;
 
   return (

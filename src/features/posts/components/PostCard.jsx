@@ -6,22 +6,36 @@ import { useFollowUserMutation } from "../../../services/users/user";
 import { contextThemeSetup } from "../../../utils/contextSetup";
 import { useAuth } from "../../auth/hooks/useAuth";
 import { useCommentsContext } from "../../comments/hooks/useIsCommentsOpen";
+import { useLike } from "../../../hooks/useLike";
 
 export const PostCard = ({ post }) => {
-  const { _id, mediaUrl, postdata, userData, likesUsersData } = post;
+  const { _id, mediaUrl, postdata, userData, likesUsersData, likes } = post;
+  const { user } = useAuth();
   const { isCommentsOpen, setIsCommentsOpen } = useCommentsContext();
-
+  const isLiked = likes.includes(user?._id);
   const { iconsColor } = contextThemeSetup();
   const [isFollow, setFollow] = useState(false);
-  const { user } = useAuth();
-  const [isLiked, setLike] = useState(false);
+
   const [followUser, { isLoading, data }] = useFollowUserMutation();
+
+  const likesData = useLike({
+    likesArray: likes,
+    currentPost: post,
+    postCreaterId: userData?._id,
+  });
+  const handleLikeClick = likesData?.handleLikeClick;
+  const localHasLiked = likesData?.localHasLiked;
+  const localLikesCount = likesData?.localLikesCount;
 
   const debouncedFollow = useMemo(() => {
     return debounce(() => {
-      console.log("code runned after 5 sec");
-      followUser(userData?._id); // send backend request after updating Ui
-    }, 5000);
+      followUser({
+        _id: userData?._id,
+        fullname: userData?.fullname,
+        username: userData?.username,
+        profileImage: userData?.profileImage,
+      }); // send backend request after updating Ui
+    }, 1000);
   }, []);
 
   const handleFollowClick = () => {
@@ -73,8 +87,8 @@ export const PostCard = ({ post }) => {
       <div className="action-icons px-2 mt-2 flex justify-between">
         <div className="flex gap-8">
           <Icons.heart
-            onClick={() => setLike((prev) => !prev)} // Toggle like state
-            color={isLiked ? "#E41A7F" : iconsColor}
+            onClick={handleLikeClick} // Toggle like state
+            color={localHasLiked ? "#E41A7F" : iconsColor}
             size={23}
           />
           <Icons.comments
@@ -90,15 +104,23 @@ export const PostCard = ({ post }) => {
       {/* Likes and video title */}
       <div className="mt-4 text-sm">
         {likesUsersData?.length > 0 && Array.isArray(likesUsersData) ? (
-          <div className="text-(--text-secondary) ">
+          <div className="text-(--text-secondary) flex items-center gap-2">
+            <div className="relative h-12 w-10 ">
+              <span className="absolute top-0 right-4">
+                <Avatar size="sm" src={likesUsersData?.[0]?.profileImage} />
+              </span>
+              <span className="absolute top-0">
+                <Avatar size="sm" src={likesUsersData?.[1]?.profileImage} />
+              </span>
+            </div>{" "}
             Liked by{" "}
             <span className="text-(--text-primary)">
               {likesUsersData?.[0]?.name?.split(" ")[0]},{" "}
               {likesUsersData?.[1]?.name?.split(" ")[0]}
-            </span>{" "}
+            </span>
             {likesUsersData.length > 2 && (
               <span className="text-(--text-primary)">
-                {Math.abs(likesUsersData.length - 2)} and others
+                and others {Math.abs(likesUsersData.length - 2)}
               </span>
             )}
           </div>
@@ -107,7 +129,9 @@ export const PostCard = ({ post }) => {
         )}
         <div className="flex gap-1 flex-col sm:flex-row text-(--text-primary) ">
           <p>{userData?.username || "user"}_posted: </p>
-          <p className="text-(--text-secondary) ">{postdata}</p>
+          <p className="text-(--text-secondary) ">
+            {postdata || "Reelnest Video"}
+          </p>
         </div>
       </div>
     </div>

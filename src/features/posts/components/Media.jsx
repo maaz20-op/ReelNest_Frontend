@@ -1,8 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useLazyGetPostsQuery } from "../../../services/posts/post";
 import { PostCardSkeleton } from "../../../skeleton/homeFeed/postCard";
-import { useAuth } from "../../auth/hooks/useAuth";
-import { debounce } from "../../../utils/debounce";
 import { PostCard } from "./PostCard";
 
 export const Media = ({
@@ -23,21 +21,29 @@ export const Media = ({
 
   // calling api
   useEffect(() => {
-    if (page > 1 && !hasNextPage) return;
+    if (page > 1 && !hasNextPage) return setBtmContainer(false);
     fetchPosts({ page: page });
+    setBtmContainer(true);
   }, [page]);
 
   // settings data
   useEffect(() => {
-    if (data?.data) {
-      if (page === 1) return setPosts(postsRawData);
-
-      setPosts((prev) => [...prev, ...postsRawData]);
+    if (postsRawData && Array.isArray(postsRawData)) {
+      if (page === 1) {
+        setPosts(postsRawData);
+      } else {
+        setPosts((prev) => {
+          const existingIds = new Set(prev.map((p) => p._id));
+          const newUniquePosts = postsRawData.filter(
+            (p) => !existingIds.has(p._id),
+          );
+          return [...prev, ...newUniquePosts];
+        });
+      }
       setBtmContainer(false);
     }
   }, [data]);
 
-  // updating page
   useEffect(() => {
     if (!isBottomOfContainer) return;
     if (isFetching) return;

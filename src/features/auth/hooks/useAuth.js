@@ -13,6 +13,5 @@ export const useAuth = () => {
     return { user: null, isLoading, error };
   }
 
-  console.log("user", user);
   return { user, isLoading, error };
 };

@@ -7,28 +7,20 @@ import { useAuth } from "../features/auth/hooks/useAuth";
 export const useLike = ({ currentPost, postCreaterId, likesArray }) => {
   const { user } = useAuth();
   const userId = user?._id;
+
   const initialTotalLikes = likesArray.length;
   const initialHasUserLiked = likesArray.includes(userId);
+
   const postId = currentPost?._id;
   const [localHasLiked, setLocalHasLiked] = useState(initialHasUserLiked);
   const [localLikesCount, setLocalLikesCount] = useState(initialTotalLikes);
   const [likePost] = useLikePostMutation();
 
-  console.log("is user already liked ", localHasLiked, likesArray);
-
   // 2. Jab video ya post badle, to local state ko sync karein
-  useEffect(() => {
-    setLocalHasLiked(initialHasUserLiked);
-    setLocalLikesCount(initialTotalLikes);
-  }, [currentPost?._id]);
 
   const debouncedLikePost = useMemo(() => {
     return debounce(async (shouldLike) => {
       try {
-        console.log(
-          "api called forddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd like",
-          postCreaterId,
-        );
         await likePost({
           postId,
           userId: postCreaterId,
@@ -51,5 +43,7 @@ export const useLike = ({ currentPost, postCreaterId, likesArray }) => {
 
     debouncedLikePost(nextLikedState);
   };
+
+  console.log(localHasLiked, initialHasUserLiked);
   return { handleLikeClick, localLikesCount, localHasLiked };
 };

@@ -23,7 +23,7 @@ export const Profile = () => {
   const [isLoggedInUser, setLoggedInUser] = useState(true);
   const location = useLocation();
   const obj = location.state;
-  console.log(obj);
+
   const [profileImgSrc, setImgSrc] = useState("");
   const [loading, setLoading] = useState(true);
 

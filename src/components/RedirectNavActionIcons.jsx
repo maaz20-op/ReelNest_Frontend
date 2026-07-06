@@ -16,7 +16,7 @@ export const Nav_Actions = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="w-full h-15  bg-(--bg-primary)  flex   gap-4 px-2  justify-between items-center  lg:flex-col lg:h-full lg:border-l lg:py-30 lg:min-h-0 lg:border-(--border-color)  lg:justify-start">
+    <div className="w-full h-15  bg-(--bg-primary)   gap-4 px-2 flex justify-between items-center absolute  bottom-0 lg:flex-col lg:h-full lg:border-l lg:py-30 lg:min-h-0 lg:border-(--border-color)  lg:justify-start">
       {IconsContent.map(({ text, icon: Icon, redirect }, indx) => (
         <div
           onClick={() => navigate(redirect)}

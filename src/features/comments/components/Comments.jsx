@@ -9,17 +9,43 @@ import { Avatar } from "../../../components/Avatar";
 import { useAuth } from "../../auth/hooks/useAuth";
 import { useCommentsContext } from "../hooks/useIsCommentsOpen";
 import { contextThemeSetup } from "../../../utils/contextSetup";
+import {
+  useCreateCommentMutation,
+  useGetPostsCommentsQuery,
+} from "../../../services/comments/comment";
+import { fetchBaseQuery } from "@reduxjs/toolkit/query";
 
-export const Comments = ({
-  comments,
-  loading,
-  createrInfo,
-  title,
-  isFollow,
-}) => {
+export const Comments = ({ postId, createrInfo, title, isFollow }) => {
   const { user } = useAuth();
   const { isCommentsOpen, setIsCommentsOpen } = useCommentsContext();
   const { isDark, iconsColor } = contextThemeSetup();
+  const [comment, setComment] = useState("");
+  const [createComment] = useCreateCommentMutation();
+  const { data: commentData, isLoading: loading } = useGetPostsCommentsQuery(
+    postId,
+    {
+      skip: !postId || !isCommentsOpen,
+    },
+  );
+
+  const comments = commentData?.data[0]?.comments;
+
+  const handleCreateComment = async () => {
+    try {
+      await createComment({
+        text: comment,
+        postId: postId,
+        userId: {
+          fullname: user?.fullname,
+          username: user?.username,
+          profileImage: user?.profileImage,
+        },
+      });
+      console.log("comment created");
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <>
@@ -109,7 +135,7 @@ export const Comments = ({
           </div>
           <div className="comments-container account-settings relative overflow-y-auto mt-2 min-h-0 h-80 flex flex-col gap-2">
             {comments?.length > 0 ? (
-              comments.map(({ text, userId }, indx) => (
+              [...comments].reverse().map(({ text, userId }, indx) => (
                 <div
                   key={indx}
                   className="comment-div  flex items-center lg:gap-3  xl:gap-10  px-2 py-3 rounded"
@@ -131,6 +157,24 @@ export const Comments = ({
                 No Comments...
               </div>
             )}
+          </div>
+          <div className="h-15 w-full p-2 flex items-center">
+            <form className="flex items-center gap-8   w-full">
+              <Button content="Hide" background="bg-(--bg-secondary)" />
+              <input
+                className="outline-none p-2 text-(--text-primary) rounded-2xl w-2/3 border-2 border-(--border-color)"
+                type="text"
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                placeholder="Share your thoughts..."
+              />
+              <div
+                onClick={handleCreateComment}
+                className="flex justify-center items-center"
+              >
+                <Icons.send color={iconsColor} size={30} />
+              </div>
+            </form>
           </div>
         </div>
       )}
