@@ -1,13 +1,13 @@
 {
   "cleanUrls": true,
-  "rewrites": [
+  "trailingSlash": false,
+  "routes": [
     {
-      "source": "/",
-      "destination": "/src/app/index.html"
+      "handle": "filesystem"
     },
     {
-      "source": "/(.*)",
-      "destination": "/src/app/$1"
+      "src": "/(.*)",
+      "dest": "/index.html"
     }
   ]
 }
