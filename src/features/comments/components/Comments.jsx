@@ -199,7 +199,7 @@ export const Comments = ({ postId, createrInfo, title, isFollow }) => {
           <div className=" flex gap-3 items-center justify-between  border-b border-(--border-color) ">
             <div className="flex items-center gap-4">
               <Icons.back
-                onClick={() => setCommentsOpen(false)}
+                onClick={() => setIsCommentsOpen(false)}
                 color={iconsColor}
                 size={23}
               />
