@@ -55,7 +55,7 @@ export const Header = () => {
         </div>
       </nav>
       <BorderDiv />
-      <FriendSection />
+
       <BorderDiv />
     </header>
   );

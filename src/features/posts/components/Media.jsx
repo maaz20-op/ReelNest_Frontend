@@ -9,6 +9,7 @@ export const Media = ({
   setBtmContainer,
   isBottomOfContainer,
   setEndOfPosts,
+  setCurrentPostCommentsData,
 }) => {
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(1);
@@ -60,7 +61,13 @@ export const Media = ({
   return (
     <div className="posts-container">
       {Array.isArray(posts) &&
-        posts.map((post) => <PostCard key={post._id} post={post} />)}
+        posts.map((post) => (
+          <PostCard
+            key={post._id}
+            setCurrentPostCommentsData={setCurrentPostCommentsData}
+            post={post}
+          />
+        ))}
     </div>
   );
 };

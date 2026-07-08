@@ -10,15 +10,15 @@ import { Avatar } from "../../../components/Avatar";
 import { FriendsList } from "../../../components/desktop/leftFriendsPanel/compoenents/friendsList";
 import { FriendsListSkeleton } from "../../../skeleton/leftDesktopPanel";
 import { useCommentsContext } from "../../comments/hooks/useIsCommentsOpen";
+import { FriendSection } from "../../../components/mobile/FriendsHeaderSection";
 
 export const FeedPage = () => {
   const { iconsColor, isDark } = contextThemeSetup();
-
+  const [commentsData, setCurrentPostCommentsData] = useState(null);
+  console.log(commentsData);
   const [isPostsEnd, setEndOfPosts] = useState(false);
 
-  const { isCommentsOpen } = useCommentsContext();
-  const [translateCommentsX, setTranslateCommentsX] = useState(0);
-  const [commentsContainerWidth, setCommentsContainerWidth] = useState(0);
+  const { isCommentsOpen, setIsCommentsOpen } = useCommentsContext();
 
   // For scroll Loader
   const [isBottomOfContainer, setBtmContainer] = useState(false);
@@ -42,17 +42,7 @@ export const FeedPage = () => {
   };
 
   useEffect(() => {
-    const updateTranslateWidth = () => {
-      const rect = postContainerRef?.current?.getBoundingClientRect();
-      if (rect) {
-        setTranslateCommentsX(rect.left);
-        setCommentsContainerWidth(rect.width);
-      }
-    };
-    updateTranslateWidth();
-    window.addEventListener("resize", updateTranslateWidth);
-
-    return () => window.removeEventListener("resize", updateTranslateWidth);
+    return () => setIsCommentsOpen(false);
   }, []);
 
   return (
@@ -62,6 +52,7 @@ export const FeedPage = () => {
         ref={postContainerRef}
         className={`${isCommentsOpen ? "overflow-hidden" : "overflow-y-auto "} min-h-0    account-settings`}
       >
+        <FriendSection />
         {/* Media */}
         <Media
           isBottomOfContainer={isBottomOfContainer}
@@ -69,6 +60,7 @@ export const FeedPage = () => {
           setBtmContainer={setBtmContainer}
           isPostsEnd={isPostsEnd}
           setEndOfPosts={setEndOfPosts}
+          setCurrentPostCommentsData={setCurrentPostCommentsData}
         />
         {!isPostsEnd && isBottomOfContainer && (
           <div className="flex items-center justify-center space-x-2">
@@ -81,7 +73,11 @@ export const FeedPage = () => {
 
       {isCommentsOpen && (
         <div className="comments-box h-full flex justify-end p-2">
-          <Comments />
+          <Comments
+            postId={commentsData?.postId}
+            createrInfo={commentsData?.createrInfo}
+            title={commentsData?.title}
+          />
         </div>
       )}
 

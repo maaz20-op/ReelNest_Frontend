@@ -14,11 +14,13 @@ import {
   useGetPostsCommentsQuery,
 } from "../../../services/comments/comment";
 import { fetchBaseQuery } from "@reduxjs/toolkit/query";
+import { checkIsFollowed } from "../../../utils/checkisFollowed";
 
-export const Comments = ({ postId, createrInfo, title, isFollow }) => {
+export const Comments = ({ postId, createrInfo, title }) => {
   const { user } = useAuth();
   const { isCommentsOpen, setIsCommentsOpen } = useCommentsContext();
   const { isDark, iconsColor } = contextThemeSetup();
+  const isFollow = checkIsFollowed(createrInfo?._id);
   const [comment, setComment] = useState("");
   const [createComment] = useCreateCommentMutation();
   const { data: commentData, isLoading: loading } = useGetPostsCommentsQuery(
@@ -87,7 +89,7 @@ export const Comments = ({ postId, createrInfo, title, isFollow }) => {
               <h1 className="text-(--text-secondary)">
                 Followers{" "}
                 <span className="text-(--text-primary)">
-                  {createrInfo?.followers}
+                  {createrInfo?.followers.length || createrInfo.followers}
                 </span>
               </h1>
               <Button
@@ -220,7 +222,7 @@ export const Comments = ({ postId, createrInfo, title, isFollow }) => {
             </div>
           </div>
 
-          <div className="comments-container account-settings  overflow-y-auto   max-h-[70%]  flex flex-col gap-2">
+          <div className="comments-container account-settings  overflow-y-auto   h-[80%]  flex flex-col gap-2">
             {Array.isArray(comments) &&
               comments.map(({ text, userId }, indx) => (
                 <div
@@ -243,9 +245,15 @@ export const Comments = ({ postId, createrInfo, title, isFollow }) => {
               <input
                 className="outline-none p-2 text-(--text-primary) rounded-2xl w-2/3 border-2 border-(--border-color)"
                 type="text"
+                vlaue={comment}
+                onChange={(e) => e.target.value}
                 placeholder="Share your thoughts..."
               />
-              <Icons.send color={iconsColor} size={30} />
+              <Icons.send
+                onClick={handleCreateComment}
+                color={iconsColor}
+                size={30}
+              />
             </form>
           </div>
         </div>

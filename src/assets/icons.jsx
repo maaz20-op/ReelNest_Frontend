@@ -1,4 +1,4 @@
-import { Search } from "lucide-react";
+import { Search, PlusIcon } from "lucide-react";
 import { GoVideo } from "react-icons/go";
 import { CgProfile } from "react-icons/cg";
 import { MdOutlineMessage } from "react-icons/md";
@@ -34,6 +34,7 @@ export const Icons = {
   search: Search,
   share: IoIosShareAlt,
   HomeIcon: GoVideo,
+  plus: PlusIcon,
   profile: CgProfile,
   loop: ImLoop,
   arrowUp: FaArrowUp,

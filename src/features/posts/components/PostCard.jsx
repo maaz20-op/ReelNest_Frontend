@@ -1,15 +1,16 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Avatar } from "../../../components/Avatar";
 import { Icons } from "../../../assets/icons";
 import { debounce } from "../../../utils/debounce";
-import { useFollowUserMutation } from "../../../services/users/user";
+import { useFollowUserMutation, userApi } from "../../../services/users/user";
 import { contextThemeSetup } from "../../../utils/contextSetup";
 import { useAuth } from "../../auth/hooks/useAuth";
 import { useCommentsContext } from "../../comments/hooks/useIsCommentsOpen";
 import { useLike } from "../../../hooks/useLike";
 
-export const PostCard = ({ post }) => {
+export const PostCard = ({ post, setCurrentPostCommentsData }) => {
   const { _id, mediaUrl, postdata, userData, likesUsersData, likes } = post;
+
   const { user } = useAuth();
   const { isCommentsOpen, setIsCommentsOpen } = useCommentsContext();
   const isLiked = likes.includes(user?._id);
@@ -92,7 +93,14 @@ export const PostCard = ({ post }) => {
             size={23}
           />
           <Icons.comments
-            onClick={() => setIsCommentsOpen((prev) => !prev)}
+            onClick={() => {
+              setCurrentPostCommentsData({
+                postId: _id,
+                createrInfo: userData,
+                title: postdata,
+              });
+              setIsCommentsOpen((prev) => !prev);
+            }}
             color={isCommentsOpen ? "red" : iconsColor}
             size={23}
           />
