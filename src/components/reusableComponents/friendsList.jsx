@@ -18,6 +18,12 @@ const msgs = {
   },
 };
 
+const btnContent = {
+  Friends: "Message",
+  Following: "View Profile",
+  Followers: "Follow Back",
+};
+
 export const FriendsList = ({
   elementRef,
   isHoverd,
@@ -70,11 +76,12 @@ export const FriendsList = ({
 
             <Button
               background="bg-tranparent"
-              content="Message"
-              font="font-medium"
+              content={btnContent[selectedSection]}
+              font="font-light"
               textSize="sm"
+              width="w-30"
               border="rounded-2xl"
-              otherStyles={`${isDark ? "hover:bg-red-500" : "hover:bg-red-300"} hover:scale-[1.04] duration-300 border border-(--border-color)`}
+              otherStyles={`${isDark ? "hover:bg-red-500" : "hover:bg-red-300"} w-40 text-xs hover:scale-[1.04] duration-300 border border-(--border-color)`}
             />
           </div>
         ))

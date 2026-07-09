@@ -7,11 +7,14 @@ import { contextThemeSetup } from "../../../utils/contextSetup";
 import { useAuth } from "../../auth/hooks/useAuth";
 import { useCommentsContext } from "../../comments/hooks/useIsCommentsOpen";
 import { useLike } from "../../../hooks/useLike";
+import { useNavigate } from "react-router-dom";
+import { handleRedirectToUserProfile } from "../../../utils/handleRedirectToUserProfile";
 
 export const PostCard = ({ post, setCurrentPostCommentsData }) => {
   const { _id, mediaUrl, postdata, userData, likesUsersData, likes } = post;
 
   const { user } = useAuth();
+  const navigate = useNavigate();
   const { isCommentsOpen, setIsCommentsOpen } = useCommentsContext();
   const isLiked = likes.includes(user?._id);
   const { iconsColor } = contextThemeSetup();
@@ -44,10 +47,19 @@ export const PostCard = ({ post, setCurrentPostCommentsData }) => {
     debouncedFollow();
   };
 
+  const handleRedirectToCreaterProfile = handleRedirectToUserProfile(
+    userData?._id,
+    userData?.fullname,
+    navigate,
+  );
+
   return (
     <div className="video-image-card py-6 flex flex-col gap-2 w-full px-2">
       {/* Profile image - username */}
-      <div className="profile-info items-center p-4 flex justify-between gap-2 ">
+      <div
+        onClick={handleRedirectToCreaterProfile}
+        className="profile-info items-center p-4 flex justify-between gap-2 "
+      >
         <div className="flex gap-4">
           <Avatar size="md" src={userData?.profileImage} />
           <div className="user-name flex flex-col leading-4 justify-center">

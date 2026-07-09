@@ -5,16 +5,19 @@ import { AppRouting } from "../../routes/AppRoutes";
 import { Provider } from "react-redux";
 import { store } from "../config/store";
 import { CommentsProvider } from "../../features/comments/hooks/useIsCommentsOpen";
+import { ConnectionProvider } from "../../contexts/useConnections";
 
 //All App providers
 export const AppProviders = ({ children }) => {
   return (
-    <ThemeProvider>
-      <CommentsProvider>
-        <Provider store={store}>
-          <BrowserRouter>{children}</BrowserRouter>
-        </Provider>
-      </CommentsProvider>
-    </ThemeProvider>
+    <Provider store={store}>
+      <ThemeProvider>
+        <ConnectionProvider>
+          <CommentsProvider>
+            <BrowserRouter>{children}</BrowserRouter>
+          </CommentsProvider>
+        </ConnectionProvider>
+      </ThemeProvider>
+    </Provider>
   );
 };

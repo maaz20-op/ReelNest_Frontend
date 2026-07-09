@@ -92,6 +92,7 @@ export const UserInfoCard = ({
           padding="md"
           background={isDark ? "bg-pink-800" : "bg-pink-400"}
           border="rounded-2xl"
+          width="w-40"
           content={
             isLoggedInUser ? (
               "My Collection"

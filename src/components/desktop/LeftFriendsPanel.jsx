@@ -4,25 +4,16 @@ import { showScrollBarOnHover } from "../../utils/showSideBarOnHover";
 import { use } from "react";
 import { FriendsList } from "../reusableComponents/friendsList";
 import { FriendsListSkeleton } from "../../skeleton/leftDesktopPanel";
+import { useConnectionsData } from "../../hooks/userConnectionData";
 
-import { useGetFollowersQuery } from "../../services/users/user";
-
-const sectionKey = "maaz_key";
 export const LeftFriendsPanelDesktop = () => {
   const [activeIndx, setActive] = useState(0);
-
   const { isDark } = contextThemeSetup();
   const [selectedSection, setSection] = useState("Friends");
   const elementRef = useRef(null);
   const isHoverd = showScrollBarOnHover(elementRef);
-  const [loading, setLoading] = useState(false);
-  const { data, isLoading, error } = useGetFollowersQuery();
-
-  const setList = {
-    Friends: data?.data[2],
-    Following: data?.data[1],
-    Followers: data?.data[0],
-  };
+  const connectionData = useConnectionsData();
+  console.log(connectionData);
 
   const handleClick = (indx, sec) => {
     setSection(sec);
@@ -41,13 +32,13 @@ export const LeftFriendsPanelDesktop = () => {
           </h1>
         ))}
       </div>
-      {isLoading || error ? (
+      {connectionData?.isLoading || connectionData?.error ? (
         <FriendsListSkeleton isDark={isDark} />
       ) : (
         <FriendsList
           elementRef={elementRef}
           isDark={isDark}
-          followersList={setList[selectedSection]}
+          followersList={connectionData?.connectionList[selectedSection]}
           isHoverd={isHoverd}
           selectedSection={selectedSection}
         />

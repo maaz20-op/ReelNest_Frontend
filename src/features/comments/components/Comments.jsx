@@ -89,7 +89,7 @@ export const Comments = ({ postId, createrInfo, title }) => {
               <h1 className="text-(--text-secondary)">
                 Followers{" "}
                 <span className="text-(--text-primary)">
-                  {createrInfo?.followers.length || createrInfo.followers}
+                  {createrInfo?.followers.length || createrInfo?.followers}
                 </span>
               </h1>
               <Button
