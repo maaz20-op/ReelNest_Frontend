@@ -66,7 +66,12 @@ export const ScrollableFeed = () => {
   return (
     <div className="h-full w-full overflow-hidden flex justify-center relative bg-(--bg-secondary)">
       {data?.isVideoTab ? (
-        <Video videoRef={videoRef} data={data} nextPost={nextPost} />
+        <Video
+          videoRef={videoRef}
+          data={data}
+          nextPost={nextPost}
+          isFollow={isFollow}
+        />
       ) : (
         <Image nextPost={nextPost} data={data} isFollow={isFollow} />
       )}
