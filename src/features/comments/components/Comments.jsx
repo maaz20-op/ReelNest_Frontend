@@ -5,7 +5,7 @@ import {
   CommentBoxDesktopFeedSkeleton,
   MobileCommentBoxSkeleton,
 } from "../../../skeleton/comments/commentsBoxSkeleton";
-import { Avatar } from "../../../components/Avatar";
+import { Avatar } from "../../../components/reusableComponents/Avatar";
 import { useAuth } from "../../auth/hooks/useAuth";
 import { useCommentsContext } from "../hooks/useIsCommentsOpen";
 import { contextThemeSetup } from "../../../utils/contextSetup";

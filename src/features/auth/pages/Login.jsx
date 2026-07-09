@@ -1,21 +1,22 @@
 import { useNavigate } from "react-router-dom";
 import { Icons } from "../../../assets/icons";
 import { useEffect, useState } from "react";
-import { LoginUser } from "../api/loginApi";
+
 import { Button } from "../../../components/reusableComponents/Button";
+import { useLoginUserMutation } from "../../../services/auth/auth";
 
 export const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const navigate = useNavigate();
+  const [loginUser, { data, isLoading }] = useLoginUserMutation();
 
   const HandleSubmit = async (e) => {
     e.preventDefault();
     if (!email || !password) return;
-    const data = await LoginUser(email, password);
+    const data = await loginUser({ email, password });
     if (data) navigate("/");
-    console.log(data);
   };
 
   const inputStyling =

@@ -12,10 +12,17 @@ export const postApi = apiSlice.injectEndpoints({
       }),
     }),
 
-    //get posts of specific user for profile page
-    getPostsByuserId: builder.query({
+    //get video posts of specific user for profile page
+    getVideoPostsByuserId: builder.query({
       query: (userId) => ({
-        url: `/posts/${userId}`,
+        url: `/posts/video/${userId}`,
+        method: "GET",
+      }),
+    }),
+
+    getImagePostsByUserId: builder.query({
+      query: (userId) => ({
+        url: `/posts/image/${userId}`,
         method: "GET",
       }),
     }),
@@ -70,6 +77,7 @@ export const postApi = apiSlice.injectEndpoints({
 export const {
   useLazyGetPostsQuery,
   useCreatePostMutation,
-  useGetPostsByuserIdQuery,
+  useGetVideoPostsByuserIdQuery,
+  useGetImagePostsByUserIdQuery,
   useLikePostMutation,
 } = postApi;

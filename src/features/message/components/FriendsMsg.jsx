@@ -1,4 +1,4 @@
-import { Avatar } from "../../../components/Avatar";
+import { Avatar } from "../../../components/reusableComponents/Avatar";
 import { useGetFollowersQuery } from "../../../services/users/user";
 
 export const FriendsMsgUI = () => {

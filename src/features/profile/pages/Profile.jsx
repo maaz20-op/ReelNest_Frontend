@@ -5,15 +5,18 @@ import { contextThemeSetup } from "../../../utils/contextSetup";
 import { useRef, useState } from "react";
 import { useAuth } from "../../auth/hooks/useAuth";
 import { Button } from "../../../components/reusableComponents/Button";
-import { Avatar } from "../../../components/Avatar";
+import { Avatar } from "../../../components/reusableComponents/Avatar";
 import { UserInfoCard } from "../components/userInfoCard";
 import { UserInfoCardSkeleton } from "../../../skeleton/profile/userInfoCard";
-import { GridVideoLayout } from "../../../components/GridMediaLayout/Video/gridVideo";
+import { GridMediaLayoutProfile } from "../components/GridMediaLayout";
 import { useGetUserByIdQuery } from "../../../services/users/user";
 import { GiTrumpet } from "react-icons/gi";
 import { useEffect } from "react";
 import { GridVideoLayoutSkeleton } from "../../../skeleton/video/GridVideoSkeleton";
-import { useGetPostsByuserIdQuery } from "../../../services/posts/post";
+import {
+  useGetVideoPostsByuserIdQuery,
+  useGetImagePostsByUserIdQuery,
+} from "../../../services/posts/post";
 
 export const Profile = () => {
   const { iconsColor, isDark } = contextThemeSetup();
@@ -29,15 +32,22 @@ export const Profile = () => {
 
   const userId = obj?.userId ? obj?.userId : user?._id;
 
+  const [isVideoTab, setVideoTab] = useState(true);
+
   // get Profile User
   const { data, isLoading, error } = useGetUserByIdQuery(userId, {
     skip: !userId,
   });
 
   // get profile User Videos
-  const { data: userPosts, isLoading: isUserPostsLoading } =
-    useGetPostsByuserIdQuery(data?.data[0]?._id, {
-      skip: !data?.data[0]?._id,
+  const { data: userVideoPosts, isLoading: isUserVideoPostsLoading } =
+    useGetVideoPostsByuserIdQuery(data?.data[0]?._id, {
+      skip: !data?.data[0]?._id || !isVideoTab,
+    });
+
+  const { data: userImagePosts, isLoading: isUserImagePostsLoading } =
+    useGetImagePostsByUserIdQuery(data?.data[0]?._id, {
+      skip: !data?.data[0]?._id || isVideoTab,
     });
 
   useEffect(() => {
@@ -69,7 +79,6 @@ export const Profile = () => {
         <UserInfoCard
           user={data?.data[0]}
           inputRef={inputRef}
-          userPosts={userPosts}
           handleChange={handleChange}
           iconsColor={iconsColor}
           profileImgSrc={profileImgSrc}
@@ -83,6 +92,9 @@ export const Profile = () => {
           {["Images", "Videos"].map((cate, indx) => (
             <span
               key={indx}
+              onClick={() =>
+                indx == 0 ? setVideoTab(false) : setVideoTab(true)
+              }
               className={`${isDark ? "bg-red-500" : "bg-red-200"}
              px-3 py-2 hover:bg-red-500 cursor-pointer 
               transition-all
@@ -101,17 +113,29 @@ export const Profile = () => {
 
         {/* grid video Layout*/}
 
-        {isUserPostsLoading || !userPosts ? (
-          <GridVideoLayoutSkeleton />
-        ) : userPosts?.data[0].length > 0 ? (
-          <GridVideoLayout user={data?.data[0]} posts={userPosts?.data[0]} />
+        {isVideoTab ? (
+          isUserVideoPostsLoading || !userVideoPosts ? (
+            <GridVideoLayoutSkeleton />
+          ) : userVideoPosts?.data[0].length > 0 ? (
+            <GridMediaLayoutProfile
+              user={data?.data[0]}
+              posts={userVideoPosts?.data[0]}
+              isVideoTab={isVideoTab}
+            />
+          ) : (
+            <div className="flex flex-col justify-center h-100 items-center gap-6">
+              <img className="h-30 w-30" src="/no-posts.svg" alt="no-friends" />
+              <p className="w-50 text-center text-(--text-primary)">
+                No Posts Uploaded By You!
+              </p>
+            </div>
+          )
         ) : (
-          <div className="flex flex-col justify-center h-100 items-center gap-6">
-            <img className="h-30 w-30" src="/no-posts.svg" alt="no-friends" />
-            <p className="w-50 text-center text-(--text-primary)">
-              No Posts Uploaded By You!
-            </p>
-          </div>
+          <GridMediaLayoutProfile
+            user={data?.data[0]}
+            isVideoTab={isVideoTab}
+            posts={userImagePosts?.data[0]}
+          />
         )}
       </div>
     </div>

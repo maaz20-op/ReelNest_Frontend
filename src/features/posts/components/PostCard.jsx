@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Avatar } from "../../../components/Avatar";
+import { Avatar } from "../../../components/reusableComponents/Avatar";
 import { Icons } from "../../../assets/icons";
 import { debounce } from "../../../utils/debounce";
 import { useFollowUserMutation, userApi } from "../../../services/users/user";

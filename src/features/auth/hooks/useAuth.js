@@ -10,7 +10,7 @@ export const useAuth = () => {
     return { user: null, isLoading, error };
   }
   if (!user || !data.success) {
-    return { user: null, isLoading, error };
+    navigate("/login");
   }
 
   return { user, isLoading, error };

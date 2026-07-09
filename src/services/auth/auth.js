@@ -6,6 +6,14 @@ export const authApi = apiSlice.injectEndpoints({
       query: () => "/auth/local/me",
     }),
 
+    loginUser: builder.mutation({
+      query: (body) => ({
+        url: "/auth/local/login",
+        method: "POST",
+        body: body,
+      }),
+    }),
+
     signupUser: builder.mutation({
       query: (body) => ({
         url: "/auth/local/signup",
@@ -16,4 +24,8 @@ export const authApi = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useGetAuthMeQuery, useSignupUserMutation } = authApi;
+export const {
+  useGetAuthMeQuery,
+  useSignupUserMutation,
+  useLoginUserMutation,
+} = authApi;

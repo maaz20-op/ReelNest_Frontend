@@ -8,7 +8,7 @@ import {
 } from "../components/ChatMsg";
 import { FriendsMsgUI } from "../components/FriendsMsg";
 import { showScrollBarOnHover } from "../../../utils/showSideBarOnHover";
-import { Avatar } from "../../../components/Avatar";
+import { Avatar } from "../../../components/reusableComponents/Avatar";
 import { FriendsMessageListSkeleton } from "../../../skeleton/message/friendsMsgList";
 import {
   MainChatScreenSkeleton,

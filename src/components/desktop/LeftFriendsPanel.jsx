@@ -1,11 +1,11 @@
 import { useRef, useState } from "react";
-import { contextThemeSetup } from "../../../utils/contextSetup";
-import { showScrollBarOnHover } from "../../../utils/showSideBarOnHover";
+import { contextThemeSetup } from "../../utils/contextSetup";
+import { showScrollBarOnHover } from "../../utils/showSideBarOnHover";
 import { use } from "react";
-import { FriendsList } from "./compoenents/friendsList";
-import { FriendsListSkeleton } from "../../../skeleton/leftDesktopPanel";
+import { FriendsList } from "../reusableComponents/friendsList";
+import { FriendsListSkeleton } from "../../skeleton/leftDesktopPanel";
 
-import { useGetFollowersQuery } from "../../../services/users/user";
+import { useGetFollowersQuery } from "../../services/users/user";
 
 const sectionKey = "maaz_key";
 export const LeftFriendsPanelDesktop = () => {

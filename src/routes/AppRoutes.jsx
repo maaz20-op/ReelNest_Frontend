@@ -37,12 +37,6 @@ const Message_Users_Page = React.lazy(() =>
   })),
 );
 
-const OthersProfile = React.lazy(() =>
-  import("../features/othersprofile/pages/OtherProfile").then((module) => ({
-    default: module.OthersProfile,
-  })),
-);
-
 const Upgrade = React.lazy(() =>
   import("../features/upgrade/pages/UpgradePage").then((module) => ({
     default: module.Upgrade,
@@ -75,7 +69,7 @@ export const AppRouting = () => {
         <Route path="/profile" element={<Profile />} />
         <Route path="/settings" element={<AccountSettings />} />
         <Route path="/message" element={<Message_Users_Page />}></Route>
-        <Route path="/other/profile" element={<OthersProfile />} />
+
         <Route path="/upgrade" element={<Upgrade />} />
         <Route path="/create/post" element={<PostCreationPage />} />
         <Route path="/profile/collection" element={<SavedPost />} />

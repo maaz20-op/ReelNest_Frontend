@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Avatar } from "../../../components/Avatar";
+import { Avatar } from "../../../components/reusableComponents/Avatar";
 import { Button } from "../../../components/reusableComponents/Button";
 import { Icons } from "../../../assets/icons";
 import { checkIsFollowed } from "../../../utils/checkisFollowed";

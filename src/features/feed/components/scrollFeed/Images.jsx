@@ -6,54 +6,15 @@ import { useGetAuthMeQuery } from "../../../../services/auth/auth";
 import { useAuth } from "../../../auth/hooks/useAuth";
 import { VideoActions } from "./Actions";
 
-export const Video = ({ videoRef, nextPost, data, isFollow }) => {
-  const [isPlay, setPlay] = useState(false);
+export const Image = ({ nextPost, data, isFollow }) => {
   const { user } = useAuth();
-  let [isVideoTimeUpdating, setTimeUpdating] = useState(false);
-  const [progressBarWidth, setWidth] = useState(0);
-  const [hidePlayPauseIcon, setHide] = useState(false);
-
-  const videoSrc = nextPost ? nextPost?.mediaUrl : data?.mediaUrl;
-
-  useEffect(() => {
-    if (!isPlay) return;
-    const timeoutId = setTimeout(() => {
-      setHide(true);
-    }, 3000);
-
-    return () => clearTimeout(timeoutId);
-  }, [isPlay]);
-
-  const handleProgressBar = () => {
-    const totalDuration = Math.floor(videoRef?.current.duration);
-    const currentPlayTime = Math.floor(videoRef?.current.currentTime);
-
-    const progress = (currentPlayTime / totalDuration) * 100;
-
-    setWidth(progress);
-  };
-
-  const handleClick = () => {
-    setPlay((prev) => !prev);
-    if (isPlay) return videoRef?.current.pause();
-
-    videoRef?.current.play();
-    setHide(false);
-  };
-
+  const imageUrl = nextPost ? nextPost?.mediaUrl : data?.mediaUrl;
   return (
     <div className="video-container h-full w-full flex justify-center gap-2">
       <div
-        className={` main-video-div relative h-full md:h-[95%] md:w-100 w-full bg-black`}
+        className={` flex justify-center items-center main-video-div relative h-full md:h-[95%] md:w-100 w-full bg-black`}
       >
-        <video
-          onPlay={() => setPlay(true)}
-          ref={videoRef}
-          onClick={() => setHide(false)}
-          onTimeUpdate={handleProgressBar}
-          className="h-full w-full bg-black"
-          src={videoSrc}
-        />
+        <img src={imageUrl} />
         <div className="creater-info flex ml-8 items-center text-white gap-4 absolute top-5 w-full ">
           <Avatar size="md" src={data?.avatar} />
           <div className="username w-30  leading-tight flex flex-col">
@@ -89,24 +50,6 @@ export const Video = ({ videoRef, nextPost, data, isFollow }) => {
           </h1>
         </div>
         !
-        {!hidePlayPauseIcon && (
-          <div
-            onClick={handleClick}
-            className="play-pause-icon absolute top-[45%]  flex justify-center items-center p-4 rounded-full left-[44%] "
-          >
-            {isPlay ? (
-              <Icons.pause size={30} color="white" />
-            ) : (
-              <Icons.play size={30} color="white" />
-            )}
-          </div>
-        )}
-        <div className="progress-bar h-1 absolute bottom-0 w-full bg-gray-400">
-          <div
-            style={{ width: progressBarWidth + "%" }}
-            className="h-1 bg-red-500 "
-          ></div>
-        </div>
       </div>
       <VideoActions
         key={nextPost?._id || data?._id}

@@ -1,6 +1,6 @@
 import { Nav_Actions } from "../components/RedirectNavActionIcons";
 import { Header } from "../components/Header";
-import { LeftFriendsPanelDesktop } from "../components/desktop/leftFriendsPanel/LeftFriendsPanel";
+import { LeftFriendsPanelDesktop } from "../components/desktop/LeftFriendsPanel";
 import { useLocation } from "react-router-dom";
 import { FriendSection } from "../components/mobile/FriendsHeaderSection";
 

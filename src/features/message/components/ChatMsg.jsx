@@ -1,5 +1,5 @@
 import React from "react";
-import { Avatar } from "../../../components/Avatar";
+import { Avatar } from "../../../components/reusableComponents/Avatar";
 import { Icons } from "../../../assets/icons";
 
 export const ChatMsg = () => {

@@ -1,5 +1,5 @@
-import { Button } from "../../../reusableComponents/Button";
-import { Avatar } from "../../../Avatar";
+import { Button } from "./Button";
+import { Avatar } from "./Avatar";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 

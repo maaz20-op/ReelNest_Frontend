@@ -1,4 +1,4 @@
-import { Avatar } from "../components/Avatar";
+import { Avatar } from "../components/reusableComponents/Avatar";
 import { Button } from "../components/reusableComponents/Button";
 
 export const FriendsListSkeleton = ({ isDark }) => {

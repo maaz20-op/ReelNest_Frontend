@@ -6,8 +6,8 @@ import { Media } from "../../posts/components/Media";
 
 import { Button } from "../../../components/reusableComponents/Button";
 import { showScrollBarOnHover } from "../../../utils/showSideBarOnHover";
-import { Avatar } from "../../../components/Avatar";
-import { FriendsList } from "../../../components/desktop/leftFriendsPanel/compoenents/friendsList";
+import { Avatar } from "../../../components/reusableComponents/Avatar";
+import { FriendsList } from "../../../components/reusableComponents/friendsList";
 import { FriendsListSkeleton } from "../../../skeleton/leftDesktopPanel";
 import { useCommentsContext } from "../../comments/hooks/useIsCommentsOpen";
 import { FriendSection } from "../../../components/mobile/FriendsHeaderSection";
@@ -15,7 +15,7 @@ import { FriendSection } from "../../../components/mobile/FriendsHeaderSection";
 export const FeedPage = () => {
   const { iconsColor, isDark } = contextThemeSetup();
   const [commentsData, setCurrentPostCommentsData] = useState(null);
-  console.log(commentsData);
+
   const [isPostsEnd, setEndOfPosts] = useState(false);
 
   const { isCommentsOpen, setIsCommentsOpen } = useCommentsContext();

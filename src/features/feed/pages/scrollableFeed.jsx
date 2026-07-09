@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
 import { Media } from "../../posts/components/Media";
-import { Avatar } from "../../../components/Avatar";
+import { Avatar } from "../../../components/reusableComponents/Avatar";
 import { Button } from "../../../components/reusableComponents/Button";
 import { Icons } from "../../../assets/icons";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -13,6 +13,7 @@ import { checkIsFollowed } from "../../../utils/checkisFollowed";
 import { useCommentsContext } from "../../comments/hooks/useIsCommentsOpen";
 import { Video } from "../components/scrollFeed/video";
 import { ScrollUpDown } from "../components/scrollFeed/ScrollUpDown";
+import { Image } from "../components/scrollFeed/Images";
 
 export const ScrollableFeed = () => {
   const { user } = useAuth();
@@ -41,7 +42,7 @@ export const ScrollableFeed = () => {
       setCount(0);
     }
     setCount((prev) => prev + 1);
-    console.log(count, data?.nextPosts[count]);
+
     setPost(data?.nextPosts[count]);
   };
 
@@ -59,18 +60,16 @@ export const ScrollableFeed = () => {
 
     setCount((prev) => prev - 1);
 
-    console.log(count, data?.nextPosts[count]);
     setPost(data?.nextPosts[count]);
   };
 
   return (
     <div className="h-full w-full overflow-hidden flex justify-center relative bg-(--bg-secondary)">
-      <Video
-        videoRef={videoRef}
-        nextPost={nextPost}
-        data={data}
-        isFollow={isFollow}
-      />
+      {data?.isVideoTab ? (
+        <Video videoRef={videoRef} data={data} nextPost={nextPost} />
+      ) : (
+        <Image nextPost={nextPost} data={data} isFollow={isFollow} />
+      )}
 
       {/* Toggle comments and scroll up-down buttons */}
       {isCommentsOpen ? (

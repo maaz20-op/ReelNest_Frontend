@@ -5,7 +5,7 @@ import { contextThemeSetup } from "../utils/contextSetup.js";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../features/auth/hooks/useAuth.js";
 import { Button } from "./reusableComponents/Button.jsx";
-import { Avatar } from "./Avatar.jsx";
+import { Avatar } from "./reusableComponents/Avatar.jsx";
 
 export const Header = () => {
   const { isDark, toggle, iconsColor } = contextThemeSetup();

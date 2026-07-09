@@ -2,7 +2,7 @@ import { Icons } from "../../assets/icons";
 import { useAuth } from "../../features/auth/hooks/useAuth";
 import { useGetFollowersQuery } from "../../services/users/user";
 import { contextThemeSetup } from "../../utils/contextSetup";
-import { Avatar } from "../Avatar";
+import { Avatar } from "../reusableComponents/Avatar";
 
 export const FriendSection = () => {
   const { user } = useAuth();
