@@ -17,7 +17,7 @@ import {
   useGetVideoPostsByuserIdQuery,
   useGetImagePostsByUserIdQuery,
 } from "../../../services/posts/post";
-import { ConnectionInfo } from "../components/connectionlist.jsx";
+import { ConnectionInfo } from "../components/connectionList.jsx";
 import { VideosImagesToggleTab } from "../../../components/reusableComponents/videosImagesTab.jsx";
 
 export const Profile = () => {
