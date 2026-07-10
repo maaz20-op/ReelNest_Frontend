@@ -17,9 +17,9 @@ import {
   useGetVideoPostsByuserIdQuery,
   useGetImagePostsByUserIdQuery,
 } from "../../../services/posts/post";
-ConnectionInfo;
-import { VideosImagesToggleTab } from "../../../components/reusableComponents/videosImagesTab.jsx";
-import { ConnectionInfo } from "../components/connectionList.jsx";
+
+import { VideosImagesToggleTab } from "../../../components/reusableComponents/videosImagesTab";
+import { ConnectionInfo } from "../components/userConnectionsData";
 
 export const Profile = () => {
   const { iconsColor, isDark } = contextThemeSetup();
