@@ -32,7 +32,7 @@ export const Button = ({
   }
   return (
     <button
-      className={`${background} ${border} ${textSizes[textSize]} ${width} ${otherStyles}  ${font} ${paddings[padding]}  text-(--text-primary) `}
+      className={`${background} ${border} ${textSizes[textSize]} ${width} ${otherStyles}  ${font} ${paddings[padding]} flex justify-center items-center  text-(--text-primary) `}
       onClick={fnc}
     >
       {content}

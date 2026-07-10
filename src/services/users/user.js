@@ -14,6 +14,49 @@ export const userApi = apiSlice.injectEndpoints({
       }),
     }),
 
+    updateAvatar: builder.mutation({
+      query: ({ formData, userId }) => ({
+        url: "/users/profile-pic",
+        method: "PATCH",
+        body: formData,
+        formData: true,
+      }),
+      async onQueryStarted({ formData, userId }, { dispatch, queryFulfilled }) {
+        try {
+          // 1. Wait for the server to finish uploading the file
+          const { data: serverResponse } = await queryFulfilled;
+
+          const newImagePath = serverResponse?.data[0];
+
+          if (newImagePath) {
+            // 3. Safely update the getAuthMe cache using the clean text string URL
+
+            dispatch(
+              apiSlice.util.updateQueryData("getAuthMe", undefined, (draft) => {
+                const user = draft?.data[0];
+                console.log(serverResponse);
+                if (user) {
+                  user.profileImage = newImagePath;
+                }
+              }),
+            );
+
+            dispatch(
+              apiSlice.util.updateQueryData("getUserById", userId, (draft) => {
+                const user = draft?.data[0];
+                console.log(current(draft));
+                if (user) {
+                  user.profileImage = newImagePath;
+                }
+              }),
+            );
+          }
+        } catch (err) {
+          console.error("Upload failed, cache not updated:", err);
+        }
+      },
+    }),
+
     followUser: builder.mutation({
       query: (followedUser) => ({
         url: "/users/follow",
@@ -58,7 +101,7 @@ export const userApi = apiSlice.injectEndpoints({
           await queryFulfilled;
         } catch (err) {
           updateFollowingList.undo();
-          updateUserPatch.patch();
+          updateUserPatch.undo();
         }
       },
     }),
@@ -68,5 +111,6 @@ export const userApi = apiSlice.injectEndpoints({
 export const {
   useGetFollowersQuery,
   useGetUserByIdQuery,
+  useUpdateAvatarMutation,
   useFollowUserMutation,
 } = userApi;

@@ -63,6 +63,7 @@ export const postApi = apiSlice.injectEndpoints({
         }
       },
     }),
+
     // create post
     createPost: builder.mutation({
       query: (userData) => ({
@@ -79,5 +80,6 @@ export const {
   useCreatePostMutation,
   useGetVideoPostsByuserIdQuery,
   useGetImagePostsByUserIdQuery,
+
   useLikePostMutation,
 } = postApi;

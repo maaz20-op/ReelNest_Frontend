@@ -7,7 +7,11 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useGetPostsCommentsQuery } from "../../../services/comments/comment";
 
-export const GridMediaLayoutProfile = ({ user, posts, isVideoTab }) => {
+export const GridMediaLayoutProfile = ({
+  user,
+  posts,
+  isVideoTab = "video",
+}) => {
   const containerRef = useRef(null);
   const [postId, setPostId] = useState("");
   const [currentPost, setCurrentPost] = useState({});

@@ -3,6 +3,7 @@ const avatarsSize = {
   md: "h-10  w-10",
   lg: "h-14 w-14",
   xl: "h-20 w-20",
+  full: "h-80 w-80 sm:h-120 sm:w-120 md:w-100 md:h-100 lg:h-125 lg:w-125",
 };
 
 export const Avatar = ({

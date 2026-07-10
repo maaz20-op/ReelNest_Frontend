@@ -1,12 +1,18 @@
+import { useNavigate } from "react-router-dom";
 import { Icons } from "../../assets/icons";
 import { useAuth } from "../../features/auth/hooks/useAuth";
+import { useConnectionsData } from "../../hooks/userConnectionData";
 import { useGetFollowersQuery } from "../../services/users/user";
 import { contextThemeSetup } from "../../utils/contextSetup";
+import { handleRedirectToUserProfile } from "../../utils/handleRedirectToUserProfile";
 import { Avatar } from "../reusableComponents/Avatar";
 
 export const FriendSection = () => {
   const { user } = useAuth();
   const { iconsColor } = contextThemeSetup();
+  const navigate = useNavigate();
+  const userConnectionData = useConnectionsData();
+  const Friends = userConnectionData?.connectionList?.Friends;
 
   return (
     <div className="wrapper lg:hidden">
@@ -27,21 +33,32 @@ export const FriendSection = () => {
             </div>
             <h1 className="text-(--text-secondary) font-bold">You</h1>
           </div>
-          {[...Array(14)].map((_, indx) => (
-            <div
-              key={indx}
-              className="friend-card flex gap-1 justify-center items-center flex-col   px-2 py-2 rounded-2xl text-(--text-primary)"
-            >
-              <div className="h-14 w-14 rounded-full object-cover bg-black">
-                <img
-                  className="w-full h-full rounded-full"
-                  src="https://iili.io/BZuCZ57.jpg"
-                  alt="user profile"
-                />
+          {Array.isArray(Friends) &&
+            Friends.map(({ _id, fullname, profileImage }, indx) => (
+              <div
+                key={indx}
+                onClick={() => {
+                  const redirectToProfile = handleRedirectToUserProfile(
+                    _id,
+                    fullname,
+                    navigate,
+                  );
+                  redirectToProfile();
+                }}
+                className="friend-card flex gap-1 justify-center items-center flex-col   px-2 py-2 rounded-2xl text-(--text-primary)"
+              >
+                <div className="h-14 w-14 rounded-full object-cover bg-black">
+                  <img
+                    className="w-full h-full rounded-full"
+                    src={profileImage}
+                    alt="user profile"
+                  />
+                </div>
+                <h1 className="text-xs text-center w-15 line-clamp-1 text-(--text-secondary)">
+                  {fullname}
+                </h1>
               </div>
-              <h1 className="text-(--text-secondary)">Malaika</h1>
-            </div>
-          ))}
+            ))}
         </div>
       </div>
     </div>

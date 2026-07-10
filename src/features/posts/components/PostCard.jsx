@@ -9,6 +9,7 @@ import { useCommentsContext } from "../../comments/hooks/useIsCommentsOpen";
 import { useLike } from "../../../hooks/useLike";
 import { useNavigate } from "react-router-dom";
 import { handleRedirectToUserProfile } from "../../../utils/handleRedirectToUserProfile";
+import { useCreateUserSavedPinsMutation } from "../../../services/pins/pin";
 
 export const PostCard = ({ post, setCurrentPostCommentsData }) => {
   const { _id, mediaUrl, postdata, userData, likesUsersData, likes } = post;
@@ -21,6 +22,7 @@ export const PostCard = ({ post, setCurrentPostCommentsData }) => {
   const [isFollow, setFollow] = useState(false);
 
   const [followUser, { isLoading, data }] = useFollowUserMutation();
+  const [savePost] = useCreateUserSavedPinsMutation();
 
   const likesData = useLike({
     likesArray: likes,
@@ -52,6 +54,15 @@ export const PostCard = ({ post, setCurrentPostCommentsData }) => {
     userData?.fullname,
     navigate,
   );
+
+  // save Post
+  const handleSavePostClick = async () => {
+    try {
+      await savePost(_id);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <div className="video-image-card py-6 flex flex-col gap-2 w-full px-2">
@@ -118,7 +129,11 @@ export const PostCard = ({ post, setCurrentPostCommentsData }) => {
           />
           <Icons.send color={iconsColor} size={23} />
         </div>
-        <Icons.save color={iconsColor} size={23} />
+        <Icons.save
+          onClick={handleSavePostClick}
+          color={iconsColor}
+          size={23}
+        />
       </div>
 
       {/* Likes and video title */}
