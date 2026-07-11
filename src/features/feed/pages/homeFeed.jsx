@@ -90,7 +90,7 @@ export const FeedPage = () => {
                 ref={suggestionContainerRef}
                 className={`${isHoverd ? "overflow-y-auto" : "overflow-y-hidden"} other-profile-container  scrollbar-gutter-stable flex flex-col gap-2 flex-1 min-h-0 mt-5  py-5 `}
               >
-                {isConnectionLoading ? (
+                {isConnectionLoading || Followers.length === 0 ? (
                   <FriendsListSkeleton
                     isDark={isDark}
                     elementRef={suggestionContainerRef}

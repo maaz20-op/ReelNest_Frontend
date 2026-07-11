@@ -1,10 +1,10 @@
-import { createContext, useContext, useEffect } from "react";
-import { useGetFollowersQuery } from "../services/users/user";
+import { createContext, useContext, useEffect, useState } from "react";
+import { useGetLoggedInUserConnectionQuery } from "../services/users/user";
 
 export const ConnectionContext = createContext(null);
 
 export const ConnectionProvider = ({ children }) => {
-  const { data, isLoading, error } = useGetFollowersQuery();
+  const { data, isLoading, error } = useGetLoggedInUserConnectionQuery();
 
   const setList = {
     Friends: data?.data[2],

@@ -1,14 +1,16 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { contextThemeSetup } from "../../utils/contextSetup";
 import { showScrollBarOnHover } from "../../utils/showSideBarOnHover";
 import { use } from "react";
 import { FriendsList } from "../reusableComponents/friendsList";
 import { FriendsListSkeleton } from "../../skeleton/leftDesktopPanel";
 import { useConnectionsData } from "../../hooks/userConnectionData";
+import { useAuth } from "../../features/auth/hooks/useAuth";
 
 export const LeftFriendsPanelDesktop = () => {
   const [activeIndx, setActive] = useState(0);
   const { isDark } = contextThemeSetup();
+  const { user } = useAuth();
   const [selectedSection, setSection] = useState("Friends");
   const elementRef = useRef(null);
   const isHoverd = showScrollBarOnHover(elementRef);

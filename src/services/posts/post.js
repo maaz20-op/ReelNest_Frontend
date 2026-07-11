@@ -39,7 +39,7 @@ export const postApi = apiSlice.injectEndpoints({
       ) {
         const patch = dispatch(
           apiSlice.util.updateQueryData(
-            "getPostsByuserId",
+            "getVideoPostsByuserId",
             String(userId),
             (draft) => {
               console.log("this is darft", current(draft));

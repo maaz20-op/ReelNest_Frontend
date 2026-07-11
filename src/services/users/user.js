@@ -3,8 +3,18 @@ import { current } from "@reduxjs/toolkit";
 
 export const userApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getFollowers: builder.query({
-      query: () => "/users/followers",
+    getUserConnectionsById: builder.query({
+      query: (userId) => ({
+        url: `/users/connection/${userId}`,
+        method: "GET",
+      }),
+    }),
+
+    getLoggedInUserConnection: builder.query({
+      query: () => ({
+        url: "/users/connection",
+        method: "GET",
+      }),
     }),
 
     getUserById: builder.query({
@@ -115,18 +125,22 @@ export const userApi = apiSlice.injectEndpoints({
 
       async onQueryStarted(followedUser, { dispatch, queryFulfilled }) {
         const updateFollowingList = dispatch(
-          apiSlice.util.updateQueryData("getFollowers", undefined, (draft) => {
-            console.log("this is draft", current(draft?.data[1]));
-            const followingArray = draft?.data[1];
-            const isAlreadyFollowed = followingArray.find(
-              (f) => f?._id === followedUser?._id,
-            );
+          apiSlice.util.updateQueryData(
+            "getLoggedInUserConnection",
+            undefined,
+            (draft) => {
+              console.log("this is draft", current(draft?.data[1]));
+              const followingArray = draft?.data[1];
+              const isAlreadyFollowed = followingArray.find(
+                (f) => f?._id === followedUser?._id,
+              );
 
-            if (Array.isArray(followingArray) && !isAlreadyFollowed) {
-              followingArray.push(followedUser);
-              return;
-            }
-          }),
+              if (Array.isArray(followingArray) && !isAlreadyFollowed) {
+                followingArray.push(followedUser);
+                return;
+              }
+            },
+          ),
         );
 
         const updateUserPatch = dispatch(
@@ -156,8 +170,9 @@ export const userApi = apiSlice.injectEndpoints({
 });
 
 export const {
-  useGetFollowersQuery,
+  useGetUserConnectionsByIdQuery,
   useGetUserByIdQuery,
+  useGetLoggedInUserConnectionQuery,
   useUpdateAvatarMutation,
   useDeleteUserAccountMutation,
   useUpdateUserProfileSettingsMutation,

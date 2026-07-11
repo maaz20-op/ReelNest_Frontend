@@ -16,11 +16,11 @@ export const MainLayout = ({ children }) => {
   const [windowWidth, setWindowWidth] = useState(0);
 
   const mobileWidth = windowWidth <= 400;
-  console.log(mobileWidth);
+
   useEffect(() => {
     const trackResize = () => {
       let width = window.innerWidth;
-      console.log("Current width is: " + width + "px");
+
       setWindowWidth(width);
     };
 
@@ -28,7 +28,7 @@ export const MainLayout = ({ children }) => {
 
     return () => window.removeEventListener("resize", trackResize);
   }, []);
-  console.log(!isAuthPage && !isScrollablFeed && mobileWidth);
+
   return (
     <div className="  flex flex-col max-h-screen overflow-x-hidden h-dvh select-none max-w-screen   bg-(--bg-primary)">
       {!isAuthPage && !isScrollablFeed && !mobileWidth && <Header />}

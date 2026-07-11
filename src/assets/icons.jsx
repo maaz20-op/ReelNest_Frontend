@@ -29,10 +29,12 @@ import { FaArrowUp } from "react-icons/fa";
 import { FaArrowDown } from "react-icons/fa";
 import { RiUserFollowFill } from "react-icons/ri";
 import { IoPersonAdd } from "react-icons/io5";
+import { BsThreeDotsVertical } from "react-icons/bs";
 
 export const Icons = {
   search: Search,
   share: IoIosShareAlt,
+  videoPreference: BsThreeDotsVertical,
   HomeIcon: GoVideo,
   plus: PlusIcon,
   profile: CgProfile,

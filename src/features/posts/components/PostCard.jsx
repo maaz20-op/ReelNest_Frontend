@@ -10,6 +10,8 @@ import { useLike } from "../../../hooks/useLike";
 import { useNavigate } from "react-router-dom";
 import { handleRedirectToUserProfile } from "../../../utils/handleRedirectToUserProfile";
 import { useCreateUserSavedPinsMutation } from "../../../services/pins/pin";
+import { useFollowUser } from "../../../hooks/useFollowUser";
+import { checkIsFollowed } from "../../../utils/checkisFollowed";
 
 export const PostCard = ({ post, setCurrentPostCommentsData }) => {
   const { _id, mediaUrl, postdata, userData, likesUsersData, likes } = post;
@@ -18,10 +20,9 @@ export const PostCard = ({ post, setCurrentPostCommentsData }) => {
   const navigate = useNavigate();
   const { isCommentsOpen, setIsCommentsOpen } = useCommentsContext();
   const isLiked = likes.includes(user?._id);
-  const { iconsColor } = contextThemeSetup();
   const [isFollow, setFollow] = useState(false);
+  const { iconsColor } = contextThemeSetup();
 
-  const [followUser, { isLoading, data }] = useFollowUserMutation();
   const [savePost] = useCreateUserSavedPinsMutation();
 
   const likesData = useLike({
@@ -29,31 +30,20 @@ export const PostCard = ({ post, setCurrentPostCommentsData }) => {
     currentPost: post,
     postCreaterId: userData?._id,
   });
+
   const handleLikeClick = likesData?.handleLikeClick;
   const localHasLiked = likesData?.localHasLiked;
   const localLikesCount = likesData?.localLikesCount;
 
-  const debouncedFollow = useMemo(() => {
-    return debounce(() => {
-      followUser({
-        _id: userData?._id,
-        fullname: userData?.fullname,
-        username: userData?.username,
-        profileImage: userData?.profileImage,
-      }); // send backend request after updating Ui
-    }, 1000);
-  }, []);
+  const handleFollowClick = useFollowUser({ userData, setFollow });
 
-  const handleFollowClick = () => {
-    setFollow((prev) => !prev);
-    debouncedFollow();
-  };
-
+  const isFollowed = checkIsFollowed(userData?._id);
   const handleRedirectToCreaterProfile = handleRedirectToUserProfile(
     userData?._id,
     userData?.fullname,
     navigate,
   );
+  console.log(isFollowed, isFollow);
 
   // save Post
   const handleSavePostClick = async () => {
@@ -84,7 +74,7 @@ export const PostCard = ({ post, setCurrentPostCommentsData }) => {
         </div>
 
         <div onClick={handleFollowClick}>
-          {userData?.followers?.includes(user?._id) || isFollow ? (
+          {userData?.followers?.includes(user?._id) || isFollowed?.isFollow ? (
             <Icons.followedIcon color={iconsColor} size={25} />
           ) : (
             userData?._id !== user?._id && (

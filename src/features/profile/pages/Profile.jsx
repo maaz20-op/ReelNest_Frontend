@@ -74,6 +74,7 @@ export const Profile = () => {
         <ConnectionInfo
           isConnectionInfoClicked={isConnectionClicked}
           setIsConnectionClicked={setIsConnectionClicked}
+          userId={userId}
         />
       )}
 

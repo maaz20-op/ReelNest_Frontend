@@ -1,90 +1,41 @@
-import { Profiler, useMemo, useState } from "react";
+import { Profiler, useEffect, useMemo, useState } from "react";
 import { Search } from "lucide-react";
 import { Icons } from "../../../assets/icons";
 import { ThemeContext } from "../../../contexts/theme";
 import { contextThemeSetup } from "../../../utils/contextSetup";
 import { useConnectionsData } from "../../../hooks/userConnectionData";
 import { Avatar } from "../../../components/reusableComponents/Avatar";
-
-const dummyData = {
-  Friends: [
-    {
-      id: 1,
-      username: "maaz_dev",
-      name: "Maaz Javed",
-      avatar: "https://i.pravatar.cc/150?img=1",
-    },
-    {
-      id: 2,
-      username: "react_guy",
-      name: "Ali Khan",
-      avatar: "https://i.pravatar.cc/150?img=2",
-    },
-    {
-      id: 3,
-      username: "node_master",
-      name: "Ahmed",
-      avatar: "https://i.pravatar.cc/150?img=3",
-    },
-  ],
-
-  Followers: [
-    {
-      id: 4,
-      username: "frontend_pro",
-      name: "Sara",
-      avatar: "https://i.pravatar.cc/150?img=4",
-    },
-    {
-      id: 5,
-      username: "mern_dev",
-      name: "Hamza",
-      avatar: "https://i.pravatar.cc/150?img=5",
-    },
-  ],
-
-  Following: [
-    {
-      id: 6,
-      username: "ui_master",
-      name: "Hassan",
-      avatar: "https://i.pravatar.cc/150?img=6",
-    },
-    {
-      id: 7,
-      username: "backend_boss",
-      name: "Bilal",
-      avatar: "https://i.pravatar.cc/150?img=7",
-    },
-    {
-      id: 8,
-      username: "tailwind_dev",
-      name: "Usman",
-      avatar: "https://i.pravatar.cc/150?img=8",
-    },
-  ],
-};
+import { useNavigate } from "react-router-dom";
+import { handleRedirectToUserProfile } from "../../../utils/handleRedirectToUserProfile";
+import { useGetUserConnectionsByIdQuery } from "../../../services/users/user";
 
 const tabs = ["Friends", "Followers", "Following"];
 
 export const ConnectionInfo = ({
   isConnectionInfoClicked,
   setIsConnectionClicked,
+  userId,
 }) => {
   const [activeTab, setActiveTab] = useState("Friends");
   const [search, setSearch] = useState("");
   const { iconsColor } = contextThemeSetup();
-  const userConnectionData = useConnectionsData();
-  const connectionData = {
-    Friends: userConnectionData?.connectionList?.Friends || [],
-    Followers: userConnectionData?.connectionList?.Followers || [],
-    Following: userConnectionData?.connectionList?.Following || [],
+
+  const navigate = useNavigate();
+
+  const { data, isLoading, error } = useGetUserConnectionsByIdQuery(userId, {
+    skip: !userId,
+  });
+
+  const connectionCate = {
+    Friends: data?.data[2] || [],
+    Following: data?.data[1] || [],
+    Followers: data?.data[0] || [],
   };
 
   if (!isConnectionInfoClicked) return null;
 
   const users = useMemo(() => {
-    return connectionData[activeTab].filter(
+    return connectionCate[activeTab].filter(
       (user) =>
         user?.fullname?.toLowerCase().includes(search.toLowerCase()) ||
         user?.data?.fullname?.toLowerCase().includes(search.toLowerCase()) ||
@@ -129,7 +80,7 @@ export const ConnectionInfo = ({
           >
             {tab}
             <span className="ml-1 text-red-600 text-xs">
-              ({connectionData[tab].length})
+              ({connectionCate[tab].length})
             </span>
           </button>
         ))}
@@ -164,7 +115,16 @@ export const ConnectionInfo = ({
                 </div>
               </div>
 
-              <button className="rounded-full border border-(--border-color) px-4 py-1.5 text-sm hover:bg-(--bg-secondary) text-(--text-primary)">
+              <button
+                onClick={() =>
+                  handleRedirectToUserProfile(
+                    user?._id,
+                    user?.fullname,
+                    navigate,
+                  )
+                }
+                className="rounded-full border border-(--border-color) px-4 py-1.5 text-sm hover:bg-(--bg-secondary) text-(--text-primary)"
+              >
                 View
               </button>
             </div>

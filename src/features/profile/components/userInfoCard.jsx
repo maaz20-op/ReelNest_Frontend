@@ -13,6 +13,8 @@ export const UserInfoCard = ({
   setIsConnectionClicked,
 }) => {
   const obj = checkIsFollowed(user?._id);
+
+  console.log(obj);
   const navigate = useNavigate();
   const [profileImgSrc, setImgSrc] = useState("");
   const inputRef = useRef(null);
@@ -49,6 +51,10 @@ export const UserInfoCard = ({
   };
 
   const handleAvatarClick = (e) => setIsImageFullScreen((prev) => !prev);
+
+  const showLoggedInUserCollections = () => {
+    if (isLoggedInUser) return navigate("/profile/collection");
+  };
 
   return (
     <div className="profile-Card rounded   md:flex md:flex-row-reverse md:justify-end h-6/7 md:h-40 px-6 py-4 w-14/15 md:w-9/10  mx-auto mt-4 bg-(--bg-secondary)">
@@ -151,7 +157,7 @@ export const UserInfoCard = ({
               "Follow"
             )
           }
-          fnc={() => navigate("/profile/collection")}
+          fnc={showLoggedInUserCollections}
           otherStyles="md:text-sm "
         />
       </div>

@@ -13,7 +13,9 @@ export const checkIsFollowed = (otherUserId) => {
       otherUserId && user?.following?.includes(String(otherUserId));
 
     if (followed) setFollowed(true);
-  }, [user]);
+
+    return () => setFollowed(false);
+  }, [user?._id, otherUserId]);
 
   return {
     isFollow: isFollow,
