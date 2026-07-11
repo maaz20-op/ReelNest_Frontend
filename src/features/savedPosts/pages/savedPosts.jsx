@@ -17,6 +17,7 @@ export const SavedPost = () => {
   const [isVideoTab, setVideoTab] = useState(true);
 
   // fetch saved videos
+
   const {
     data: savedPostsVideo,
     isLoading,

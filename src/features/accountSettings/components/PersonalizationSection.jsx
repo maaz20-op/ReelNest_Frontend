@@ -1,59 +1,126 @@
+import { useState, useEffect } from "react"; // Added useEffect to handle async auth loading
+import { Button } from "../../../components/reusableComponents/Button";
+import { useAuth } from "../../auth/hooks/useAuth";
+import { useUpdateUserProfileSettingsMutation } from "../../../services/users/user";
+
 export const PersonalizationSection = () => {
+  const { user } = useAuth();
+
+  // 1. Initialize state variables directly with existing user profile data
+  const [fullname, setFullname] = useState(user?.fullname || "");
+  const [username, setUsername] = useState(user?.username || "");
+  const [bio, setBio] = useState(user?.bio || "");
+
+  const [updateProfile] = useUpdateUserProfileSettingsMutation();
+
+  useEffect(() => {
+    if (user) {
+      setFullname(user.fullname || "");
+      setUsername(user.username || "");
+      setBio(user.bio || "");
+    }
+  }, [user]);
+
+  console.log(fullname, bio, username);
+
+  const handleSavePersonlizationSettings = async (e) => {
+    e.preventDefault();
+
+    // Check if any actual field edits were made
+    if (
+      fullname === (user?.fullname || "") &&
+      username === (user?.username || "") &&
+      bio === (user?.bio || "")
+    ) {
+      return console.log("No changes made");
+    }
+
+    const formData = new FormData();
+    formData.append("fullname", fullname);
+    formData.append("username", username);
+    formData.append("bio", bio);
+
+    console.log("calling/..,.,", formData.get("fullname"));
+
+    try {
+      await updateProfile({ formData, userId: user?._id });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
-    <form action="" className="account-settings flex flex-col gap-15   mt-10">
+    <div className="account-settings flex py-5 flex-col gap-10 md:gap-15 mt-6 md:mt-10 px-4 sm:px-0">
+      {/* Full Name Section */}
       <div className="flex flex-col gap-2">
-        <h1 className="text-2xl text-(--text-primary)">
-          Change your Full Name{" "}
+        <h1 className="text-base sm:text-2xl font-semibold text-(--text-primary)">
+          Change your Full Name
         </h1>
-        <p className="text-(--text-secondary)">
-          {" "}
+        <p className="text-(--text-secondary) text-sm lg:text-base max-w-3xl">
           Updating your full name will change how your name appears across your
-          profile and other areas of the platform. This name may be visible to
-          other users in posts, comments, messages, and account-related
-          interactions. Please use your preferred name and make sure the
-          information is accurate before saving your changes.
+          profile...
         </p>
         <input
           type="text"
-          className="px-3 py-3 border-2 w-130 outline-none text-(--text-primary) rounded border-gray-500"
-          value="Malaika Qamar"
+          className="px-3 py-3 border-2 w-full sm:max-w-md lg:w-130 outline-none text-(--text-primary) rounded border-gray-500 mt-2"
+          value={fullname} // Changed to controlled value
+          placeholder="change your fullname..."
+          onChange={(e) => setFullname(e.target.value)}
+          name="fullname"
         />
       </div>
+
+      {/* Username Section */}
       <div className="flex flex-col gap-2">
-        <h1 className="text-2xl text-(--text-primary)">Change Username</h1>
-        <p className="text-(--text-secondary)">
-          {" "}
+        <h1 className="text-base sm:text-2xl font-semibold text-(--text-primary)">
+          Change Username
+        </h1>
+        <p className="text-(--text-secondary) text-sm lg:text-base max-w-3xl">
           Changing your username will update your unique account identity across
-          the platform. Your username may be visible in your profile link,
-          posts, comments, mentions, messages, and other public interactions.
-          Some usernames may not be available if they are already in use. Please
-          choose a username that is unique, easy to recognize, and follows our
-          platform guidelines before saving your changes.
+          the platform...
         </p>
-        <input
-          type="email"
-          placeholder="Change your password"
-          className="px-3 py-3 border-2 w-130 outline-none text-(--text-primary) rounded border-gray-500"
-        />
+
+        {/* RECOMMENDED DESIGN: Visual-only '@' symbol container so your state stays completely clean */}
+        <div className="relative w-full sm:max-w-md lg:w-130 mt-2">
+          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-medium pointer-events-none">
+            @
+          </span>
+          <input
+            type="text"
+            placeholder="Change your username"
+            name="username"
+            className="pl-8 pr-3 py-3 border-2 w-full outline-none text-(--text-primary) rounded border-gray-500"
+            value={username} // Keeps state entirely free of '@' symbols
+            onChange={(e) => setUsername(e.target.value.replace(/@/g, ""))} // Strips all input '@' marks globally
+          />
+        </div>
       </div>
+
+      {/* Bio Section */}
       <div className="flex flex-col gap-2">
-        <h1 className="text-2xl text-(--text-primary)">Change Bio</h1>
-        <p className="text-(--text-secondary)">
-          {" "}
+        <h1 className="text-base sm:text-2xl font-semibold text-(--text-primary)">
+          Change Bio
+        </h1>
+        <p className="text-(--text-secondary) text-sm lg:text-base max-w-3xl">
           Updating your bio will change the short description displayed on your
-          profile. Your bio helps other users learn more about you and may be
-          visible across different areas of the platform. You can use this
-          section to share information about yourself, your interests, or
-          anything you would like others to see on your profile. Please make
-          sure your bio follows our community guidelines before saving your
-          changes.
+          profile...
         </p>
-        <input
-          type="text"
-          placeholder="Change your password"
-          className="px-3 py-3 border-2 w-130 outline-none text-(--text-primary) rounded border-gray-500"
+        <textarea
+          placeholder="Write something about yourself..."
+          className="px-3 py-3 border-2 w-full sm:max-w-md lg:w-130 h-100 account-settings resize-none outline-none text-(--text-primary) rounded border-gray-500 mt-2"
+          value={bio} // Changed to controlled value
+          onChange={(e) => setBio(e.target.value)}
+          name="bio"
         />
       </div>
-    </form>
+
+      <Button
+        fnc={handleSavePersonlizationSettings}
+        background="bg-blue-600"
+        padding="md"
+        border="rounded"
+        content="Save personalization"
+      />
+    </div>
   );
 };

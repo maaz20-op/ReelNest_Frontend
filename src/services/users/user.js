@@ -14,6 +14,53 @@ export const userApi = apiSlice.injectEndpoints({
       }),
     }),
 
+    deleteUserAccount: builder.mutation({
+      query: () => ({
+        url: "/users",
+        method: "DELETE",
+      }),
+    }),
+
+    updateUserProfileSettings: builder.mutation({
+      query: ({ formData, userId }) => ({
+        url: "/users/update",
+        method: "PATCH",
+        body: Object.fromEntries(formData),
+      }),
+
+      async onQueryStarted({ formData, userId }, { dispatch, queryFulfilled }) {
+        const authUserPatch = dispatch(
+          apiSlice.util.updateQueryData("getAuthMe", undefined, (draft) => {
+            console.log("DSKADIOADIA");
+            const user = draft?.data[0];
+            const updatedData = Object.fromEntries(formData);
+            for (let key in updatedData) {
+              console.log("keys", key, updatedData[key]);
+              user[key] = updatedData[key];
+            }
+          }),
+        );
+        const profileUserPatch = dispatch(
+          apiSlice.util.updateQueryData("getUserById", userId, (draft) => {
+            const user = draft?.data[0];
+            const updatedData = Object.fromEntries(formData);
+            for (let key in updatedData) {
+              console.log("keys", key, updatedData[key]);
+              user[key] = updatedData[key];
+            }
+            console.log(user?.fullname);
+          }),
+        );
+
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          authUserPatch.undo();
+          profileUserPatch.undo();
+        }
+      },
+    }),
+
     updateAvatar: builder.mutation({
       query: ({ formData, userId }) => ({
         url: "/users/profile-pic",
@@ -112,5 +159,7 @@ export const {
   useGetFollowersQuery,
   useGetUserByIdQuery,
   useUpdateAvatarMutation,
+  useDeleteUserAccountMutation,
+  useUpdateUserProfileSettingsMutation,
   useFollowUserMutation,
 } = userApi;

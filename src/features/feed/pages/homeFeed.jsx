@@ -61,8 +61,8 @@ export const FeedPage = () => {
           isBottomOfContainer={scrollData?.isBottomOfContainer}
           iconsColor={iconsColor}
           setBtmContainer={scrollData?.setBtmContainer}
-          isPostsEnd={scrollData?.isPostsEnd}
-          setEndOfPosts={scrollData?.setEndOfPosts}
+          isPostsEnd={isPostsEnd}
+          setEndOfPosts={setEndOfPosts}
           setCurrentPostCommentsData={setCurrentPostCommentsData}
         />
         {!isPostsEnd && scrollData?.isBottomOfContainer && <Spinner />}

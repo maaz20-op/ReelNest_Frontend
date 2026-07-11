@@ -9,6 +9,7 @@ export const Media = ({
   isCommentsOpen,
   setBtmContainer,
   isBottomOfContainer,
+  isPostsEnd,
   setEndOfPosts,
   setCurrentPostCommentsData,
 }) => {
@@ -22,6 +23,8 @@ export const Media = ({
     hasNextPage,
     setBtmContainer,
     postsRawData,
+    isPostsEnd,
+    setEndOfPosts,
     data,
     isBottomOfContainer,
     isFetching,
@@ -33,13 +36,16 @@ export const Media = ({
   return (
     <div className="posts-container">
       {Array.isArray(posts) &&
-        posts.map((post) => (
-          <PostCard
-            key={post._id}
-            setCurrentPostCommentsData={setCurrentPostCommentsData}
-            post={post}
-          />
-        ))}
+        posts.map((post) => {
+          const uniqueId = crypto.randomUUID();
+          return (
+            <PostCard
+              key={uniqueId}
+              setCurrentPostCommentsData={setCurrentPostCommentsData}
+              post={post}
+            />
+          );
+        })}
     </div>
   );
 };

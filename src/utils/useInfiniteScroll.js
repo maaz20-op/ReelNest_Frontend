@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 
 export const useInfinteScroll = () => {
   const [isBottomOfContainer, setBtmContainer] = useState(false);
-  const [isPostsEnd, setEndOfPosts] = useState(false);
 
   const handleScroll = (e) => {
     const totalHeight = e.currentTarget.scrollHeight;
@@ -15,11 +14,8 @@ export const useInfinteScroll = () => {
   };
 
   return {
-    isPostsEnd,
     setBtmContainer,
     isBottomOfContainer,
-    isPostsEnd,
-    setEndOfPosts,
     handleScroll,
   };
 };
@@ -29,12 +25,15 @@ export const setPagesAndCallApiInfiniteScroll = ({
   setBtmContainer,
   postsRawData,
   data,
+  isPostsEnd,
+  setEndOfPosts,
   isBottomOfContainer,
   isFetching,
   fetchData,
 }) => {
   const [apiData, setApiData] = useState([]);
   const [page, setPage] = useState(1);
+
   // calling api
   useEffect(() => {
     if (page > 1 && !hasNextPage) return setBtmContainer(false);

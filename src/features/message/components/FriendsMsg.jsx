@@ -1,11 +1,14 @@
+import { useEffect } from "react";
 import { Avatar } from "../../../components/reusableComponents/Avatar";
-import { useGetFollowersQuery } from "../../../services/users/user";
+import { useConnectionsData } from "../../../hooks/userConnectionData";
 
 export const FriendsMsgUI = () => {
-  const { data, isLoading } = useGetFollowersQuery();
+  const connectionData = useConnectionsData();
+
+  const friends = connectionData?.connectionList?.Friends || [];
   return (
     <div className="flex  flex-col gap-2 mt-5 px-2 py-3">
-      {data?.data[2].map(({ profileImage }, indx) => (
+      {friends.map(({ profileImage }, indx) => (
         <div
           key={indx}
           className="msg-div cursor-pointer  flex items-center justify-between hover:bg-(--bg-secondary) gap-3 px-1 py-3 rounded"

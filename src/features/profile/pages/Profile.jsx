@@ -100,7 +100,7 @@ export const Profile = () => {
                   No Posts Uploaded By{" "}
                 </p>
                 <span className="text-(--text-primary)">
-                  {userId === user?._id ? "You" : obj?.name}!
+                  {userId === user?._id ? "You" : userData?.name}!
                 </span>
               </div>
             </div>

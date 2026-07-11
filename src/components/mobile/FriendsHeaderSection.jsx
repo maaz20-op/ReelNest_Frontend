@@ -2,7 +2,6 @@ import { useNavigate } from "react-router-dom";
 import { Icons } from "../../assets/icons";
 import { useAuth } from "../../features/auth/hooks/useAuth";
 import { useConnectionsData } from "../../hooks/userConnectionData";
-import { useGetFollowersQuery } from "../../services/users/user";
 import { contextThemeSetup } from "../../utils/contextSetup";
 import { handleRedirectToUserProfile } from "../../utils/handleRedirectToUserProfile";
 import { Avatar } from "../reusableComponents/Avatar";
