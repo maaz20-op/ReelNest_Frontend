@@ -27,6 +27,46 @@ export const postApi = apiSlice.injectEndpoints({
       }),
     }),
 
+    deleteLoggedInUserPost: builder.mutation({
+      query: ({ postId, userId, mediaType }) => ({
+        url: `/posts/${postId}`,
+        method: "DELETE",
+      }),
+      async onQueryStarted(
+        { postId, userId, mediaType },
+        { dispatch, queryFulfilled },
+      ) {
+        const queryKey =
+          mediaType === "video"
+            ? "getVideoPostsByuserId"
+            : "getImagePostsByUserId";
+
+        const updatePostPatch = dispatch(
+          apiSlice.util.updateQueryData(queryKey, userId, (draft) => {
+            const postsArray = draft?.data?.[0];
+
+            if (Array.isArray(postsArray)) {
+              // 2. Find the index of the post to delete
+              const index = postsArray.findIndex(
+                (p) => p?._id?.toString() === postId?.toString(),
+              );
+
+              // 3. Mutate the array directly so Immer tracks the change
+              if (index !== -1) {
+                postsArray.splice(index, 1);
+              }
+            }
+          }),
+        );
+
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          updatePostPatch.undo();
+        }
+      },
+    }),
+
     // like post
     likePost: builder.mutation({
       query: ({ postId, userId }) => ({
@@ -78,6 +118,7 @@ export const postApi = apiSlice.injectEndpoints({
 export const {
   useLazyGetPostsQuery,
   useCreatePostMutation,
+  useDeleteLoggedInUserPostMutation,
   useGetVideoPostsByuserIdQuery,
   useGetImagePostsByUserIdQuery,
 

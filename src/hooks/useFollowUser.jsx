@@ -25,3 +25,20 @@ export const useFollowUser = ({ userData, setFollow }) => {
 
   return handleFollowClick;
 };
+
+export const useUnfollowUser = ({ unfollowUserId, setFollow }) => {
+  const debouncedFollow = useMemo(() => {
+    return debounce(() => {
+      followUser(); // send backend request after updating Ui
+    }, 1000);
+  }, []);
+
+  const handleUnfollowClick = (e) => {
+    e.stopPropagation();
+    setFollow(false);
+
+    debouncedFollow();
+  };
+
+  return handleUnfollowClick;
+};

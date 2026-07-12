@@ -9,7 +9,6 @@ export const PostCreationPage = () => {
   const inputRef = useRef(null);
   const submitBtnRef = useRef(null);
   const { iconsColor } = contextThemeSetup();
-  console.log(import.meta.env.VITE_REELNEST_BACKEND_URL);
 
   const [title, setTitle] = useState("");
   const [imgUrl, setImgSrc] = useState("");

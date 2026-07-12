@@ -15,13 +15,11 @@ export const PersonalizationSection = () => {
 
   useEffect(() => {
     if (user) {
-      setFullname(user.fullname || "");
-      setUsername(user.username || "");
-      setBio(user.bio || "");
+      setFullname(user?.fullname || "");
+      setUsername(user?.username || "");
+      setBio(user?.bio || "");
     }
   }, [user]);
-
-  console.log(fullname, bio, username);
 
   const handleSavePersonlizationSettings = async (e) => {
     e.preventDefault();
@@ -39,8 +37,6 @@ export const PersonalizationSection = () => {
     formData.append("fullname", fullname);
     formData.append("username", username);
     formData.append("bio", bio);
-
-    console.log("calling/..,.,", formData.get("fullname"));
 
     try {
       await updateProfile({ formData, userId: user?._id });

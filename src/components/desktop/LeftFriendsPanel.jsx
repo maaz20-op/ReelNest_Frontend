@@ -15,7 +15,6 @@ export const LeftFriendsPanelDesktop = () => {
   const elementRef = useRef(null);
   const isHoverd = showScrollBarOnHover(elementRef);
   const connectionData = useConnectionsData();
-  console.log(connectionData);
 
   const handleClick = (indx, sec) => {
     setSection(sec);

@@ -43,7 +43,6 @@ export const PostCard = ({ post, setCurrentPostCommentsData }) => {
     userData?.fullname,
     navigate,
   );
-  console.log(isFollowed, isFollow);
 
   // save Post
   const handleSavePostClick = async () => {
@@ -87,7 +86,7 @@ export const PostCard = ({ post, setCurrentPostCommentsData }) => {
       {/* Image - video content */}
       <div className="video/image-container w-full ">
         <video
-          className="w-full aspect-square object-cover h-140 rounded-2xl"
+          className="w-full aspect-square object-cover h-130  sm:h-135 lg:h-145 rounded-2xl"
           src={
             mediaUrl
               ? mediaUrl

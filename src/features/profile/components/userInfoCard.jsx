@@ -6,6 +6,7 @@ import { checkIsFollowed } from "../../../utils/checkisFollowed";
 import { useRef, useState } from "react";
 import { contextThemeSetup } from "../../../utils/contextSetup";
 import { useUpdateAvatarMutation } from "../../../services/users/user";
+import { useFollowUser, useUnfollowUser } from "../../../hooks/useFollowUser";
 
 export const UserInfoCard = ({
   user,
@@ -14,16 +15,22 @@ export const UserInfoCard = ({
 }) => {
   const obj = checkIsFollowed(user?._id);
 
-  console.log(obj);
   const navigate = useNavigate();
   const [profileImgSrc, setImgSrc] = useState("");
   const inputRef = useRef(null);
   const [isImageFullScreen, setIsImageFullScreen] = useState(false);
-  const isFollow = obj?.isFollow;
+  const [currentFollow, setFollow] = useState(false);
+  const isAlreadyFollowed = obj?.isFollow;
   const { iconsColor, isDark } = contextThemeSetup();
 
   //update Avatar
   const [updateAvatar] = useUpdateAvatarMutation();
+
+  const handleFollowClick = useFollowUser({ userData: user, setFollow });
+  const handleUnfollowClick = useUnfollowUser({
+    unfollowUserId: user?._id,
+    setFollow,
+  });
 
   const handleUpdateAvatar = async (e) => {
     const file = e.target.files[0];
@@ -71,7 +78,7 @@ export const UserInfoCard = ({
         <div className="flex shrink-0 flex-col p-1 2xl:flex-row 2xl:w-1/3 items-center gap-2   ">
           {/* userprofileImage  full screen */}
           {isImageFullScreen && (
-            <div className="absolute  z-1 md:top-30 md:left-[32%] lg:top-30 lg:left-[37%]">
+            <div className="absolute  z-20 md:top-30 md:left-[32%] lg:top-30 lg:left-[37%]">
               <Avatar
                 fn={() => setIsImageFullScreen(false)}
                 size="full"
@@ -148,7 +155,7 @@ export const UserInfoCard = ({
           content={
             isLoggedInUser ? (
               "My Collection"
-            ) : isFollow ? (
+            ) : isAlreadyFollowed || currentFollow ? (
               <div className="flex gap-2 items-center">
                 <p>Followed</p>
                 <Icons.followedIcon color="white" size={19} />
@@ -157,7 +164,13 @@ export const UserInfoCard = ({
               "Follow"
             )
           }
-          fnc={showLoggedInUserCollections}
+          fnc={
+            isLoggedInUser
+              ? showLoggedInUserCollections
+              : isAlreadyFollowed
+                ? handleUnfollowClick
+                : handleFollowClick
+          }
           otherStyles="md:text-sm "
         />
       </div>

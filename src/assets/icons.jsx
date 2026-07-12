@@ -30,10 +30,12 @@ import { FaArrowDown } from "react-icons/fa";
 import { RiUserFollowFill } from "react-icons/ri";
 import { IoPersonAdd } from "react-icons/io5";
 import { BsThreeDotsVertical } from "react-icons/bs";
+import { MdDeleteForever } from "react-icons/md";
 
 export const Icons = {
   search: Search,
   share: IoIosShareAlt,
+  delete: MdDeleteForever,
   videoPreference: BsThreeDotsVertical,
   HomeIcon: GoVideo,
   plus: PlusIcon,

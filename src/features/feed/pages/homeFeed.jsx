@@ -47,12 +47,11 @@ export const FeedPage = () => {
   }, []);
 
   return (
-    <div className="min-h-0 pl-2 lg:pl-5 xl:pl-10  py-3 md:grid md:grid-cols-[400px_1fr] lg:grid-cols-[340px_1fr] 2xl:grid-cols-[480px_1fr] xl:grid-cols-[450px_1fr] flex flex-col gap-4 ">
-      <div
-        onScroll={scrollData?.handleScroll}
-        ref={postContainerRef}
-        className={`${isCommentsOpen ? "overflow-hidden" : "overflow-y-auto "} min-h-0    account-settings`}
-      >
+    <div
+      onScroll={scrollData?.handleScroll}
+      className={`${isCommentsOpen ? "overflow-hidden" : "overflow-y-scroll "} min-h-0    account-settings  pl-2 lg:pl-5 xl:pl-10  py-3 md:grid md:grid-cols-[400px_1fr] lg:grid-cols-[340px_1fr] 2xl:grid-cols-[480px_1fr] xl:grid-cols-[450px_1fr] flex flex-col gap-4 `}
+    >
+      <div ref={postContainerRef}>
         {/* Mobile Devices */}
         <FriendSection />
 
@@ -77,8 +76,8 @@ export const FeedPage = () => {
           />
         </div>
       ) : (
-        <div className="justify-center hidden md:flex w-full items-start pt-12">
-          <div className="2xl:w-85 xl:w-80 lg:w-70">
+        <div className="justify-center     hidden md:flex w-full items-start pt-12">
+          <div className="2xl:w-85 fixed xl:w-80 lg:w-70">
             <div className="flex flex-col w-full p-2 rounded-2xl border-2 border-(--border-color) h-125">
               <div className="p-2 border-b-2 border-(--border-color)">
                 <h1 className="text-(--text-primary) text-center ">
@@ -90,7 +89,7 @@ export const FeedPage = () => {
                 ref={suggestionContainerRef}
                 className={`${isHoverd ? "overflow-y-auto" : "overflow-y-hidden"} other-profile-container  scrollbar-gutter-stable flex flex-col gap-2 flex-1 min-h-0 mt-5  py-5 `}
               >
-                {isConnectionLoading || Followers.length === 0 ? (
+                {isConnectionLoading || Followers?.length === 0 ? (
                   <FriendsListSkeleton
                     isDark={isDark}
                     elementRef={suggestionContainerRef}

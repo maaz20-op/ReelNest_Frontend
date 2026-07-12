@@ -28,7 +28,6 @@ export const SavedPost = () => {
   // fetch saved images
   const { data: savedPostsImage } = useGetSavedImagePostsQuery();
   const savedImagesPins = savedPostsImage?.data[0] || [];
-  console.log("image", savedImagesPins);
 
   return (
     <div className="p-3 min-h-0 flex flex-col">
