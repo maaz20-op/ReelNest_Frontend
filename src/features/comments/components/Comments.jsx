@@ -11,10 +11,15 @@ import { useCommentsContext } from "../hooks/useIsCommentsOpen";
 import { contextThemeSetup } from "../../../utils/contextSetup";
 import {
   useCreateCommentMutation,
-  useGetPostsCommentsQuery,
+  useLazyGetPostsCommentsQuery,
 } from "../../../services/comments/comment";
 import { fetchBaseQuery } from "@reduxjs/toolkit/query";
 import { checkIsFollowed } from "../../../utils/checkisFollowed";
+import {
+  setPagesAndCallApiInfiniteScroll,
+  useInfinteScroll,
+} from "../../../utils/useInfiniteScroll";
+import { Spinner } from "../../../components/reusableComponents/Spinner";
 
 export const Comments = ({ postId, createrInfo, title }) => {
   const { user } = useAuth();
@@ -23,26 +28,47 @@ export const Comments = ({ postId, createrInfo, title }) => {
   const isFollow = checkIsFollowed(createrInfo?._id);
   const [comment, setComment] = useState("");
   const [createComment] = useCreateCommentMutation();
-  const { data: commentData, isLoading: loading } = useGetPostsCommentsQuery(
-    postId,
-    {
-      skip: !postId || !isCommentsOpen,
+
+  const [isEndofComments, setEndOfcomments] = useState(false);
+  const [fetchComments, { data: commentData, isLoading: loading, isFetching }] =
+    useLazyGetPostsCommentsQuery();
+
+  const commentsLimit = 20;
+
+  console.log(commentData);
+  const commentsRawData = commentData?.data[0];
+  console.log(commentsRawData);
+  const hasNextPage = commentData?.data[1];
+  const { isBottomOfContainer, setBtmContainer, handleScroll } =
+    useInfinteScroll();
+  const { apiData: comments, page } = setPagesAndCallApiInfiniteScroll({
+    isBottomOfContainer,
+    setBtmContainer,
+    fetchData: fetchComments,
+    isEndOfPosts: isEndofComments,
+    setEndOfPosts: setEndOfcomments,
+    postsRawData: commentsRawData,
+    hasNextPage,
+    data: commentData,
+    queryObject: {
+      limit: commentsLimit,
+      postId: postId,
     },
-  );
-
-  const comments = commentData?.data[0]?.comments;
-
+    isFetching,
+  });
+  console.log(comments);
   const handleCreateComment = async () => {
+    const commentObj = {
+      text: comment,
+      postId: postId,
+      commentOwner: {
+        fullname: user?.fullname,
+        username: user?.username,
+        profileImage: user?.profileImage,
+      },
+    };
     try {
-      await createComment({
-        text: comment,
-        postId: postId,
-        userId: {
-          fullname: user?.fullname,
-          username: user?.username,
-          profileImage: user?.profileImage,
-        },
-      });
+      await createComment({ comment: commentObj, limit: commentsLimit, page });
       console.log("comment created");
     } catch (err) {
       console.error(err);
@@ -135,17 +161,20 @@ export const Comments = ({ postId, createrInfo, title }) => {
               </div>
             </div>
           </div>
-          <div className="comments-container account-settings relative overflow-y-auto mt-2 min-h-0 h-80 flex flex-col gap-2">
-            {comments?.length > 0 ? (
-              [...comments].reverse().map(({ text, userId }, indx) => (
+          <div
+            onScroll={handleScroll}
+            className="comments-container account-settings relative overflow-y-auto mt-2 min-h-0 h-80 flex flex-col gap-2"
+          >
+            {comments?.length > 0 && Array.isArray(comments) ? (
+              [...comments].reverse().map(({ text, commentOwner }, indx) => (
                 <div
                   key={indx}
                   className="comment-div  flex items-center lg:gap-3  xl:gap-10  px-2 py-3 rounded"
                 >
-                  <Avatar size="md" src={userId?.profileImage} />
+                  <Avatar size="md" src={commentOwner.profileImage} />
                   <div className="div-content w-full  overflow-hidden flex  flex-col">
                     <h1 className="lg:text-xs xl:text-sm line-clamp-1 text-(--text-secondary) ">
-                      {userId?.fullname}
+                      {commentOwner.fullname}
                     </h1>
                     <p className="text-(--text-primary) text-xs xl:text-sm">
                       {text}
@@ -158,6 +187,10 @@ export const Comments = ({ postId, createrInfo, title }) => {
                 {" "}
                 No Comments...
               </div>
+            )}
+
+            {!isEndofComments && !hasNextPage && isBottomOfContainer && (
+              <Spinner size="md" text="md" />
             )}
           </div>
           <div className="h-15 w-full p-2 flex items-center">
@@ -222,31 +255,35 @@ export const Comments = ({ postId, createrInfo, title }) => {
             </div>
           </div>
 
-          <div className="comments-container account-settings  overflow-y-auto   h-[80%]  flex flex-col gap-2">
+          <div
+            onScroll={handleScroll}
+            className="comments-container account-settings  overflow-y-auto   h-[73%]  flex flex-col gap-2"
+          >
             {Array.isArray(comments) &&
-              comments.map(({ text, userId }, indx) => (
+              comments.map(({ _id, text, commentOwner }, indx) => (
                 <div
-                  key={indx}
+                  key={_id}
                   className="comment-div  flex items-center gap-10  px-2 py-3 rounded"
                 >
-                  <Avatar size="md" src={userId?.profileImage} />
+                  <Avatar size="md" src={commentOwner?.profileImage} />
 
                   <div className="div-content w-full  overflow-hidden flex  flex-col">
                     <h1 className="text-sm line-clamp-1 text-(--text-secondary) ">
-                      {userId.fullname}
+                      {commentOwner?.fullname}
                     </h1>
                     <p className="text-(--text-primary)">{text}</p>
                   </div>
                 </div>
               ))}
+            {!isEndofComments && isBottomOfContainer && <Spinner />}
           </div>
-          <div className="h-30 w-full p-2">
-            <form className="flex items-center gap-8   w-full">
+          <div className="h-12   w-full p-2 py-2">
+            <form className="flex h-full items-center gap-8   w-full">
               <input
                 className="outline-none p-2 text-(--text-primary) rounded-2xl w-2/3 border-2 border-(--border-color)"
                 type="text"
-                vlaue={comment}
-                onChange={(e) => e.target.value}
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
                 placeholder="Share your thoughts..."
               />
               <Icons.send

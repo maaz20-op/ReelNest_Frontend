@@ -42,10 +42,12 @@ export const FriendsList = ({
     }
   }, [followersList]);
 
+  console.log(isHoverd);
+
   return (
     <div
       ref={elementRef}
-      className={`${noFollowers ? "flex  items-center justify-center" : isHoverd ? "overflow-y-auto" : "overflow-y-hidden"} other-profile-container  flex flex-col gap-2 flex-1 min-h-0  mt-5  py-5 `}
+      className={`${noFollowers ? "flex  items-center justify-center" : isHoverd ? "overflow-y-auto " : "overflow-y-hidden"} account-settings  flex flex-col gap-2 flex-1 min-h-0  mt-5  pb-5 `}
     >
       {followersList?.length > 0 ? (
         followersList.map((data, indx) => (
@@ -59,7 +61,7 @@ export const FriendsList = ({
                 },
               });
             }}
-            className="friend-div flex items-center justify-center lg:gap-1 xl:gap-2 px-2 py-3 rounded"
+            className="friend-div flex items-center bg-(--bg-secondary) rounded-xl justify-center lg:gap-1 xl:gap-2 px-2 py-3 rounded"
           >
             <Avatar
               size="md"

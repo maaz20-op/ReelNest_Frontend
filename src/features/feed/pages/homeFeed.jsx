@@ -85,14 +85,10 @@ export const FeedPage = () => {
 
               <div
                 ref={suggestionContainerRef}
-                className={`${isHoverd ? "overflow-y-auto" : "overflow-y-hidden"} other-profile-container  scrollbar-gutter-stable flex flex-col gap-2 flex-1 min-h-0 mt-5  py-5 `}
+                className={`${isHoverd ? "overflow-y-auto" : "overflow-y-hidden"} account-settings  scrollbar-gutter-stable flex flex-col gap-2 flex-1 min-h-0 mt-5  py-5 `}
               >
                 {isConnectionLoading || Followers?.length === 0 ? (
-                  <FriendsListSkeleton
-                    isDark={isDark}
-                    elementRef={suggestionContainerRef}
-                    isHoverd={isHoverd}
-                  />
+                  <FriendsListSkeleton isDark={isDark} isHoverd={isHoverd} />
                 ) : (
                   Array.isArray(Followers) &&
                   Followers.map(({ data }, indx) => (
@@ -124,7 +120,7 @@ export const FeedPage = () => {
 
                       <Button
                         background={isDark ? "bg-pink-400" : "bg-pink-100"}
-                        content="follow back"
+                        content="View Profile"
                         font="font-medium"
                         width="w-30"
                         textSize="sm"

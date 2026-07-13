@@ -27,6 +27,7 @@ export const Media = ({
     setEndOfPosts,
     data,
     isBottomOfContainer,
+    queryObject: {},
     isFetching,
     fetchData: fetchPosts,
   });

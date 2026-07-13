@@ -30,14 +30,21 @@ export const setPagesAndCallApiInfiniteScroll = ({
   isBottomOfContainer,
   isFetching,
   fetchData,
+
+  queryObject,
 }) => {
   const [apiData, setApiData] = useState([]);
   const [page, setPage] = useState(1);
-
+  console.log(queryObject?.postId);
+  const finalObj = {
+    ...queryObject,
+    page: page,
+  };
+  console.log(finalObj);
   // calling api
   useEffect(() => {
     if (page > 1 && !hasNextPage) return setBtmContainer(false);
-    fetchData({ page: page });
+    fetchData(finalObj);
     setBtmContainer(true);
   }, [page]);
 
@@ -70,5 +77,5 @@ export const setPagesAndCallApiInfiniteScroll = ({
     setPage((prev) => prev + 1);
   }, [isBottomOfContainer]);
 
-  return apiData;
+  return { apiData, page };
 };
