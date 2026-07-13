@@ -28,10 +28,10 @@ export const ScrollableFeed = () => {
 
   const { isCommentsOpen, setIsCommentsOpen } = useCommentsContext();
   const data = location?.state;
-  const userId = data?.userId;
+  const userId = nextPost?.user ? nextPost?.user?._id : data?.userId;
   const postId = nextPost ? nextPost?._id : data?._id;
 
-  const { isFollow } = checkIsFollowed(userId);
+  const isAlreadyFollowed = checkIsFollowed(userId);
 
   useEffect(() => {
     return () => setIsCommentsOpen(false);
@@ -70,24 +70,36 @@ export const ScrollableFeed = () => {
           videoRef={videoRef}
           data={data}
           nextPost={nextPost}
-          isFollow={isFollow}
+          isAlreadyFollowed={isAlreadyFollowed?.isFollow}
         />
       ) : (
-        <Image nextPost={nextPost} data={data} isFollow={isFollow} />
+        <Image
+          nextPost={nextPost}
+          data={data}
+          isAlreadyFollowed={isAlreadyFollowed?.isFollow}
+        />
       )}
 
       {/* Toggle comments and scroll up-down buttons */}
       {isCommentsOpen ? (
         <Comments
           title={data?.title}
-          isFollow={isFollow}
+          isAlreadyFollowed={isAlreadyFollowed?.isFollow}
           postId={postId}
           createrInfo={{
-            avatar: data?.avatar,
-            fullname: data?.fullname,
-            createrId: data?.userId,
-            username: data?.username,
-            followers: data?.followers,
+            avatar: nextPost?.user
+              ? nextPost?.user?.profileImage
+              : data?.avatar,
+            fullname: nextPost?.user
+              ? nextPost?.user?.fullname
+              : data?.fullname,
+            createrId: nextPost?.user ? nextPost?.user?.userId : data?.userId,
+            username: nextPost?.user
+              ? nextPost?.user?.username
+              : data?.username,
+            followers: nextPost?.user
+              ? nextPost?.followers?.followe
+              : data?.followers,
           }}
         />
       ) : (

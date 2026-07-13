@@ -1,5 +1,8 @@
 import { useMemo, useState } from "react";
-import { useFollowUserMutation } from "../services/users/user";
+import {
+  useFollowUserMutation,
+  useUnfollowUserMutation,
+} from "../services/users/user";
 import { debounce } from "../utils/debounce";
 
 export const useFollowUser = ({ userData, setFollow }) => {
@@ -26,12 +29,14 @@ export const useFollowUser = ({ userData, setFollow }) => {
   return handleFollowClick;
 };
 
-export const useUnfollowUser = ({ unfollowUserId, setFollow }) => {
+export const useUnfollowUser = ({ unfollowUserId, setFollow, userId }) => {
+  const [unfollowUser, { data, isLoading }] = useUnfollowUserMutation();
+  console.log(unfollowUserId);
   const debouncedFollow = useMemo(() => {
-    return debounce(() => {
-      followUser(); // send backend request after updating Ui
+    return debounce(async () => {
+      await unfollowUser({ unfollowUserId: unfollowUserId, userId: userId }); // send backend request after updating Ui
     }, 1000);
-  }, []);
+  }, [unfollowUser]);
 
   const handleUnfollowClick = (e) => {
     e.stopPropagation();

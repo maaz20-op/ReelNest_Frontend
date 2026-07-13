@@ -6,12 +6,23 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../features/auth/hooks/useAuth.js";
 import { Button } from "./reusableComponents/Button.jsx";
 import { Avatar } from "./reusableComponents/Avatar.jsx";
+import { useState } from "react";
+import { useSearchContext } from "../contexts/seachContext.jsx";
 
 export const Header = () => {
   const { isDark, toggle, iconsColor } = contextThemeSetup();
   const SearchIcon = Icons.search;
   const { user, isLoading, error } = useAuth();
+
   const navigate = useNavigate();
+
+  const { setSearchQuery, searchQuery, setSearchBtnClicked } =
+    useSearchContext();
+
+  const handleSearch = async () => {
+    navigate("/search");
+    setSearchBtnClicked(true);
+  };
 
   return (
     <header className="w-full  bg-text-xl">
@@ -28,9 +39,14 @@ export const Header = () => {
             <input
               className="lg:w-120 px-3 py-2 text-(--text-primary) text-sm outline-none border rounded-l-2xl border-(--border-color)"
               type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search"
             />
-            <div className="px-3 py-2 bg-(--bg-secondary) rounded-r-2xl">
+            <div
+              onClick={handleSearch}
+              className="px-3 py-2 bg-(--bg-secondary) rounded-r-2xl"
+            >
               <SearchIcon color={iconsColor} />
             </div>
           </div>

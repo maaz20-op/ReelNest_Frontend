@@ -5,15 +5,45 @@ import { Avatar } from "../../../../components/reusableComponents/Avatar";
 import { useGetAuthMeQuery } from "../../../../services/auth/auth";
 import { useAuth } from "../../../auth/hooks/useAuth";
 import { VideoActions } from "./Actions";
+import {
+  useFollowUser,
+  useUnfollowUser,
+} from "../../../../hooks/useFollowUser";
 
-export const Video = ({ videoRef, nextPost, data, isFollow }) => {
+export const Video = ({ videoRef, nextPost, data, isAlreadyFollowed }) => {
   const [isPlay, setPlay] = useState(false);
   const { user } = useAuth();
   let [isVideoTimeUpdating, setTimeUpdating] = useState(false);
+  const [isFollow, setFollow] = useState(isAlreadyFollowed);
   const [progressBarWidth, setWidth] = useState(0);
   const [hidePlayPauseIcon, setHide] = useState(false);
+  console.log("$$$$$$$$", isFollow, isAlreadyFollowed);
+  const currentPost = nextPost?.user ? nextPost : data;
+  console.log("nextPost", nextPost);
+  const handleFollowClick = useFollowUser({
+    userData: {
+      _id: currentPost?._id,
+      fullname: currentPost?.fullname,
+      username: currentPost?.username,
+      profileImage: currentPost?.avatar || currentPost?.profileImage,
+    },
+    setFollow,
+  });
 
-  const videoSrc = nextPost ? nextPost?.mediaUrl : data?.mediaUrl;
+  useEffect(() => {
+    if (isAlreadyFollowed !== undefined) {
+      console.log("useEffet", isAlreadyFollowed);
+      setFollow(isAlreadyFollowed);
+    }
+  }, [isAlreadyFollowed]);
+
+  const handleUnfollowClick = useUnfollowUser({
+    unfollowUserId: currentPost?.userId || currentPost?.user?._id,
+    setFollow,
+    userId: user?._id,
+  });
+  console.log("$$$$$$$$", isFollow, isAlreadyFollowed);
+  const videoSrc = currentPost?.mediaUrl;
 
   useEffect(() => {
     if (!isPlay) return;
@@ -55,10 +85,17 @@ export const Video = ({ videoRef, nextPost, data, isFollow }) => {
           src={videoSrc}
         />
         <div className="creater-info flex ml-8 items-center text-white gap-4 absolute top-5 w-full ">
-          <Avatar size="md" src={data?.avatar} />
+          <Avatar
+            size="md"
+            src={currentPost.user?.profileImage || currentPost?.avatar}
+          />
           <div className="username w-30  leading-tight flex flex-col">
-            <h1 className="text-base line-clamp-1">{data?.fullname}</h1>
-            <h2 className="text-sm line-clamp-1">@maaz-20</h2>
+            <h1 className="text-base line-clamp-1">
+              {currentPost?.user?.fullname || currentPost?.fullname}
+            </h1>
+            <h2 className="text-sm line-clamp-1">
+              {currentPost?.user?.username || currentPost?.username}
+            </h2>
           </div>
           <Button
             content={
@@ -68,7 +105,7 @@ export const Video = ({ videoRef, nextPost, data, isFollow }) => {
                   <Icons.followedIcon color="white" size={19} />{" "}
                 </div>
               ) : nextPost ? (
-                nextPost?.user === user?._id ? (
+                nextPost?.user?._id === user?._id ? (
                   "You"
                 ) : (
                   "Follow"
@@ -79,16 +116,17 @@ export const Video = ({ videoRef, nextPost, data, isFollow }) => {
                 "Follow"
               )
             }
+            fnc={isFollow ? handleUnfollowClick : handleFollowClick}
             background="bg-pink-600"
             border="rounded"
           />
         </div>
         <div className="video-metadata w-70 ml-5  absolute bottom-10 text-white">
           <h1 className="video-title line-clamp-3 font-bold">
-            {nextPost ? nextPost?.postdata : data?.title} #reelnest
+            {currentPost?.postdata || currentPost?.title} #reelnest
           </h1>
         </div>
-        !
+
         {!hidePlayPauseIcon && (
           <div
             onClick={handleClick}

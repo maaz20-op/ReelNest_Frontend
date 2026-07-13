@@ -6,17 +6,20 @@ import { Provider } from "react-redux";
 import { store } from "../config/store";
 import { CommentsProvider } from "../../features/comments/hooks/useIsCommentsOpen";
 import { ConnectionProvider } from "../../contexts/useConnections";
+import { SearchContextProvider } from "../../contexts/seachContext";
 
 //All App providers
 export const AppProviders = ({ children }) => {
   return (
     <Provider store={store}>
       <ThemeProvider>
-        <ConnectionProvider>
-          <CommentsProvider>
-            <BrowserRouter>{children}</BrowserRouter>
-          </CommentsProvider>
-        </ConnectionProvider>
+        <SearchContextProvider>
+          <ConnectionProvider>
+            <CommentsProvider>
+              <BrowserRouter>{children}</BrowserRouter>
+            </CommentsProvider>
+          </ConnectionProvider>
+        </SearchContextProvider>
       </ThemeProvider>
     </Provider>
   );

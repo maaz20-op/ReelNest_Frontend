@@ -27,6 +27,13 @@ export const postApi = apiSlice.injectEndpoints({
       }),
     }),
 
+    getSearchResults: builder.query({
+      query: (text) => ({
+        url: `/posts?text=${text}`,
+        method: "GET",
+      }),
+    }),
+
     deleteLoggedInUserPost: builder.mutation({
       query: ({ postId, userId, mediaType }) => ({
         url: `/posts/${postId}`,
@@ -121,6 +128,6 @@ export const {
   useDeleteLoggedInUserPostMutation,
   useGetVideoPostsByuserIdQuery,
   useGetImagePostsByUserIdQuery,
-
+  useLazyGetSearchResultsQuery,
   useLikePostMutation,
 } = postApi;

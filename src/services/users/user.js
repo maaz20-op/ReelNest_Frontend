@@ -24,6 +24,68 @@ export const userApi = apiSlice.injectEndpoints({
       }),
     }),
 
+    unfollowUser: builder.mutation({
+      query: ({ unfollowUserId, userId }) => ({
+        url: "/users/unfollow",
+        method: "PATCH",
+        body: {
+          id: unfollowUserId,
+        },
+      }),
+
+      async onQueryStarted(
+        { unfollowUserId, userId },
+        { dispatch, queryFulfilled },
+      ) {
+        console.log(unfollowUserId);
+        const updateUserfollowing = dispatch(
+          apiSlice.util.updateQueryData("getAuthMe", undefined, (draft) => {
+            const user = draft?.data[0];
+            console.log("user following", user.following);
+            if (user && Array.isArray(user.following)) {
+              user.following = user.following.filter(
+                (id) => id !== unfollowUserId,
+              );
+
+              console.log("after update", user.following);
+            }
+          }),
+        );
+
+        const updateUserConnectionData = dispatch(
+          apiSlice.util.updateQueryData(
+            "getLoggedInUserConnection",
+            undefined,
+            (draft) => {
+              let followingList = draft?.data[1];
+              let friends = draft?.data[2];
+              console.log(current(draft));
+              if (Array.isArray(followingList) && Array.isArray(friends)) {
+                followingList = followingList.filter(
+                  (fu) => fu?._id.toString() !== unfollowUserId.toString(),
+                );
+
+                friends = friends.filter(
+                  (fu) => fu?._id.toString() !== unfollowUserId.toString(),
+                );
+
+                draft.data[1] = followingList;
+                draft.data[2] = friends;
+                console.log(friends, followingList);
+              }
+            },
+          ),
+        );
+
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          updateUserfollowing.undo();
+          updateUserConnectionData.undo();
+        }
+      },
+    }),
+
     deleteUserAccount: builder.mutation({
       query: () => ({
         url: "/users",
@@ -129,6 +191,7 @@ export const userApi = apiSlice.injectEndpoints({
             "getLoggedInUserConnection",
             undefined,
             (draft) => {
+              console.log("followed user", followedUser);
               console.log("this is draft", current(draft?.data[1]));
               const followingArray = draft?.data[1];
               const isAlreadyFollowed = followingArray.find(
@@ -174,6 +237,7 @@ export const {
   useGetUserByIdQuery,
   useGetLoggedInUserConnectionQuery,
   useUpdateAvatarMutation,
+  useUnfollowUserMutation,
   useDeleteUserAccountMutation,
   useUpdateUserProfileSettingsMutation,
   useFollowUserMutation,

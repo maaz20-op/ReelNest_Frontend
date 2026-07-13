@@ -3,10 +3,11 @@ import { Avatar } from "../../../components/reusableComponents/Avatar";
 import { Button } from "../../../components/reusableComponents/Button";
 import { Icons } from "../../../assets/icons";
 import { checkIsFollowed } from "../../../utils/checkisFollowed";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { contextThemeSetup } from "../../../utils/contextSetup";
 import { useUpdateAvatarMutation } from "../../../services/users/user";
 import { useFollowUser, useUnfollowUser } from "../../../hooks/useFollowUser";
+import { useAuth } from "../../auth/hooks/useAuth";
 
 export const UserInfoCard = ({
   user,
@@ -16,21 +17,33 @@ export const UserInfoCard = ({
   const obj = checkIsFollowed(user?._id);
 
   const navigate = useNavigate();
+  const { user: loggedInUser } = useAuth();
   const [profileImgSrc, setImgSrc] = useState("");
   const inputRef = useRef(null);
   const [isImageFullScreen, setIsImageFullScreen] = useState(false);
-  const [currentFollow, setFollow] = useState(false);
-  const isAlreadyFollowed = obj?.isFollow;
+
+  let isAlreadyFollowed = obj?.isFollow;
+  const [currentFollow, setFollow] = useState(isAlreadyFollowed);
   const { iconsColor, isDark } = contextThemeSetup();
 
   //update Avatar
   const [updateAvatar] = useUpdateAvatarMutation();
 
   const handleFollowClick = useFollowUser({ userData: user, setFollow });
+
+  console.log(user?._id);
+
   const handleUnfollowClick = useUnfollowUser({
     unfollowUserId: user?._id,
     setFollow,
+    userId: loggedInUser?._id,
   });
+
+  useEffect(() => {
+    if (isAlreadyFollowed !== undefined) {
+      setFollow(isAlreadyFollowed);
+    }
+  }, [isAlreadyFollowed]);
 
   const handleUpdateAvatar = async (e) => {
     const file = e.target.files[0];
@@ -57,6 +70,7 @@ export const UserInfoCard = ({
     }
   };
 
+  console.log("current value", currentFollow, isAlreadyFollowed);
   const handleAvatarClick = (e) => setIsImageFullScreen((prev) => !prev);
 
   const showLoggedInUserCollections = () => {
@@ -155,7 +169,7 @@ export const UserInfoCard = ({
           content={
             isLoggedInUser ? (
               "My Collection"
-            ) : isAlreadyFollowed || currentFollow ? (
+            ) : currentFollow ? (
               <div className="flex gap-2 items-center">
                 <p>Followed</p>
                 <Icons.followedIcon color="white" size={19} />
@@ -167,7 +181,7 @@ export const UserInfoCard = ({
           fnc={
             isLoggedInUser
               ? showLoggedInUserCollections
-              : isAlreadyFollowed
+              : currentFollow
                 ? handleUnfollowClick
                 : handleFollowClick
           }

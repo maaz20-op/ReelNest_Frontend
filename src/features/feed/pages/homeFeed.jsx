@@ -36,8 +36,6 @@ export const FeedPage = () => {
   const suggestionContainerRef = useRef(null);
   const postContainerRef = useRef(null);
 
-  const [loading, setLoading] = useState(false);
-
   const isHoverd = showScrollBarOnHover(suggestionContainerRef);
 
   const scrollData = useInfinteScroll();

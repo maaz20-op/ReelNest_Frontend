@@ -1,10 +1,24 @@
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import React from "react";
-import { ScrollableFeed } from "../features/feed/pages/scrollableFeed";
+
 const LoginPage = React.lazy(() =>
   import("../features/auth/pages/Login").then((module) => ({
     default: module.LoginPage,
   })),
+);
+
+const ScrollableFeed = React.lazy(() =>
+  import("../features/feed/pages/scrollableFeed").then((module) => ({
+    default: module.ScrollableFeed,
+  })),
+);
+
+const SearchResults = React.lazy(() =>
+  import("../features/searchResultsPage/page/searchResultsPage").then(
+    (module) => ({
+      default: module.SearchResults,
+    }),
+  ),
 );
 
 const SignupPage = React.lazy(() =>
@@ -69,7 +83,7 @@ export const AppRouting = () => {
         <Route path="/profile" element={<Profile />} />
         <Route path="/settings" element={<AccountSettings />} />
         <Route path="/message" element={<Message_Users_Page />}></Route>
-
+        <Route path="/search" element={<SearchResults />}></Route>
         <Route path="/upgrade" element={<Upgrade />} />
         <Route path="/create/post" element={<PostCreationPage />} />
         <Route path="/profile/collection" element={<SavedPost />} />
