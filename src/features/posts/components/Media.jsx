@@ -19,7 +19,7 @@ export const Media = ({
   const postsRawData = data?.data?.[0];
   const hasNextPage = data?.data?.[1];
 
-  const posts = setPagesAndCallApiInfiniteScroll({
+  const { apiData: posts } = setPagesAndCallApiInfiniteScroll({
     hasNextPage,
     setBtmContainer,
     postsRawData,

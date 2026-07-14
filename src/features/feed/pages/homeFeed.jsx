@@ -66,15 +66,18 @@ export const FeedPage = () => {
       </div>
 
       {isCommentsOpen ? (
-        <div className="comments-box h-full flex justify-end p-2">
-          <Comments
-            postId={commentsData?.postId}
-            createrInfo={commentsData?.createrInfo}
-            title={commentsData?.title}
-          />
+        <div className="comments-box h-full w-full   flex items-center justify-end p-2">
+          <div className="fixed top-24  md:h-120 md:w-1/3 lg:h-150 lg:w-1/5 2xl:w-1/4   flex justify-end">
+            <Comments
+              postId={commentsData?.postId}
+              createrInfo={commentsData?.createrInfo}
+              title={commentsData?.title}
+              isHomeFeed={true}
+            />
+          </div>
         </div>
       ) : (
-        <div className="justify-center     hidden md:flex w-full items-start pt-12">
+        <div className="justify-center h-full    hidden md:flex w-full items-start pt-12">
           <div className="2xl:w-85 fixed xl:w-80 lg:w-70">
             <div className="flex flex-col w-full p-2 rounded-2xl border-2 border-(--border-color) h-125">
               <div className="p-2 border-b-2 border-(--border-color)">

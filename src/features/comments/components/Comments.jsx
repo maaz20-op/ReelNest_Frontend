@@ -21,7 +21,12 @@ import {
 } from "../../../utils/useInfiniteScroll";
 import { Spinner } from "../../../components/reusableComponents/Spinner";
 
-export const Comments = ({ postId, createrInfo, title }) => {
+export const Comments = ({
+  postId,
+  createrInfo,
+  title,
+  isHomeFeed = false,
+}) => {
   const { user } = useAuth();
   const { isCommentsOpen, setIsCommentsOpen } = useCommentsContext();
   const { isDark, iconsColor } = contextThemeSetup();
@@ -87,7 +92,7 @@ export const Comments = ({ postId, createrInfo, title }) => {
         />
       ) : (
         <div
-          className={` ${isDark ? "bg-black" : "bg-white"}  hidden border-2 border-(--border-color) md:h-110 md:w-4/5 lg:h-150 lg:w-6/7 2xl:w-2/3 rounded-xl md:flex flex-col p-1   xl:p-3 `}
+          className={` ${isDark ? "bg-black" : "bg-white"} ${isHomeFeed ? "h-full" : "md:h-110 md:w-4/5 lg:h-150 lg:w-6/7 2xl:w-2/3"}  hidden border-2 border-(--border-color)  rounded-xl md:flex flex-col p-1   xl:p-3 `}
         >
           <div className="user-info w-full h-35 flex  bg-(--bg-secondary) p-2 rounded-xl">
             <div className="w-1/2  flex flex-col  gap-5">
