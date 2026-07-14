@@ -1,0 +1,11 @@
+ <div className="flex flex-col justify-center h-100 items-center gap-6">
+              <img className="h-30 w-30" src="/no-posts.svg" alt="no-friends" />
+              <div className="flex flex-col gap-0 justify-center items-center">
+                <p className="w-50   text-center text-(--text-secondary)">
+                  No Posts Uploaded By{" "}
+                </p>
+                <span className="text-(--text-primary)">
+                  {userId === user?._id ? "You" : userData?.name}!
+                </span>
+              </div>
+            </div>
