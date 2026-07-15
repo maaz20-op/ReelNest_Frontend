@@ -34,10 +34,10 @@ export const Header = () => {
         </div>
 
         {/* Search Div show desktop */}
-        <div className="wrapper sm:block hidden">
+        <div className="wrapper ">
           <div className="flex ">
             <input
-              className="lg:w-120 px-3 py-2 text-(--text-primary) text-sm outline-none border rounded-l-2xl border-(--border-color)"
+              className="lg:w-120 w-20 px-3 py-2 text-(--text-primary) text-sm outline-none border rounded-l-2xl border-(--border-color)"
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -70,8 +70,6 @@ export const Header = () => {
           )}
         </div>
       </nav>
-      <BorderDiv />
-
       <BorderDiv />
     </header>
   );

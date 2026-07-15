@@ -12,14 +12,19 @@ import { GridMediaLayoutProfile } from "../components/GridMediaLayout";
 import { useGetUserByIdQuery } from "../../../services/users/user";
 import { GiTrumpet } from "react-icons/gi";
 import { useEffect } from "react";
+import { Spinner } from "../../../components/reusableComponents/Spinner";
 import { GridVideoLayoutSkeleton } from "../../../skeleton/video/GridVideoSkeleton";
 import {
-  useGetVideoPostsByuserIdQuery,
-  useGetImagePostsByUserIdQuery,
+  useLazyGetVideoPostsByuserIdQuery,
+  useLazyGetImagePostsByUserIdQuery,
 } from "../../../services/posts/post";
 
 import { VideosImagesToggleTab } from "../../../components/reusableComponents/videosImagesTab";
 import { ConnectionInfo } from "../components/userConnectionsData";
+import {
+  setPagesAndCallApiInfiniteScroll,
+  useInfinteScroll,
+} from "../../../utils/useInfiniteScroll";
 
 export const Profile = () => {
   const { iconsColor, isDark } = contextThemeSetup();
@@ -35,22 +40,60 @@ export const Profile = () => {
   const userId = userData?.userId ? userData?.userId : user?._id;
 
   const [isVideoTab, setVideoTab] = useState(true);
+  const [isEndOfPosts, setEndOfPosts] = useState(false);
 
   // get Profile User
   const { data, isLoading, error } = useGetUserByIdQuery(userId, {
     skip: !userId,
   });
 
-  // get profile User Videos
-  const { data: userVideoPosts, isLoading: isUserVideoPostsLoading } =
-    useGetVideoPostsByuserIdQuery(data?.data[0]?._id, {
-      skip: !data?.data[0]?._id || !isVideoTab,
-    });
+  const { isBottomOfContainer, setBtmContainer, handleScroll } =
+    useInfinteScroll();
 
-  const { data: userImagePosts, isLoading: isUserImagePostsLoading } =
-    useGetImagePostsByUserIdQuery(data?.data[0]?._id, {
-      skip: !data?.data[0]?._id || isVideoTab,
-    });
+  // get profile User Videos
+  const [
+    fetchVideos,
+    {
+      data: userVideoPosts,
+      isLoading: isUserVideoPostsLoading,
+      isFetching: isFetchingVideo,
+    },
+  ] = useLazyGetVideoPostsByuserIdQuery();
+
+  const [
+    fetchImages,
+    {
+      data: userImagePosts,
+      isLoading: isUserImagePostsLoading,
+      isFetching: isFetchingImages,
+    },
+  ] = useLazyGetImagePostsByUserIdQuery();
+
+  const hasNextPage = isVideoTab
+    ? userVideoPosts?.data[1]
+    : userImagePosts?.data[1];
+  const limit = 12;
+
+  console.log(userVideoPosts);
+
+  const { apiData: posts } = setPagesAndCallApiInfiniteScroll({
+    hasNextPage,
+    isBottomOfContainer,
+    setBtmContainer,
+    postsRawData: isVideoTab
+      ? userVideoPosts?.data[0]
+      : userImagePosts?.data[0],
+    setEndOfPosts,
+    queryObject: {
+      isVideoTab: isVideoTab,
+      limit: limit,
+      userId: data?.data[0]?._id,
+    },
+    fetchData: isVideoTab ? fetchVideos : fetchImages,
+    data: isVideoTab ? userVideoPosts : userImagePosts,
+    isFetching: isVideoTab ? isFetchingVideo : isFetchingImages,
+    isPostsEnd: isEndOfPosts,
+  });
 
   useEffect(() => {
     if (data?.data[0]?._id !== user?._id) setLoggedInUser(false);
@@ -58,7 +101,10 @@ export const Profile = () => {
   }, [data?.data[0]]);
 
   return (
-    <div className="w-full min-h-0 account-settings overflow-y-auto flex flex-col ">
+    <div
+      onScroll={handleScroll}
+      className="w-full min-h-0 account-settings overflow-y-auto flex flex-col "
+    >
       {/* user info Card top */}
       {isLoading || error || !data ? (
         <UserInfoCardSkeleton />
@@ -90,7 +136,7 @@ export const Profile = () => {
           ) : userVideoPosts?.data[0].length > 0 ? (
             <GridMediaLayoutProfile
               user={data?.data[0]}
-              posts={userVideoPosts?.data[0]}
+              posts={posts}
               isVideoTab={isVideoTab}
             />
           ) : (
@@ -110,9 +156,10 @@ export const Profile = () => {
           <GridMediaLayoutProfile
             user={data?.data[0]}
             isVideoTab={isVideoTab}
-            posts={userImagePosts?.data[0]}
+            posts={posts}
           />
         )}
+        {isBottomOfContainer && isEndOfPosts && <Spinner />}
       </div>
     </div>
   );
