@@ -16,6 +16,7 @@ export const GridItem = ({
   setActiveTooltipId,
   posts,
   handlePreferenceClick,
+  isMyCollectionPage,
   activeTooltipId,
 }) => {
   const userId = post?.user?._id;
@@ -74,7 +75,26 @@ export const GridItem = ({
             </h1>
           </div>
 
-          {isloggedInUser && (
+          {isMyCollectionPage && isloggedInUser && (
+            <div
+              className="relative p-2 cursor-pointer hit-target"
+              onClick={(e) => handlePreferenceClick(e, _id)}
+              onTouchStart={(e) => {
+                e.stopPropagation();
+              }}
+            >
+              <Icons.videoPreference size={22} color="white" />
+
+              {activeTooltipId === _id && (
+                <TooltipMenu
+                  options={getTooltipOptions(_id, mediaType)}
+                  onClose={() => setActiveTooltipId(null)}
+                />
+              )}
+            </div>
+          )}
+
+          {isloggedInUser && !isMyCollectionPage && (
             <div
               className="relative p-2 cursor-pointer hit-target"
               onClick={(e) => handlePreferenceClick(e, _id)}

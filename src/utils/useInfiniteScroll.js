@@ -30,7 +30,7 @@ export const setPagesAndCallApiInfiniteScroll = ({
   isBottomOfContainer,
   isFetching,
   fetchData,
-
+  userId,
   queryObject,
 }) => {
   const [apiData, setApiData] = useState([]);
@@ -43,6 +43,7 @@ export const setPagesAndCallApiInfiniteScroll = ({
   console.log(finalObj);
 
   const isVideo = queryObject?.isVideoTab;
+
   let isValid = Object.values(finalObj).every(
     (value) => value !== undefined && value !== null,
   );
@@ -54,11 +55,11 @@ export const setPagesAndCallApiInfiniteScroll = ({
     if (page > 1 && !hasNextPage) return setBtmContainer(false);
     fetchData(finalObj);
     setBtmContainer(true);
-  }, [page, isValid, isVideo]);
+  }, [page, isValid, isVideo, userId]);
 
   useEffect(() => {
     setPage(1);
-  }, [isVideo]);
+  }, [isVideo, userId]);
 
   // settings data
   useEffect(() => {

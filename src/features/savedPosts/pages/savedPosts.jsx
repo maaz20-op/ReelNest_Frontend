@@ -24,7 +24,7 @@ export const SavedPost = () => {
     error,
   } = useGetSavedVideoPostsQuery();
   const savedVideoPins = savedPostsVideo?.data?.[0] || [];
-
+  console.log(savedPostsVideo);
   // fetch saved images
   const { data: savedPostsImage } = useGetSavedImagePostsQuery();
   const savedImagesPins = savedPostsImage?.data[0] || [];
@@ -57,12 +57,14 @@ export const SavedPost = () => {
             user={user}
             posts={savedVideoPins}
             isVideoTab={isVideoTab}
+            isMyCollectionPage={true}
           />
         ) : (
           <GridMediaLayoutProfile
             user={user}
             posts={savedImagesPins}
             isVideoTab={isVideoTab}
+            isMyCollectionPage={true}
           />
         )}
       </div>

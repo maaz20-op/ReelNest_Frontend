@@ -25,6 +25,12 @@ const pinApi = apiSlice.injectEndpoints({
         },
       }),
     }),
+
+    deleteSavedPost: builder.mutation({
+      query: (postId) => ({
+        url: `/pins/${postId}`,
+      }),
+    }),
   }),
 });
 

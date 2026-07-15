@@ -11,6 +11,7 @@ export const GridMediaLayoutProfile = ({
   user,
   posts,
   isVideoTab = "video",
+  isMyCollectionPage = false,
 }) => {
   const { user: loggedInUser } = useAuth();
   const [activeTooltipId, setActiveTooltipId] = useState(null);
@@ -31,6 +32,14 @@ export const GridMediaLayoutProfile = ({
   };
 
   const handleDeleteLoggedInUserPost = async (postId, mediaType) => {
+    try {
+      await deletePost({ postId, userId: loggedInUser?._id, mediaType });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const deleteSavedPost = async (postId, mediaType) => {
     try {
       await deletePost({ postId, userId: loggedInUser?._id, mediaType });
     } catch (err) {
@@ -68,6 +77,7 @@ export const GridMediaLayoutProfile = ({
             handlePreferenceClick={handlePreferenceClick}
             getTooltipOptions={getTooltipOptions}
             setPostCreaterInformation={setPostCreaterInformation}
+            isMyCollectionPage={isMyCollectionPage}
           />
         ))}
     </div>

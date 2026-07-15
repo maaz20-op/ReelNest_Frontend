@@ -84,6 +84,7 @@ export const Profile = () => {
       ? userVideoPosts?.data[0]
       : userImagePosts?.data[0],
     setEndOfPosts,
+    userId: data?.data[0]?._id,
     queryObject: {
       isVideoTab: isVideoTab,
       limit: limit,
@@ -159,7 +160,7 @@ export const Profile = () => {
             posts={posts}
           />
         )}
-        {isBottomOfContainer && isEndOfPosts && <Spinner />}
+        {isBottomOfContainer && !isEndOfPosts && <Spinner />}
       </div>
     </div>
   );
