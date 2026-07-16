@@ -32,6 +32,7 @@ export const Button = ({
   }
   return (
     <button
+      disabled={disable}
       className={`${background} ${border} ${textSizes[textSize]} ${width} ${otherStyles}  ${font} ${paddings[padding]} flex justify-center items-center  text-(--text-primary) `}
       onClick={fnc}
     >

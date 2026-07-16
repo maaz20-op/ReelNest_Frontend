@@ -8,6 +8,7 @@ import { contextThemeSetup } from "../../../utils/contextSetup";
 import { useUpdateAvatarMutation } from "../../../services/users/user";
 import { useFollowUser, useUnfollowUser } from "../../../hooks/useFollowUser";
 import { useAuth } from "../../auth/hooks/useAuth";
+import { Loader } from "../../../components/reusableComponents/Loader";
 
 export const UserInfoCard = ({
   user,
@@ -29,7 +30,10 @@ export const UserInfoCard = ({
   //update Avatar
   const [updateAvatar] = useUpdateAvatarMutation();
 
-  const handleFollowClick = useFollowUser({ userData: user, setFollow });
+  const { handleFollowClick, isLoading: followLoading } = useFollowUser({
+    userData: user,
+    setFollow,
+  });
 
   console.log(user?._id);
 
@@ -165,7 +169,7 @@ export const UserInfoCard = ({
           padding="md"
           background={isDark ? "bg-pink-800" : "bg-pink-400"}
           border="rounded-2xl"
-          width="w-40"
+          width="w-60"
           content={
             isLoggedInUser ? (
               "My Collection"
@@ -175,7 +179,10 @@ export const UserInfoCard = ({
                 <Icons.followedIcon color="white" size={19} />
               </div>
             ) : (
-              "Follow"
+              <div className="flex gap-2 items-center">
+                <p>Follow</p>
+                <Icons.followIcon color="white" size={19} />
+              </div>
             )
           }
           fnc={

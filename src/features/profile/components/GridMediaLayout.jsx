@@ -6,12 +6,18 @@ import { Icons } from "../../../assets/icons";
 import { TooltipMenu } from "../../../utils/tooltip";
 import { useDeleteLoggedInUserPostMutation } from "../../../services/posts/post";
 import { GridItem } from "./GridItem";
+import { useDeleteSavedPostMutation } from "../../../services/pins/pin";
+import { VirtualList } from "../../../utils/useVirtualization";
 
 export const GridMediaLayoutProfile = ({
   user,
   posts,
   isVideoTab = "video",
   isMyCollectionPage = false,
+  isSearchPage = false,
+  limit,
+  page,
+  mainContainerRef,
 }) => {
   const { user: loggedInUser } = useAuth();
   const [activeTooltipId, setActiveTooltipId] = useState(null);
@@ -19,9 +25,10 @@ export const GridMediaLayoutProfile = ({
   const videoRef = useRef(null);
   const navigate = useNavigate();
   const [postCreaterInformation, setPostCreaterInformation] = useState({});
-
+  console.log(isMyCollectionPage);
   // delete LoggedIn User Post
   const [deletePost, { data, isLoading }] = useDeleteLoggedInUserPostMutation();
+  const [deleteSavedPost] = useDeleteSavedPostMutation();
 
   const handlePreferenceClick = (e, id) => {
     e.preventDefault();
@@ -39,9 +46,9 @@ export const GridMediaLayoutProfile = ({
     }
   };
 
-  const deleteSavedPost = async (postId, mediaType) => {
+  const handleDeleteSavedPost = async (postId, mediaType) => {
     try {
-      await deletePost({ postId, userId: loggedInUser?._id, mediaType });
+      await deleteSavedPost({ postId, mediaType, page, limit });
     } catch (err) {
       console.error(err);
     }
@@ -49,9 +56,12 @@ export const GridMediaLayoutProfile = ({
 
   const getTooltipOptions = (postId, mediaType) => [
     {
-      label: "Delete Post",
+      label: isMyCollectionPage ? "Delete Saved Post" : "Delete Post",
       icon: Icons.delete,
-      action: () => handleDeleteLoggedInUserPost(postId, mediaType),
+      action: () =>
+        isMyCollectionPage
+          ? handleDeleteSavedPost(postId, mediaType)
+          : handleDeleteLoggedInUserPost(postId, mediaType),
     },
     {
       label: "Edit Caption",
@@ -60,7 +70,31 @@ export const GridMediaLayoutProfile = ({
     },
   ];
 
-  return (
+  console.log(posts);
+  return !isSearchPage ? (
+    <VirtualList
+      mainContainerRef={mainContainerRef}
+      data={posts}
+      isGrid={true}
+      itemRendered={(post) => (
+        <GridItem
+          key={post?._id}
+          post={post}
+          user={user}
+          isVideoTab={isVideoTab}
+          isloggedInUser={isloggedInUser}
+          videoRef={videoRef}
+          posts={posts}
+          activeTooltipId={activeTooltipId}
+          setActiveTooltipId={setActiveTooltipId}
+          handlePreferenceClick={handlePreferenceClick}
+          getTooltipOptions={getTooltipOptions}
+          setPostCreaterInformation={setPostCreaterInformation}
+          isMyCollectionPage={isMyCollectionPage}
+        />
+      )}
+    />
+  ) : (
     <div className="video-container p-4 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
       {Array.isArray(posts) &&
         posts.map((post, indx) => (

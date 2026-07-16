@@ -28,11 +28,14 @@ export const ScrollableFeed = () => {
 
   const { isCommentsOpen, setIsCommentsOpen } = useCommentsContext();
   const data = location?.state;
-  const userId = nextPost?.user ? nextPost?.user?._id : data?.userId;
+  const userId =
+    nextPost?.postOwner || nextPost?.user
+      ? nextPost?.postOwner?._id || nextPost?.user?._id
+      : data?.userId;
   const postId = nextPost ? nextPost?._id : data?._id;
 
   const isAlreadyFollowed = checkIsFollowed(userId);
-
+  console.log(isAlreadyFollowed);
   useEffect(() => {
     return () => setIsCommentsOpen(false);
   }, []);

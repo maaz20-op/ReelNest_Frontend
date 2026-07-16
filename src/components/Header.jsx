@@ -70,7 +70,6 @@ export const Header = () => {
           )}
         </div>
       </nav>
-      <BorderDiv />
     </header>
   );
 };

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Icons } from "../../../assets/icons";
 import { Button } from "../../../components/reusableComponents/Button";
 import {
@@ -20,6 +20,7 @@ import {
   useInfinteScroll,
 } from "../../../utils/useInfiniteScroll";
 import { Spinner } from "../../../components/reusableComponents/Spinner";
+import { VirtualList } from "../../../utils/useVirtualization";
 
 export const Comments = ({
   postId,
@@ -42,6 +43,7 @@ export const Comments = ({
 
   console.log(commentData);
   const commentsRawData = commentData?.data[0];
+  const commentsContainerRef = useRef(null);
   console.log(commentsRawData);
   const hasNextPage = commentData?.data[1];
   const { isBottomOfContainer, setBtmContainer, handleScroll } =
@@ -61,6 +63,7 @@ export const Comments = ({
     },
     isFetching,
   });
+
   console.log(comments);
   const handleCreateComment = async () => {
     const commentObj = {
@@ -72,6 +75,7 @@ export const Comments = ({
         profileImage: user?.profileImage,
       },
     };
+    setComment("");
     try {
       await createComment({ comment: commentObj, limit: commentsLimit, page });
       console.log("comment created");
@@ -89,6 +93,7 @@ export const Comments = ({
           setCommentsOpen={setIsCommentsOpen}
           iconsColor={iconsColor}
           isDark={isDark}
+          isHomeFeed={isHomeFeed}
         />
       ) : (
         <div
@@ -167,34 +172,40 @@ export const Comments = ({
             </div>
           </div>
           <div
+            ref={commentsContainerRef}
             onScroll={handleScroll}
             className="comments-container account-settings relative overflow-y-auto mt-2 min-h-0 h-80 flex flex-col gap-2"
           >
-            {comments?.length > 0 && Array.isArray(comments) ? (
-              [...comments].reverse().map(({ text, commentOwner }, indx) => (
-                <div
-                  key={indx}
-                  className="comment-div  flex items-center lg:gap-3  xl:gap-10  px-2 py-3 rounded"
-                >
-                  <Avatar size="md" src={commentOwner.profileImage} />
-                  <div className="div-content w-full  overflow-hidden flex  flex-col">
-                    <h1 className="lg:text-xs xl:text-sm line-clamp-1 text-(--text-secondary) ">
-                      {commentOwner.fullname}
-                    </h1>
-                    <p className="text-(--text-primary) text-xs xl:text-sm">
-                      {text}
-                    </p>
-                  </div>
-                </div>
-              ))
-            ) : (
+            {comments?.length === 0 && Array.isArray(comments) && (
               <div className="text-(--text-primary) absolute top-[50%] left-[40%]">
                 {" "}
                 No Comments...
               </div>
             )}
+            <VirtualList
+              mainContainerRef={commentsContainerRef}
+              data={comments}
+              itemRendered={({ commentOwner, text, _id }, indx) => {
+                return (
+                  <div
+                    key={_id || indx}
+                    className="comment-div  flex items-center lg:gap-3  xl:gap-10  px-2 py-3 rounded"
+                  >
+                    <Avatar size="md" src={commentOwner?.profileImage} />
+                    <div className="div-content w-full  overflow-hidden flex  flex-col">
+                      <h1 className="lg:text-xs xl:text-sm line-clamp-1 text-(--text-secondary) ">
+                        {commentOwner?.fullname}
+                      </h1>
+                      <p className="text-(--text-primary) text-xs xl:text-sm">
+                        {text}
+                      </p>
+                    </div>
+                  </div>
+                );
+              }}
+            />
 
-            {!isEndofComments && !hasNextPage && isBottomOfContainer && (
+            {!isEndofComments && isBottomOfContainer && (
               <Spinner size="md" text="md" />
             )}
           </div>
@@ -264,8 +275,16 @@ export const Comments = ({
             onScroll={handleScroll}
             className="comments-container account-settings  overflow-y-auto   h-[73%]  flex flex-col gap-2"
           >
-            {Array.isArray(comments) &&
-              comments.map(({ _id, text, commentOwner }, indx) => (
+            {comments?.length === 0 && Array.isArray(comments) && (
+              <div className="text-(--text-primary) absolute top-[50%] left-[40%]">
+                {" "}
+                No Comments...
+              </div>
+            )}
+            <VirtualList
+              mainContainerRef={commentsContainerRef}
+              data={comments}
+              itemRendered={({ commentOwner, text, _id }, indx) => (
                 <div
                   key={_id}
                   className="comment-div  flex items-center gap-10  px-2 py-3 rounded"
@@ -279,7 +298,9 @@ export const Comments = ({
                     <p className="text-(--text-primary)">{text}</p>
                   </div>
                 </div>
-              ))}
+              )}
+            />
+
             {!isEndofComments && isBottomOfContainer && <Spinner />}
           </div>
           <div className="h-12   w-full p-2 py-2">

@@ -12,19 +12,16 @@ export const LeftFriendsPanelDesktop = () => {
   const { isDark } = contextThemeSetup();
   const { user } = useAuth();
   const [selectedSection, setSection] = useState("Friends");
-  const elementRef = useRef(null);
-  const isHoverd = showScrollBarOnHover(elementRef);
-  const connectionData = useConnectionsData();
 
-  console.log(isHoverd);
+  const connectionData = useConnectionsData();
 
   const handleClick = (indx, sec) => {
     setSection(sec);
     setActive(indx);
   };
   return (
-    <div className="lg:flex lg:flex-col xl:p-5 hidden lg:p-2  border border-r border-(--border-color) py-4 min-h-0 ">
-      <div className="sections text-(--text-secondary)   flex justify-between gap-2">
+    <div className="lg:flex lg:flex-col  hidden  py-4   border border-r border-(--border-color)  min-h-0 ">
+      <div className="sections text-(--text-secondary) px-4   flex justify-between gap-2">
         {["Friends", "Followers", "Following"].map((sec, indx) => (
           <h1
             key={indx}
@@ -39,10 +36,8 @@ export const LeftFriendsPanelDesktop = () => {
         <FriendsListSkeleton isDark={isDark} />
       ) : (
         <FriendsList
-          elementRef={elementRef}
           isDark={isDark}
           followersList={connectionData?.connectionList[selectedSection]}
-          isHoverd={isHoverd}
           selectedSection={selectedSection}
         />
       )}

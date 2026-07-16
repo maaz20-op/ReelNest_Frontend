@@ -15,6 +15,7 @@ export const userApi = apiSlice.injectEndpoints({
         url: "/users/connection",
         method: "GET",
       }),
+      providesTags: ["User"],
     }),
 
     getUserById: builder.query({

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Avatar } from "../../../components/reusableComponents/Avatar";
 import { Icons } from "../../../assets/icons";
 import { debounce } from "../../../utils/debounce";
@@ -7,15 +7,16 @@ import { contextThemeSetup } from "../../../utils/contextSetup";
 import { useAuth } from "../../auth/hooks/useAuth";
 import { useCommentsContext } from "../../comments/hooks/useIsCommentsOpen";
 import { useLike } from "../../../hooks/useLike";
-import { useNavigate } from "react-router-dom";
+import { data, useNavigate } from "react-router-dom";
 import { handleRedirectToUserProfile } from "../../../utils/handleRedirectToUserProfile";
 import { useCreateUserSavedPinsMutation } from "../../../services/pins/pin";
 import { useFollowUser } from "../../../hooks/useFollowUser";
 import { checkIsFollowed } from "../../../utils/checkisFollowed";
+import { useToastContext } from "../../../contexts/toast";
 
 export const PostCard = ({ post, setCurrentPostCommentsData }) => {
   const { _id, mediaUrl, postdata, userData, likesUsersData, likes } = post;
-
+  const videoRef = useRef(null);
   const { user } = useAuth();
   const navigate = useNavigate();
   const { isCommentsOpen, setIsCommentsOpen } = useCommentsContext();
@@ -44,12 +45,30 @@ export const PostCard = ({ post, setCurrentPostCommentsData }) => {
     navigate,
   );
 
+  useEffect(() => {
+    try {
+    } catch (err) {}
+  }, []);
+  const { showToast, setSuccessMsg } = useToastContext();
   // save Post
   const handleSavePostClick = async () => {
     try {
+      showToast(`Post Saved By ${userData?.fullname}`);
+      setSuccessMsg(true);
       await savePost(_id);
+      if (!data?.success) {
+        showToast(`Failed to Save Post By ${userData?.fullname}`);
+        setSuccessMsg(false);
+      } else {
+        showToast(`Post Saved By ${userData?.fullname}`);
+        setSuccessMsg(true);
+      }
     } catch (err) {
       console.log(err);
+      if (err || !data?.success) {
+        showToast(`Failed to Save Post By ${userData?.fullname}`);
+        setSuccessMsg(false);
+      }
     }
   };
 
@@ -84,15 +103,14 @@ export const PostCard = ({ post, setCurrentPostCommentsData }) => {
       </div>
 
       {/* Image - video content */}
-      <div className="video/image-container w-full ">
+
+      <div className="video/image-container w-full bg-black rounded-2xl overflow-hidden">
         <video
-          className="w-full aspect-square object-cover h-130  sm:h-135 lg:h-145 rounded-2xl"
-          src={
-            mediaUrl
-              ? mediaUrl
-              : "https://res.cloudinary.com/ddl6cgcbp/video/upload/q_auto,f_auto/v1752447426/ReelNest/videos/x764nhgtfjojbau5h23i.mp4"
-          }
+          ref={videoRef}
+          className="w-full aspect-square object-cover h-[500px] sm:h-[540px] lg:h-[580px] rounded-2xl"
+          src={mediaUrl}
           controls
+          preload="metadata"
         ></video>
       </div>
 

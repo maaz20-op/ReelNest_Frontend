@@ -4,10 +4,11 @@ import {
   useUnfollowUserMutation,
 } from "../services/users/user";
 import { debounce } from "../utils/debounce";
+import { useToastContext } from "../contexts/toast";
 
 export const useFollowUser = ({ userData, setFollow }) => {
   const [followUser, { isLoading, data }] = useFollowUserMutation();
-
+  const { showToast, setSuccessMsg } = useToastContext();
   const debouncedFollow = useMemo(() => {
     return debounce(() => {
       followUser({
@@ -22,15 +23,17 @@ export const useFollowUser = ({ userData, setFollow }) => {
   const handleFollowClick = (e) => {
     e.stopPropagation();
     setFollow(true);
+    showToast(`${userData?.fullname || "User"} Followed By You!`);
 
     debouncedFollow();
   };
 
-  return handleFollowClick;
+  return { handleFollowClick, isLoading };
 };
 
 export const useUnfollowUser = ({ unfollowUserId, setFollow, userId }) => {
   const [unfollowUser, { data, isLoading }] = useUnfollowUserMutation();
+  const { showToast, setSuccessMsg } = useToastContext();
   console.log(unfollowUserId);
   const debouncedFollow = useMemo(() => {
     return debounce(async () => {
@@ -41,7 +44,8 @@ export const useUnfollowUser = ({ unfollowUserId, setFollow, userId }) => {
   const handleUnfollowClick = (e) => {
     e.stopPropagation();
     setFollow(false);
-
+    showToast(`Unfollowed Successfully`);
+    setSuccessMsg(true);
     debouncedFollow();
   };
 

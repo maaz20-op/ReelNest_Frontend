@@ -1,8 +1,11 @@
-import { useEffect, useImperativeHandle, useMemo, useState } from "react";
+import { Virtuoso } from "react-virtuoso";
 import { useLazyGetPostsQuery } from "../../../services/posts/post";
 import { PostCardSkeleton } from "../../../skeleton/homeFeed/postCard";
 import { PostCard } from "./PostCard";
 import { setPagesAndCallApiInfiniteScroll } from "../../../utils/useInfiniteScroll";
+import { VirtualList } from "../../../utils/useVirtualization";
+import { useEffect } from "react";
+import { useToastContext } from "../../../contexts/toast";
 
 export const Media = ({
   setCommentsOpen,
@@ -12,6 +15,7 @@ export const Media = ({
   isPostsEnd,
   setEndOfPosts,
   setCurrentPostCommentsData,
+  mainScrollContainerRef,
 }) => {
   const [fetchPosts, { data, isLoading, error, isFetching }] =
     useLazyGetPostsQuery();
@@ -32,21 +36,26 @@ export const Media = ({
     fetchData: fetchPosts,
   });
 
-  if (isLoading || error) return <PostCardSkeleton />;
+  if (isLoading) return <PostCardSkeleton />;
+
+  if (error) return <p>Something went wrong.</p>;
+
+  if (!Array.isArray(posts) || posts.length === 0) {
+    return <p>No posts available.</p>;
+  }
 
   return (
-    <div className="posts-container">
-      {Array.isArray(posts) &&
-        posts.map((post) => {
-          const uniqueId = crypto.randomUUID();
-          return (
-            <PostCard
-              key={uniqueId}
-              setCurrentPostCommentsData={setCurrentPostCommentsData}
-              post={post}
-            />
-          );
-        })}
+    <div className="w-full">
+      <VirtualList
+        mainContainerRef={mainScrollContainerRef}
+        data={posts}
+        itemRendered={(post) => (
+          <PostCard
+            post={post}
+            setCurrentPostCommentsData={setCurrentPostCommentsData}
+          />
+        )}
+      />
     </div>
   );
 };

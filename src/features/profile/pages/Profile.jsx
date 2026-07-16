@@ -96,6 +96,8 @@ export const Profile = () => {
     isPostsEnd: isEndOfPosts,
   });
 
+  const profileContainerRef = useRef(null);
+
   useEffect(() => {
     if (data?.data[0]?._id !== user?._id) setLoggedInUser(false);
     else if (data?.data[0]?._id === user?._id) setLoggedInUser(true);
@@ -104,6 +106,7 @@ export const Profile = () => {
   return (
     <div
       onScroll={handleScroll}
+      ref={profileContainerRef}
       className="w-full min-h-0 account-settings overflow-y-auto flex flex-col "
     >
       {/* user info Card top */}
@@ -139,6 +142,7 @@ export const Profile = () => {
               user={data?.data[0]}
               posts={posts}
               isVideoTab={isVideoTab}
+              mainContainerRef={profileContainerRef}
             />
           ) : (
             <div className="flex flex-col justify-center h-100 items-center gap-6">
@@ -158,6 +162,7 @@ export const Profile = () => {
             user={data?.data[0]}
             isVideoTab={isVideoTab}
             posts={posts}
+            mainContainerRef={profileContainerRef}
           />
         )}
         {isBottomOfContainer && !isEndOfPosts && <Spinner />}

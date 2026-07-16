@@ -20,10 +20,18 @@ export const GridItem = ({
   activeTooltipId,
 }) => {
   const userId = post?.user?._id;
-  const fullname = user?.fullname || post?.user?.fullname;
-  const username = user?.username || post?.user?.username;
-  const profileImage = user?.profileImage || post?.user?.profileImage;
-  const followers = user?.followers?.length || post?.user?.followers?.length;
+  const fullname =
+    post?.user?.fullname || post?.postOwner?.fullname || user?.fullname;
+  const username =
+    post?.user?.username || post?.postOwner?.username || user?.username;
+  const profileImage =
+    post?.user?.profileImage ||
+    post?.postOwner?.profileImage ||
+    user?.profileImage;
+  const followers =
+    post?.user?.followers?.length ||
+    post?.postOwner?.followers?.length ||
+    user?.followers?.length;
   const _id = post?._id;
   const comments = post?.comments || [];
   const mediaUrl = post?.mediaUrl;
@@ -49,10 +57,10 @@ export const GridItem = ({
         nextPosts: posts,
         mediaUrl,
         title: postdata || "ReelNest video #reelnest",
-        avatar: user?.profileImage || profileImage,
-        fullname: user?.fullname || fullname || "Guest",
-        username: user?.username || username || "@user",
-        followers: user?.followers || followers,
+        avatar: profileImage,
+        fullname: fullname || "Guest",
+        username: username || "@user",
+        followers: followers,
       },
     });
   };
@@ -75,7 +83,7 @@ export const GridItem = ({
             </h1>
           </div>
 
-          {isMyCollectionPage && isloggedInUser && (
+          {isloggedInUser && isMyCollectionPage && (
             <div
               className="relative p-2 cursor-pointer hit-target"
               onClick={(e) => handlePreferenceClick(e, _id)}
@@ -94,7 +102,7 @@ export const GridItem = ({
             </div>
           )}
 
-          {isloggedInUser && !isMyCollectionPage && (
+          {isloggedInUser && (
             <div
               className="relative p-2 cursor-pointer hit-target"
               onClick={(e) => handlePreferenceClick(e, _id)}

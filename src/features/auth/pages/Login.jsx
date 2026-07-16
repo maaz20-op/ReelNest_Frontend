@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 import { Button } from "../../../components/reusableComponents/Button";
 import { useLoginUserMutation } from "../../../services/auth/auth";
+import { Loader } from "../../../components/reusableComponents/Loader";
 
 export const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -50,9 +51,19 @@ export const LoginPage = () => {
         <Button
           fnc={HandleSubmit}
           padding="md"
-          background="bg-red-400"
+          background="bg-red-700"
           border="rounded-xl"
-          content="Login"
+          disable={isLoading}
+          content={
+            !isLoading ? (
+              "Login"
+            ) : (
+              <div className="flex justify-center items-center gap-4">
+                <span>Logging In...</span>
+                <Loader size="sm" color="white" />
+              </div>
+            )
+          }
           width="w-full"
         />
 

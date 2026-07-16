@@ -3,6 +3,7 @@ import { Icons } from "../../../assets/icons";
 import { Button } from "../../../components/reusableComponents/Button";
 import { useState } from "react";
 import { useSignupUserMutation } from "../../../services/auth/auth";
+import { Loader } from "../../../components/reusableComponents/Loader";
 
 export const SignupPage = () => {
   const [fullname, setFullname] = useState("");
@@ -80,9 +81,19 @@ export const SignupPage = () => {
         <Button
           fnc={handleSignup}
           padding="md"
-          background="bg-red-400"
+          background="bg-red-700"
           border="rounded-xl"
-          content="Sign up"
+          disable={isLoading}
+          content={
+            !isLoading ? (
+              "Sign Up"
+            ) : (
+              <div className="flex justify-center items-center gap-4">
+                <span>Creating Account...</span>
+                <Loader size="sm" color="white" />
+              </div>
+            )
+          }
           width="w-full"
         />
 

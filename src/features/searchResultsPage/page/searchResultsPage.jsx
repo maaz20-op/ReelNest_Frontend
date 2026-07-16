@@ -23,7 +23,7 @@ export function SearchResults() {
   const { searchQuery, isSearchBtnClick } = useSearchContext();
   const [getSearchResults, { data, isLoading }] =
     useLazyGetSearchResultsQuery();
-
+  console.log(data);
   useEffect(() => {
     if (!searchQuery || !isSearchBtnClick) return;
 
@@ -34,7 +34,7 @@ export function SearchResults() {
         console.error(err);
       }
     };
-
+    console.log("$@#*((*#@%Y(HFD(*W");
     callBackend();
   }, [searchQuery, isSearchBtnClick]);
   console.log(data?.data[0]);
@@ -42,7 +42,7 @@ export function SearchResults() {
   const videoPosts =
     Array.isArray(data?.data[0]) &&
     data?.data[0].filter((p) => p?.mediaType !== "image");
-
+  console.log("$$$$$$", videoPosts);
   const imagesPosts =
     Array.isArray(data?.data[0]) &&
     data?.data[0].filter((p) => p?.mediaType !== "video");
@@ -81,7 +81,11 @@ export function SearchResults() {
             {isLoading ? (
               <GridVideoLayoutSkeleton />
             ) : (
-              <GridMediaLayoutProfile posts={videoPosts} isVideoTab={true} />
+              <GridMediaLayoutProfile
+                posts={videoPosts}
+                isSearchPage={true}
+                isVideoTab={true}
+              />
             )}
           </section>
         )}
@@ -126,7 +130,11 @@ export function SearchResults() {
             </div>
 
             {!isLoading ? (
-              <GridMediaLayoutProfile posts={imagesPosts} isVideoTab={false} />
+              <GridMediaLayoutProfile
+                posts={imagesPosts}
+                isSearchPage={true}
+                isVideoTab={false}
+              />
             ) : (
               <GridVideoLayoutSkeleton />
             )}

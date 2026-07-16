@@ -4,6 +4,7 @@ export const authApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getAuthMe: builder.query({
       query: () => "/auth/local/me",
+      providesTags: ["User"],
     }),
 
     loginUser: builder.mutation({
@@ -12,6 +13,7 @@ export const authApi = apiSlice.injectEndpoints({
         method: "POST",
         body: body,
       }),
+      invalidatesTags: ["User"],
     }),
 
     logoutUser: builder.mutation({

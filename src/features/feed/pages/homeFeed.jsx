@@ -39,7 +39,7 @@ export const FeedPage = () => {
   const isHoverd = showScrollBarOnHover(suggestionContainerRef);
 
   const scrollData = useInfinteScroll();
-
+  const mainScrollContainerRef = useRef(null);
   useEffect(() => {
     return () => setIsCommentsOpen(false);
   }, []);
@@ -47,6 +47,7 @@ export const FeedPage = () => {
   return (
     <div
       onScroll={scrollData?.handleScroll}
+      ref={mainScrollContainerRef}
       className={`${isCommentsOpen ? "overflow-hidden" : "overflow-y-scroll "} min-h-0    account-settings  pl-2 lg:pl-5 xl:pl-10  py-3 md:grid md:grid-cols-[400px_1fr] lg:grid-cols-[340px_1fr] 2xl:grid-cols-[480px_1fr] xl:grid-cols-[450px_1fr] flex flex-col gap-4 `}
     >
       <div ref={postContainerRef}>
@@ -61,13 +62,14 @@ export const FeedPage = () => {
           isPostsEnd={isPostsEnd}
           setEndOfPosts={setEndOfPosts}
           setCurrentPostCommentsData={setCurrentPostCommentsData}
+          mainScrollContainerRef={mainScrollContainerRef}
         />
         {!isPostsEnd && scrollData?.isBottomOfContainer && <Spinner />}
       </div>
 
       {isCommentsOpen ? (
-        <div className="comments-box h-full w-full   flex items-center justify-end p-2">
-          <div className="fixed top-24  md:h-120 md:w-1/3 lg:h-150 lg:w-1/5 2xl:w-1/4   flex justify-end">
+        <div className="comments-box h-full w-full  flex items-center justify-end p-2">
+          <div className="fixed top-24  md:h-120 md:w-1/3 lg:h-150 lg:w-1/4 2xl:w-1/4   flex justify-end">
             <Comments
               postId={commentsData?.postId}
               createrInfo={commentsData?.createrInfo}

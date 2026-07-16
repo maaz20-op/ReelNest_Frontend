@@ -5,11 +5,17 @@ import { GridMediaLayoutProfile } from "../../profile/components/GridMediaLayout
 import { useAuth } from "../../auth/hooks/useAuth";
 import { GridVideoLayoutSkeleton } from "../../../skeleton/video/GridVideoSkeleton";
 import {
-  useGetSavedImagePostsQuery,
-  useGetSavedVideoPostsQuery,
+  useLazyGetSavedImagePostsQuery,
+  useLazyGetSavedVideoPostsQuery,
 } from "../../../services/pins/pin";
 import { VideosImagesToggleTab } from "../../../components/reusableComponents/videosImagesTab";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import {
+  setPagesAndCallApiInfiniteScroll,
+  useInfinteScroll,
+} from "../../../utils/useInfiniteScroll";
+import { Spinner } from "../../../components/reusableComponents/Spinner";
+import { VirtualList } from "../../../utils/useVirtualization";
 
 export const SavedPost = () => {
   const { isDark } = contextThemeSetup();
@@ -17,17 +23,48 @@ export const SavedPost = () => {
   const [isVideoTab, setVideoTab] = useState(true);
 
   // fetch saved videos
+  const [isEndofPosts, setEndOfPosts] = useState(false);
+  const savedPostContainerRef = useRef(null);
+  const { handleScroll, isBottomOfContainer, setBtmContainer } =
+    useInfinteScroll();
 
-  const {
-    data: savedPostsVideo,
-    isLoading,
-    error,
-  } = useGetSavedVideoPostsQuery();
+  const [
+    fetchSavedVideos,
+    {
+      data: savedPostsVideo,
+      isLoading,
+      error,
+      isFetching: isSavedVideosFetching,
+    },
+  ] = useLazyGetSavedVideoPostsQuery();
   const savedVideoPins = savedPostsVideo?.data?.[0] || [];
   console.log(savedPostsVideo);
   // fetch saved images
-  const { data: savedPostsImage } = useGetSavedImagePostsQuery();
+  const [
+    fetchSavedImages,
+    { data: savedPostsImage, isFetching: isSavedImagesFetching },
+  ] = useLazyGetSavedImagePostsQuery();
   const savedImagesPins = savedPostsImage?.data[0] || [];
+
+  const hasNextPage = isVideoTab
+    ? savedPostsVideo?.data?.[1]
+    : savedPostsImage?.data[1];
+  console.log(hasNextPage);
+  const limit = 12;
+  const { apiData: posts, page } = setPagesAndCallApiInfiniteScroll({
+    hasNextPage,
+    setBtmContainer,
+    isBottomOfContainer,
+    data: isVideoTab ? savedPostsVideo : savedPostsImage,
+    limit,
+    postsRawData: isVideoTab ? savedVideoPins : savedImagesPins,
+    isPostsEnd: isEndofPosts,
+    setEndOfPosts,
+    queryObject: { limit },
+    fetchData: isVideoTab ? fetchSavedVideos : fetchSavedImages,
+    isFetching: isVideoTab ? isSavedVideosFetching : isSavedImagesFetching,
+  });
+  console.log(posts);
 
   return (
     <div className="p-3 min-h-0 flex flex-col">
@@ -39,7 +76,11 @@ export const SavedPost = () => {
       <VideosImagesToggleTab setVideoTab={setVideoTab} />
       <BorderDiv />
 
-      <div className="min-h-0 account-settings overflow-y-auto w-full h-full">
+      <div
+        ref={savedPostContainerRef}
+        onScroll={handleScroll}
+        className="min-h-0 account-settings overflow-y-auto w-full h-full"
+      >
         {savedVideoPins.length === 0 && isVideoTab && (
           <div className="text-(--text-primary) h-full w-full flex justify-center items-center">
             No Saved video Posts yet...
@@ -55,18 +96,22 @@ export const SavedPost = () => {
         ) : isVideoTab ? (
           <GridMediaLayoutProfile
             user={user}
-            posts={savedVideoPins}
+            posts={posts}
             isVideoTab={isVideoTab}
             isMyCollectionPage={true}
+            page={page}
+            limit={limit}
+            mainContainerRef={savedPostContainerRef}
           />
         ) : (
           <GridMediaLayoutProfile
             user={user}
-            posts={savedImagesPins}
+            posts={posts}
             isVideoTab={isVideoTab}
             isMyCollectionPage={true}
           />
         )}
+        {isBottomOfContainer && !isEndofPosts && <Spinner />}
       </div>
     </div>
   );

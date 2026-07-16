@@ -1,7 +1,8 @@
 import { Button } from "./Button";
 import { Avatar } from "./Avatar";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { showScrollBarOnHover } from "../../utils/showSideBarOnHover";
 
 const msgs = {
   Friends: {
@@ -24,15 +25,11 @@ const btnContent = {
   Followers: "Follow Back",
 };
 
-export const FriendsList = ({
-  elementRef,
-  isHoverd,
-  isDark,
-  followersList,
-  selectedSection,
-}) => {
+export const FriendsList = ({ isDark, followersList, selectedSection }) => {
   const navigate = useNavigate();
   const [noFollowers, setNoFollowers] = useState(false);
+  const elementRef = useRef(null);
+  const isHoverd = showScrollBarOnHover(elementRef);
 
   useEffect(() => {
     if (followersList?.length === 0) {
@@ -47,7 +44,7 @@ export const FriendsList = ({
   return (
     <div
       ref={elementRef}
-      className={`${noFollowers ? "flex  items-center justify-center" : isHoverd ? "overflow-y-auto " : "overflow-y-hidden"} account-settings  flex flex-col gap-2 flex-1 min-h-0  mt-5  pb-5 `}
+      className={`${noFollowers ? "flex  items-center justify-center" : ""}  p-5  ${isHoverd ? "overflow-y-auto" : "overflow-y-hidden"} w-full   account-settings  flex flex-col gap-2 flex-1 min-h-0  mt-5  pb-5 `}
     >
       {followersList?.length > 0 ? (
         followersList.map((data, indx) => (

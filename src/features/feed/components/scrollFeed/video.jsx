@@ -18,7 +18,8 @@ export const Video = ({ videoRef, nextPost, data, isAlreadyFollowed }) => {
   const [progressBarWidth, setWidth] = useState(0);
   const [hidePlayPauseIcon, setHide] = useState(false);
   console.log("$$$$$$$$", isFollow, isAlreadyFollowed);
-  const currentPost = nextPost?.user ? nextPost : data;
+
+  const currentPost = nextPost?.user || nextPost?.postOwner ? nextPost : data;
   console.log("nextPost", nextPost);
   const handleFollowClick = useFollowUser({
     userData: {
@@ -30,6 +31,8 @@ export const Video = ({ videoRef, nextPost, data, isAlreadyFollowed }) => {
     setFollow,
   });
 
+  console.log("os follow", isFollow);
+
   useEffect(() => {
     if (isAlreadyFollowed !== undefined) {
       console.log("useEffet", isAlreadyFollowed);
@@ -38,7 +41,10 @@ export const Video = ({ videoRef, nextPost, data, isAlreadyFollowed }) => {
   }, [isAlreadyFollowed]);
 
   const handleUnfollowClick = useUnfollowUser({
-    unfollowUserId: currentPost?.userId || currentPost?.user?._id,
+    unfollowUserId:
+      currentPost?.userId ||
+      currentPost?.postOwner?._id ||
+      currentPost?.user?._id,
     setFollow,
     userId: user?._id,
   });
@@ -87,14 +93,22 @@ export const Video = ({ videoRef, nextPost, data, isAlreadyFollowed }) => {
         <div className="creater-info flex ml-8 items-center text-white gap-4 absolute top-5 w-full ">
           <Avatar
             size="md"
-            src={currentPost.user?.profileImage || currentPost?.avatar}
+            src={
+              currentPost.user?.profileImage ||
+              currentPost.postOwner?.profileImage ||
+              currentPost?.avatar
+            }
           />
           <div className="username w-30  leading-tight flex flex-col">
             <h1 className="text-base line-clamp-1">
-              {currentPost?.user?.fullname || currentPost?.fullname}
+              {currentPost?.user?.fullname ||
+                currentPost?.postOwner?.fullname ||
+                currentPost?.fullname}
             </h1>
             <h2 className="text-sm line-clamp-1">
-              {currentPost?.user?.username || currentPost?.username}
+              {currentPost?.user?.username ||
+                currentPost.postOwner?.username ||
+                currentPost?.username}
             </h2>
           </div>
           <Button
@@ -105,7 +119,8 @@ export const Video = ({ videoRef, nextPost, data, isAlreadyFollowed }) => {
                   <Icons.followedIcon color="white" size={19} />{" "}
                 </div>
               ) : nextPost ? (
-                nextPost?.user?._id === user?._id ? (
+                nextPost?.user?._id ||
+                nextPost?.postOwner?._id === user?._id ? (
                   "You"
                 ) : (
                   "Follow"
