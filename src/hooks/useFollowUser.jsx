@@ -28,7 +28,7 @@ export const useFollowUser = ({ userData, setFollow }) => {
     debouncedFollow();
   };
 
-  return { handleFollowClick, isLoading };
+  return handleFollowClick;
 };
 
 export const useUnfollowUser = ({ unfollowUserId, setFollow, userId }) => {

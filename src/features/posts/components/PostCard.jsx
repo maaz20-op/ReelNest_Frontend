@@ -45,10 +45,6 @@ export const PostCard = ({ post, setCurrentPostCommentsData }) => {
     navigate,
   );
 
-  useEffect(() => {
-    try {
-    } catch (err) {}
-  }, []);
   const { showToast, setSuccessMsg } = useToastContext();
   // save Post
   const handleSavePostClick = async () => {

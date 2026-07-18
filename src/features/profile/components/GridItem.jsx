@@ -102,7 +102,7 @@ export const GridItem = ({
             </div>
           )}
 
-          {isloggedInUser && (
+          {isloggedInUser && !isMyCollectionPage && (
             <div
               className="relative p-2 cursor-pointer hit-target"
               onClick={(e) => handlePreferenceClick(e, _id)}

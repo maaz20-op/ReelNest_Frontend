@@ -76,7 +76,7 @@ export const Profile = () => {
 
   console.log(userVideoPosts);
 
-  const { apiData: posts } = setPagesAndCallApiInfiniteScroll({
+  const { apiData: posts, page } = setPagesAndCallApiInfiniteScroll({
     hasNextPage,
     isBottomOfContainer,
     setBtmContainer,
@@ -143,6 +143,8 @@ export const Profile = () => {
               posts={posts}
               isVideoTab={isVideoTab}
               mainContainerRef={profileContainerRef}
+              page={page}
+              limit={limit}
             />
           ) : (
             <div className="flex flex-col justify-center h-100 items-center gap-6">
@@ -163,6 +165,8 @@ export const Profile = () => {
             isVideoTab={isVideoTab}
             posts={posts}
             mainContainerRef={profileContainerRef}
+            page={page}
+            limit={limit}
           />
         )}
         {isBottomOfContainer && !isEndOfPosts && <Spinner />}

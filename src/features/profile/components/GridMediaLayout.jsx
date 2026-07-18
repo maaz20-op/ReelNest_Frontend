@@ -40,7 +40,20 @@ export const GridMediaLayoutProfile = ({
 
   const handleDeleteLoggedInUserPost = async (postId, mediaType) => {
     try {
-      await deletePost({ postId, userId: loggedInUser?._id, mediaType });
+      await deletePost({
+        postId,
+        page: page,
+        limit: limit,
+        userId: loggedInUser?._id,
+        mediaType,
+      });
+      console.log("tyring to delete ...", {
+        postId,
+        page: page,
+        limit: limit,
+        userId: loggedInUser?._id,
+        mediaType,
+      });
     } catch (err) {
       console.error(err);
     }
@@ -70,7 +83,6 @@ export const GridMediaLayoutProfile = ({
     },
   ];
 
-  console.log(posts);
   return !isSearchPage ? (
     <VirtualList
       mainContainerRef={mainContainerRef}

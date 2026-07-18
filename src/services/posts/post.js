@@ -40,7 +40,7 @@ export const postApi = apiSlice.injectEndpoints({
         method: "DELETE",
       }),
       async onQueryStarted(
-        { postId, userId, mediaType },
+        { postId, userId, limit, page, mediaType },
         { dispatch, queryFulfilled },
       ) {
         const queryKey =
@@ -49,21 +49,18 @@ export const postApi = apiSlice.injectEndpoints({
             : "getImagePostsByUserId";
 
         const updatePostPatch = dispatch(
-          apiSlice.util.updateQueryData(queryKey, userId, (draft) => {
-            const postsArray = draft?.data?.[0];
-
-            if (Array.isArray(postsArray)) {
-              // 2. Find the index of the post to delete
-              const index = postsArray.findIndex(
-                (p) => p?._id?.toString() === postId?.toString(),
-              );
-
-              // 3. Mutate the array directly so Immer tracks the change
-              if (index !== -1) {
-                postsArray.splice(index, 1);
+          apiSlice.util.updateQueryData(
+            queryKey,
+            { limit, page, userId },
+            (draft) => {
+              console.log(current(draft));
+              if (draft?.data && Array.isArray(draft.data[0])) {
+                draft.data[0] = draft.data[0].filter(
+                  (p) => p?._id?.toString() !== postId?.toString(),
+                );
               }
-            }
-          }),
+            },
+          ),
         );
 
         try {
@@ -73,7 +70,6 @@ export const postApi = apiSlice.injectEndpoints({
         }
       },
     }),
-
     // like post
     likePost: builder.mutation({
       query: ({ postId, userId }) => ({
