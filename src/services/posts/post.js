@@ -40,7 +40,7 @@ export const postApi = apiSlice.injectEndpoints({
         method: "DELETE",
       }),
       async onQueryStarted(
-        { postId, userId, limit, page, mediaType },
+        { postId, userId, isVideoTab, limit, page, mediaType },
         { dispatch, queryFulfilled },
       ) {
         const queryKey =
@@ -51,13 +51,17 @@ export const postApi = apiSlice.injectEndpoints({
         const updatePostPatch = dispatch(
           apiSlice.util.updateQueryData(
             queryKey,
-            { limit, page, userId },
+            { limit, page, userId, isVideoTab },
             (draft) => {
-              console.log(current(draft));
               if (draft?.data && Array.isArray(draft.data[0])) {
-                draft.data[0] = draft.data[0].filter(
-                  (p) => p?._id?.toString() !== postId?.toString(),
+                // 3. Post ka index dundo
+                const index = draft.data[0].findIndex(
+                  (p) => p?._id?.toString() === postId?.toString(),
                 );
+
+                if (index !== -1) {
+                  draft.data[0].splice(index, 1);
+                }
               }
             },
           ),

@@ -16,6 +16,7 @@ import { Spinner } from "../../../components/reusableComponents/Spinner";
 import { useConnectionsData } from "../../../hooks/userConnectionData";
 import { handleRedirectToUserProfile } from "../../../utils/handleRedirectToUserProfile";
 import { useNavigate } from "react-router-dom";
+import { Header } from "../../../components/Header";
 
 export const FeedPage = () => {
   const { iconsColor, isDark } = contextThemeSetup();

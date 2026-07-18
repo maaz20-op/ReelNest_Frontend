@@ -78,9 +78,9 @@ export const Video = ({ videoRef, nextPost, data, isAlreadyFollowed }) => {
   };
 
   return (
-    <div className="video-container h-full w-full flex justify-center gap-2">
+    <div className="video-container h-full w-full   flex justify-center gap-2">
       <div
-        className={` main-video-div relative h-full md:h-[95%] md:w-100 w-full bg-black`}
+        className={` main-video-div relative h-full md:h-[95%] md:w-100 w-full `}
       >
         <video
           onPlay={() => setPlay(true)}

@@ -4,6 +4,8 @@ import { contextThemeSetup } from "../../../utils/contextSetup";
 import { useState } from "react";
 import { BorderDiv } from "../../../utils/BorderDiv";
 import { useCreatePostMutation } from "../../../services/posts/post";
+import { Loader } from "../../../components/reusableComponents/Loader";
+import { useToastContext } from "../../../contexts/toast";
 
 export const PostCreationPage = () => {
   const inputRef = useRef(null);
@@ -14,6 +16,7 @@ export const PostCreationPage = () => {
   const [imgUrl, setImgSrc] = useState("");
   const [videoUrl, setVideoSrc] = useState("");
   const [file, setFile] = useState({});
+  const { showToast, isSuccessMsg } = useToastContext();
 
   const [createPost, { isLoading, data, error }] = useCreatePostMutation();
   const ActionBtnStyle =
@@ -30,8 +33,16 @@ export const PostCreationPage = () => {
     formData.append("media", file);
     formData.append("title", title);
 
-    await createPost(formData);
-    console.log(data);
+    try {
+      await createPost(formData);
+      setImgSrc("");
+      setVideoSrc("");
+      setTitle("");
+      showToast("Post Uploaded!");
+    } catch (err) {
+      console.error(err);
+      showToast("Failed to Upload Post");
+    }
   };
 
   return (
@@ -99,6 +110,7 @@ export const PostCreationPage = () => {
             placeholder="Write your Title..."
             rows={3}
             maxLength={100}
+            value={title}
             required
             className=" p-3 lg:w-70 xl:w-100 border-4 outline-none text-(--text-primary) account-settings border-(--border-color) rounded-lg resize-none"
             name="title"
@@ -118,6 +130,7 @@ export const PostCreationPage = () => {
 
           <button
             ref={submitBtnRef}
+            disabled={isLoading}
             onClick={handleSubmit}
             className="px-3 py-3 flex gap-2 justify-center mt-10 items-center bg-red-500 rounded"
           >
@@ -125,7 +138,11 @@ export const PostCreationPage = () => {
               {" "}
               Upload Post
             </span>
-            <Icons.upload color={iconsColor} />
+            {isLoading ? (
+              <Loader color="white" size="sm" />
+            ) : (
+              <Icons.upload color={iconsColor} />
+            )}
           </button>
         </div>
       </div>

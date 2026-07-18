@@ -45,6 +45,7 @@ export const GridMediaLayoutProfile = ({
         page: page,
         limit: limit,
         userId: loggedInUser?._id,
+        isVideoTab,
         mediaType,
       });
       console.log("tyring to delete ...", {

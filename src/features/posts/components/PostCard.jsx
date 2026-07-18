@@ -100,10 +100,10 @@ export const PostCard = ({ post, setCurrentPostCommentsData }) => {
 
       {/* Image - video content */}
 
-      <div className="video/image-container w-full bg-black rounded-2xl overflow-hidden">
+      <div className="video/image-container w-full h-full bg-black rounded-2xl overflow-hidden">
         <video
           ref={videoRef}
-          className="w-full aspect-square object-cover h-[500px] sm:h-[540px] lg:h-[580px] rounded-2xl"
+          className="w-full  object-cover h-[600px] sm:h-[540px] lg:h-[580px] 2xl:h-[620px] rounded-2xl"
           src={mediaUrl}
           controls
           preload="metadata"

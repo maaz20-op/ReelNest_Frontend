@@ -137,7 +137,7 @@ export const Profile = () => {
         {isVideoTab ? (
           isUserVideoPostsLoading || !userVideoPosts ? (
             <GridVideoLayoutSkeleton />
-          ) : userVideoPosts?.data[0].length > 0 ? (
+          ) : posts.length > 0 ? (
             <GridMediaLayoutProfile
               user={data?.data[0]}
               posts={posts}

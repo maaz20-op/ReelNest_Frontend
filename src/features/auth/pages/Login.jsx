@@ -86,6 +86,9 @@ export const LoginPage = () => {
         ].map(({ text, icon: Icon }, indx) => (
           <div
             key={indx}
+            onClick={() => {
+              window.location.href = "http://localhost:3000/api/v1/auth/google";
+            }}
             className="flex items-center justify-center gap-2 px-3 rounded-xl text-(--text-primary) bg-(--bg-secondary) py-2"
           >
             <Icon size={23} />

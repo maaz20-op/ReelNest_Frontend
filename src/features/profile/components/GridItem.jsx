@@ -69,7 +69,7 @@ export const GridItem = ({
     <div
       key={_id || indx}
       onClick={() => handleClick(likes, postdata, _id, mediaUrl, comments)}
-      className="grid-video h-90 w-full rounded-xl relative overflow-hidden bg-black cursor-pointer"
+      className="grid-video h-75 sm:h-90 w-full rounded-xl relative overflow-hidden bg-black cursor-pointer"
     >
       <div
         className={`relative h-full w-full ${!isVideoTab ? "flex justify-center items-center" : ""}`}
