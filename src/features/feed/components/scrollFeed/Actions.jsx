@@ -43,7 +43,23 @@ export const VideoActions = ({ nextPost, data }) => {
           {
             name: "Share",
             icon: Icons?.share,
-            fnc: () => console.log("clicked"),
+            fnc: async () => {
+              if (navigator.share) {
+                try {
+                  await navigator.share({
+                    title: "Check this out!",
+                    text: "Amazing post on ReelNest",
+                    url: window.location.href,
+                  });
+
+                  console.log("Shared successfully");
+                } catch (err) {
+                  console.log("Share cancelled", err);
+                }
+              } else {
+                alert("Sharing is not supported on this browser.");
+              }
+            },
             size: 35,
           },
           {
