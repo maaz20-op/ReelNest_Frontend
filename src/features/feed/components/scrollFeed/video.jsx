@@ -60,6 +60,7 @@ export const Video = ({ videoRef, nextPost, data, isAlreadyFollowed }) => {
   const handleTouchStart = (e) => {
     touchStartX.current = e.touches[0].clientX;
     touchStartY.current = e.touches[0].clientY;
+    console.log("waijwi");
   };
 
   const handleTouchEnd = (e) => {
@@ -106,11 +107,11 @@ export const Video = ({ videoRef, nextPost, data, isAlreadyFollowed }) => {
   return (
     <div className="video-container h-full w-full   flex justify-center gap-2">
       <div
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
         className={` main-video-div relative h-full md:h-[95%] md:w-100 w-full `}
       >
         <video
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
           onPlay={() => setPlay(true)}
           ref={videoRef}
           onClick={() => setHide(false)}
