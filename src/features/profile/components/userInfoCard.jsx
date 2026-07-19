@@ -14,28 +14,28 @@ export const UserInfoCard = ({
   user,
   isLoggedInUser,
   setIsConnectionClicked,
+  isAlreadyFollowed,
 }) => {
-  const obj = checkIsFollowed(user?._id);
-
   const navigate = useNavigate();
   const { user: loggedInUser } = useAuth();
   const [profileImgSrc, setImgSrc] = useState("");
   const inputRef = useRef(null);
   const [isImageFullScreen, setIsImageFullScreen] = useState(false);
 
-  let isAlreadyFollowed = obj?.isFollow;
   const [currentFollow, setFollow] = useState(isAlreadyFollowed);
   const { iconsColor, isDark } = contextThemeSetup();
 
   //update Avatar
   const [updateAvatar] = useUpdateAvatarMutation();
 
-  const { handleFollowClick, isLoading: followLoading } = useFollowUser({
+  const handleFollowClick = useFollowUser({
     userData: user,
     setFollow,
   });
 
-  console.log(user?._id);
+  useEffect(() => {
+    setFollow(isAlreadyFollowed);
+  }, [user?._id]);
 
   const handleUnfollowClick = useUnfollowUser({
     unfollowUserId: user?._id,
@@ -74,7 +74,6 @@ export const UserInfoCard = ({
     }
   };
 
-  console.log("current value", currentFollow, isAlreadyFollowed);
   const handleAvatarClick = (e) => setIsImageFullScreen((prev) => !prev);
 
   const showLoggedInUserCollections = () => {

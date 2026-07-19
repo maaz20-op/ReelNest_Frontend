@@ -33,10 +33,6 @@ export const commentApi = apiSlice.injectEndpoints({
               if (!Array.isArray(comments) || !draft) return;
 
               comments.push(comment);
-              console.log(
-                "comments pushed in chahched",
-                current(draft?.data[0]),
-              );
             },
           ),
         );

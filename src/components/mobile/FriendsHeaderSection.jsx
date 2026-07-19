@@ -5,6 +5,7 @@ import { useConnectionsData } from "../../hooks/userConnectionData";
 import { contextThemeSetup } from "../../utils/contextSetup";
 import { handleRedirectToUserProfile } from "../../utils/handleRedirectToUserProfile";
 import { Avatar } from "../reusableComponents/Avatar";
+import { FriendSectionSkeleton } from "../../skeleton/friendSectionSkeleton";
 
 export const FriendSection = () => {
   const { user } = useAuth();
@@ -12,6 +13,10 @@ export const FriendSection = () => {
   const navigate = useNavigate();
   const userConnectionData = useConnectionsData();
   const Friends = userConnectionData?.connectionList?.Friends;
+
+  if (userConnectionData?.isLoading) {
+    return <FriendSectionSkeleton />;
+  }
 
   return (
     <div className="wrapper lg:hidden">

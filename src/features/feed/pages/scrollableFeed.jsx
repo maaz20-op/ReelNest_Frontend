@@ -20,7 +20,7 @@ export const ScrollableFeed = () => {
   const location = useLocation();
 
   const [nextPost, setPost] = useState(null);
-  const [count, setCount] = useState(1);
+  const [count, setCount] = useState(null);
   const videoContainerRef = useRef(null);
   const { iconsColor, isDark } = contextThemeSetup();
 
@@ -35,18 +35,20 @@ export const ScrollableFeed = () => {
   const postId = nextPost ? nextPost?._id : data?._id;
 
   const isAlreadyFollowed = checkIsFollowed(userId);
-  console.log(isAlreadyFollowed);
+
   useEffect(() => {
-    return () => setIsCommentsOpen(false);
+    const index = data.nextPosts.findIndex((p) => p?._id === data?._id);
+    setCount(index);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      setIsCommentsOpen(false);
+    };
   }, []);
 
   const handleGoDown = () => {
-    if (count > data?.nextPosts.length) {
-      setCount(0);
-    }
     setCount((prev) => prev + 1);
-
-    setPost(data?.nextPosts[count]);
   };
 
   useEffect(() => {
@@ -62,28 +64,17 @@ export const ScrollableFeed = () => {
       return;
     }
 
+    console.log(count);
+
     setPost(data.nextPosts[count]);
   }, [count, data]);
 
   const handleGoUp = () => {
-    if (count < 0) {
-      console.log("setting arr");
-      setCount(Number(data?.nextPosts?.length - 1));
-      setPost(data?.nextPosts[count]);
-      return;
-    }
-
-    if (count >= data?.nextPost?.length) {
-      setCount(0);
-    }
-
     setCount((prev) => prev - 1);
-
-    setPost(data?.nextPosts[count]);
   };
 
   return (
-    <div className="h-[94vh] w-full overflow-hidden flex justify-center relative bg-(--bg-secondary)">
+    <div className="h-[94vh] lg:h-full w-full overflow-hidden flex justify-center relative bg-(--bg-secondary)">
       {data?.isVideoTab ? (
         <Video
           videoRef={videoRef}

@@ -38,7 +38,7 @@ export const SavedPost = () => {
     },
   ] = useLazyGetSavedVideoPostsQuery();
   const savedVideoPins = savedPostsVideo?.data?.[0] || [];
-  console.log(savedPostsVideo);
+
   // fetch saved images
   const [
     fetchSavedImages,
@@ -49,8 +49,8 @@ export const SavedPost = () => {
   const hasNextPage = isVideoTab
     ? savedPostsVideo?.data?.[1]
     : savedPostsImage?.data[1];
-  console.log(hasNextPage);
   const limit = 12;
+
   const { apiData: posts, page } = setPagesAndCallApiInfiniteScroll({
     hasNextPage,
     setBtmContainer,
@@ -64,7 +64,6 @@ export const SavedPost = () => {
     fetchData: isVideoTab ? fetchSavedVideos : fetchSavedImages,
     isFetching: isVideoTab ? isSavedVideosFetching : isSavedImagesFetching,
   });
-  console.log(posts);
 
   return (
     <div className="p-3 min-h-0 flex flex-col">

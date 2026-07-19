@@ -23,7 +23,7 @@ export function SearchResults() {
   const { searchQuery, isSearchBtnClick } = useSearchContext();
   const [getSearchResults, { data, isLoading }] =
     useLazyGetSearchResultsQuery();
-  console.log(data);
+
   useEffect(() => {
     if (!searchQuery || !isSearchBtnClick) return;
 
@@ -34,19 +34,19 @@ export function SearchResults() {
         console.error(err);
       }
     };
-    console.log("$@#*((*#@%Y(HFD(*W");
+
     callBackend();
   }, [searchQuery, isSearchBtnClick]);
-  console.log(data?.data[0]);
+
   const suggestedAccounts = useConnectionsData()?.connectionList?.Followers;
   const videoPosts =
     Array.isArray(data?.data[0]) &&
     data?.data[0].filter((p) => p?.mediaType !== "image");
-  console.log("$$$$$$", videoPosts);
+
   const imagesPosts =
     Array.isArray(data?.data[0]) &&
     data?.data[0].filter((p) => p?.mediaType !== "video");
-  console.log("videos", videoPosts, imagesPosts);
+
   return (
     <div className="min-h-0 overflow-y-auto  account-settings bg-[var(--bg-primary)] text-[var(--text-primary)]">
       <div className="mx-auto max-w-7xl px-4 py-6">
@@ -140,16 +140,6 @@ export function SearchResults() {
             )}
           </section>
         )}
-
-        {/* More Videos */}
-
-        {/* {(activeTab === "Videos" || activeTab === "All") && (
-          <section>
-            <h2 className="mb-5 text-2xl font-bold">More Videos</h2>
-
-            <GridVideoLayoutSkeleton />
-          </section>
-        )} */}
       </div>
     </div>
   );

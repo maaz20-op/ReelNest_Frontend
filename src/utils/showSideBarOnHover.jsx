@@ -4,7 +4,6 @@ export const showScrollBarOnHover = (elementRef) => {
   const [isHoverd, setHoverd] = useState(false);
 
   useEffect(() => {
-    console.log("SSSSSSSSSSSSSSSSSSSSSS", elementRef);
     const targetElement = elementRef?.current;
 
     if (!targetElement) return; // if element ref is null

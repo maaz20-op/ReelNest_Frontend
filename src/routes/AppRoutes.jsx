@@ -1,5 +1,6 @@
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import React from "react";
+import { ProtectedRoute } from "../hooks/protectedRoute";
 
 const LoginPage = React.lazy(() =>
   import("../features/auth/pages/Login").then((module) => ({
@@ -79,15 +80,16 @@ export const AppRouting = () => {
 
         {/* App Routes */}
         <Route path="/" element={<FeedPage />} />
-
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/settings" element={<AccountSettings />} />
-        <Route path="/message" element={<Message_Users_Page />}></Route>
-        <Route path="/search" element={<SearchResults />}></Route>
-        <Route path="/upgrade" element={<Upgrade />} />
-        <Route path="/create/post" element={<PostCreationPage />} />
-        <Route path="/profile/collection" element={<SavedPost />} />
-        <Route path="/feed" element={<ScrollableFeed />} />
+        <Route element={<ProtectedRoute />}>
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/settings" element={<AccountSettings />} />
+          <Route path="/message" element={<Message_Users_Page />}></Route>
+          <Route path="/search" element={<SearchResults />}></Route>
+          <Route path="/upgrade" element={<Upgrade />} />
+          <Route path="/create/post" element={<PostCreationPage />} />
+          <Route path="/profile/collection" element={<SavedPost />} />
+          <Route path="/feed" element={<ScrollableFeed />} />
+        </Route>
       </Routes>
     </>
   );

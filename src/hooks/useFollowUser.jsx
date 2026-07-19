@@ -34,7 +34,7 @@ export const useFollowUser = ({ userData, setFollow }) => {
 export const useUnfollowUser = ({ unfollowUserId, setFollow, userId }) => {
   const [unfollowUser, { data, isLoading }] = useUnfollowUserMutation();
   const { showToast, setSuccessMsg } = useToastContext();
-  console.log(unfollowUserId);
+
   const debouncedFollow = useMemo(() => {
     return debounce(async () => {
       await unfollowUser({ unfollowUserId: unfollowUserId, userId: userId }); // send backend request after updating Ui

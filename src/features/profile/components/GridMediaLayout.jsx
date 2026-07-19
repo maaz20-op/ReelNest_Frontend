@@ -25,7 +25,7 @@ export const GridMediaLayoutProfile = ({
   const videoRef = useRef(null);
   const navigate = useNavigate();
   const [postCreaterInformation, setPostCreaterInformation] = useState({});
-  console.log(isMyCollectionPage);
+
   // delete LoggedIn User Post
   const [deletePost, { data, isLoading }] = useDeleteLoggedInUserPostMutation();
   const [deleteSavedPost] = useDeleteSavedPostMutation();

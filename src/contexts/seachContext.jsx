@@ -25,7 +25,7 @@ export const SearchContextProvider = ({ children }) => {
 
 export const useSearchContext = () => {
   const searchData = useContext(SearchContext);
-  console.log(searchData);
+
   return {
     searchQuery: searchData?.searchQuery,
     setSearchQuery: searchData?.setSearchQuery,

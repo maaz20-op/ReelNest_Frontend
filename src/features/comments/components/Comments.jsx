@@ -41,10 +41,9 @@ export const Comments = ({
 
   const commentsLimit = 20;
 
-  console.log(commentData);
   const commentsRawData = commentData?.data[0];
   const commentsContainerRef = useRef(null);
-  console.log(commentsRawData);
+
   const hasNextPage = commentData?.data[1];
   const { isBottomOfContainer, setBtmContainer, handleScroll } =
     useInfinteScroll();
@@ -64,7 +63,6 @@ export const Comments = ({
     isFetching,
   });
 
-  console.log(comments);
   const handleCreateComment = async () => {
     const commentObj = {
       text: comment,
@@ -78,7 +76,6 @@ export const Comments = ({
     setComment("");
     try {
       await createComment({ comment: commentObj, limit: commentsLimit, page });
-      console.log("comment created");
     } catch (err) {
       console.error(err);
     }
@@ -272,6 +269,7 @@ export const Comments = ({
           </div>
 
           <div
+            ref={commentsContainerRef}
             onScroll={handleScroll}
             className="comments-container account-settings  overflow-y-auto   h-[73%]  flex flex-col gap-2"
           >

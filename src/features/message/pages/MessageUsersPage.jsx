@@ -26,7 +26,7 @@ export const MessageUsersPage = () => {
   const [loading, setLoading] = useState(false);
 
   return (
-    <div className="w-full flex flex-col px-(--page-x-padding) min-h-0  ">
+    <div className="w-full flex  flex-col px-(--page-x-padding) min-h-0  ">
       {/* Header */}
       <div className="py-4 ">
         <h1 className="text-center text-2xl text-(--text-primary)">My Chats</h1>

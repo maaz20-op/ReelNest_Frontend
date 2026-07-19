@@ -25,7 +25,7 @@ export const Video = ({
   const [isFollow, setFollow] = useState(isAlreadyFollowed);
 
   const currentPost = nextPost?.user || nextPost?.postOwner ? nextPost : data;
-  console.log("nextPost", nextPost);
+  console.log(nextPost, "$$$", data);
   const handleFollowClick = useFollowUser({
     userData: {
       _id: currentPost?._id,
@@ -44,7 +44,6 @@ export const Video = ({
 
   useEffect(() => {
     if (isAlreadyFollowed !== undefined) {
-      console.log("useEffet", isAlreadyFollowed);
       setFollow(isAlreadyFollowed);
     }
   }, [isAlreadyFollowed]);

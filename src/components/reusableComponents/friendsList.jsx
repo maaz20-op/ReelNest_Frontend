@@ -39,8 +39,6 @@ export const FriendsList = ({ isDark, followersList, selectedSection }) => {
     }
   }, [followersList]);
 
-  console.log(isHoverd);
-
   return (
     <div
       ref={elementRef}

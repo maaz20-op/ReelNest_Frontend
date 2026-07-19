@@ -25,6 +25,7 @@ import {
   setPagesAndCallApiInfiniteScroll,
   useInfinteScroll,
 } from "../../../utils/useInfiniteScroll";
+import { checkIsFollowed } from "../../../utils/checkisFollowed";
 
 export const Profile = () => {
   const { iconsColor, isDark } = contextThemeSetup();
@@ -38,6 +39,7 @@ export const Profile = () => {
   const [isConnectionClicked, setIsConnectionClicked] = useState(false);
 
   const userId = userData?.userId ? userData?.userId : user?._id;
+  const obj = checkIsFollowed(userId);
 
   const [isVideoTab, setVideoTab] = useState(true);
   const [isEndOfPosts, setEndOfPosts] = useState(false);
@@ -73,8 +75,6 @@ export const Profile = () => {
     ? userVideoPosts?.data[1]
     : userImagePosts?.data[1];
   const limit = 12;
-
-  console.log(userVideoPosts);
 
   const { apiData: posts, page } = setPagesAndCallApiInfiniteScroll({
     hasNextPage,
@@ -117,6 +117,7 @@ export const Profile = () => {
           user={data?.data[0]}
           setIsConnectionClicked={setIsConnectionClicked}
           isLoggedInUser={isLoggedInUser}
+          isAlreadyFollowed={obj.isFollow}
         />
       )}
 

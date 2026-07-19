@@ -7,15 +7,18 @@ import { useEffect, useState } from "react";
 
 const authPaths = ["/login", "/signup"];
 const scrollableFeed = ["/feed"];
+const search = ["/search"];
 const homeFeed = ["/", "/profile"];
 export const MainLayout = ({ children }) => {
   const location = useLocation();
   const isAuthPage = authPaths.includes(location.pathname);
   const isScrollablFeed = scrollableFeed.includes(location.pathname);
   const isHomeFeed = homeFeed.includes(location.pathname);
+  const isSearch = search.includes(location.pathname);
+
   const [windowWidth, setWindowWidth] = useState(0);
 
-  const mobileWidth = windowWidth <= 400;
+  const mobileWidth = windowWidth <= 450;
 
   useEffect(() => {
     const trackResize = () => {
@@ -35,7 +38,11 @@ export const MainLayout = ({ children }) => {
 
       {!isAuthPage && !isScrollablFeed && mobileWidth && <Header />}
       {!isAuthPage && isScrollablFeed && !mobileWidth && <Header />}
-      {!isAuthPage && !isHomeFeed && !isScrollablFeed && <FriendSection />}
+      {!isAuthPage &&
+        !isHomeFeed &&
+        !isSearch &&
+        !isScrollablFeed &&
+        !(<FriendSection />)}
       <div
         className={`${isAuthPage ? "flex justify-center overflow-hidden items-center w-full  flex-1" : "min-h-0 flex-1 w-full grid grid-cols-1 md:grid-cols-1 lg:grid-cols-[250px_minmax(0,1fr)_90px] xl:grid-cols-[290px_minmax(0,1fr)_100px]"}`}
       >

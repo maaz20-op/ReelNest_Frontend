@@ -41,7 +41,6 @@ const pinApi = apiSlice.injectEndpoints({
 
         const updateSavedPostsPatch = dispatch(
           apiSlice.util.updateQueryData(queryKey, { limit, page }, (draft) => {
-            console.log(current(draft));
             const savedPosts = draft?.data[0];
             if (savedPosts && Array.isArray(savedPosts)) {
               draft.data[0] = savedPosts.filter(

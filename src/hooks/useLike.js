@@ -16,8 +16,6 @@ export const useLike = ({ currentPost, postCreaterId, likesArray }) => {
   const [localLikesCount, setLocalLikesCount] = useState(initialTotalLikes);
   const [likePost] = useLikePostMutation();
 
-  // 2. Jab video ya post badle, to local state ko sync karein
-
   const debouncedLikePost = useMemo(() => {
     return debounce(async (shouldLike) => {
       try {
@@ -44,6 +42,5 @@ export const useLike = ({ currentPost, postCreaterId, likesArray }) => {
     debouncedLikePost(nextLikedState);
   };
 
-  console.log(localHasLiked, initialHasUserLiked);
   return { handleLikeClick, localLikesCount, localHasLiked };
 };

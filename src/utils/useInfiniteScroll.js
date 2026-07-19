@@ -35,12 +35,11 @@ export const setPagesAndCallApiInfiniteScroll = ({
 }) => {
   const [apiData, setApiData] = useState([]);
   const [page, setPage] = useState(1);
-  console.log(queryObject?.postId);
+
   const finalObj = {
     ...queryObject,
     page: page,
   };
-  console.log(finalObj);
 
   const isVideo = queryObject?.isVideoTab;
 
@@ -48,7 +47,6 @@ export const setPagesAndCallApiInfiniteScroll = ({
     (value) => value !== undefined && value !== null,
   );
 
-  console.log("SJFDJSJ");
   // calling api
   useEffect(() => {
     if (!isValid) return;
