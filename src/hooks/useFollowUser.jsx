@@ -8,7 +8,7 @@ import { useToastContext } from "../contexts/toast";
 
 export const useFollowUser = ({ userData, setFollow }) => {
   const [followUser, { isLoading, data }] = useFollowUserMutation();
-  const { showToast, setSuccessMsg } = useToastContext();
+  const { showToast } = useToastContext();
   const debouncedFollow = useMemo(() => {
     return debounce(() => {
       followUser({
@@ -23,7 +23,7 @@ export const useFollowUser = ({ userData, setFollow }) => {
   const handleFollowClick = (e) => {
     e.stopPropagation();
     setFollow(true);
-    showToast(`${userData?.fullname || "User"} Followed By You!`);
+    showToast(`${userData?.fullname || "User"} Followed By You!`, true);
 
     debouncedFollow();
   };
@@ -33,7 +33,7 @@ export const useFollowUser = ({ userData, setFollow }) => {
 
 export const useUnfollowUser = ({ unfollowUserId, setFollow, userId }) => {
   const [unfollowUser, { data, isLoading }] = useUnfollowUserMutation();
-  const { showToast, setSuccessMsg } = useToastContext();
+  const { showToast } = useToastContext();
 
   const debouncedFollow = useMemo(() => {
     return debounce(async () => {
@@ -44,7 +44,7 @@ export const useUnfollowUser = ({ unfollowUserId, setFollow, userId }) => {
   const handleUnfollowClick = (e) => {
     e.stopPropagation();
     setFollow(false);
-    showToast(`Unfollowed Successfully`);
+    showToast(`Unfollowed Successfully`, true);
     setSuccessMsg(true);
     debouncedFollow();
   };

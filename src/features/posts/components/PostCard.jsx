@@ -7,7 +7,7 @@ import { contextThemeSetup } from "../../../utils/contextSetup";
 import { useAuth } from "../../auth/hooks/useAuth";
 import { useCommentsContext } from "../../comments/hooks/useIsCommentsOpen";
 import { useLike } from "../../../hooks/useLike";
-import { data, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { handleRedirectToUserProfile } from "../../../utils/handleRedirectToUserProfile";
 import { useCreateUserSavedPinsMutation } from "../../../services/pins/pin";
 import { useFollowUser } from "../../../hooks/useFollowUser";
@@ -17,22 +17,35 @@ import { useVideoControls } from "../../../utils/videoControls";
 
 export const PostCard = ({ post, setCurrentPostCommentsData }) => {
   const { _id, mediaUrl, postdata, userData, likesUsersData, likes } = post;
-  const videoRef = useRef(null);
-  const { user } = useAuth();
-  const navigate = useNavigate();
-  const { isCommentsOpen, setIsCommentsOpen } = useCommentsContext();
-  const isLiked = likes.includes(user?._id);
+
   const [isFollow, setFollow] = useState(false);
+  const videoRef = useRef(null);
+
+  // custom  hooks
+  const { user } = useAuth();
+  const { isCommentsOpen, setIsCommentsOpen } = useCommentsContext();
   const { iconsColor } = contextThemeSetup();
+  const { showToast } = useToastContext();
+  const navigate = useNavigate();
+  const handleRedirectToCreaterProfile = handleRedirectToUserProfile(
+    userData?._id,
+    userData?.fullname,
+    navigate,
+  );
 
-  const [savePost] = useCreateUserSavedPinsMutation();
-
+  // Manages optimistic like updates and synchronizes them with the backend.
   const likesData = useLike({
     likesArray: likes,
     currentPost: post,
     postCreaterId: userData?._id,
   });
+  const handleLikeClick = likesData?.handleLikeClick;
+  const localHasLiked = likesData?.localHasLiked;
+  const localLikesCount = likesData?.localLikesCount;
+  const isLiked = likes.includes(user?._id);
 
+  // Automatically play/pause the video based on its visibility
+  // to avoid playing off-screen media.
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -52,18 +65,9 @@ export const PostCard = ({ post, setCurrentPostCommentsData }) => {
     };
   }, [post?._id]);
 
-  const handleLikeClick = likesData?.handleLikeClick;
-  const localHasLiked = likesData?.localHasLiked;
-  const localLikesCount = likesData?.localLikesCount;
-
+  // following user otimistically
   const handleFollowClick = useFollowUser({ userData, setFollow });
-
   const isFollowed = checkIsFollowed(userData?._id);
-  const handleRedirectToCreaterProfile = handleRedirectToUserProfile(
-    userData?._id,
-    userData?.fullname,
-    navigate,
-  );
 
   const {
     handleProgressBar,
@@ -75,25 +79,23 @@ export const PostCard = ({ post, setCurrentPostCommentsData }) => {
     hidePlayPauseIcon,
   } = useVideoControls(videoRef);
 
-  const { showToast, setSuccessMsg } = useToastContext();
-  // save Post
+  // saving user Post
+  const [savePost, { data }] = useCreateUserSavedPinsMutation();
+
   const handleSavePostClick = async () => {
     try {
-      showToast(`Post Saved By ${userData?.fullname}`);
-      setSuccessMsg(true);
+      showToast(`Post Saved By ${userData?.fullname}`, true);
+
       await savePost(_id);
       if (!data?.success) {
-        showToast(`Failed to Save Post By ${userData?.fullname}`);
-        setSuccessMsg(false);
+        showToast(`Failed to Save Post By ${userData?.fullname}`, false);
       } else {
-        showToast(`Post Saved By ${userData?.fullname}`);
-        setSuccessMsg(true);
+        showToast(`Post Saved By ${userData?.fullname}`, true);
       }
     } catch (err) {
       console.log(err);
       if (err || !data?.success) {
-        showToast(`Failed to Save Post By ${userData?.fullname}`);
-        setSuccessMsg(false);
+        showToast(`Failed to Save Post By ${userData?.fullname}`, false);
       }
     }
   };

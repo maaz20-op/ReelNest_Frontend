@@ -7,9 +7,9 @@ export const ThemeProvider = ({ children }) => {
     try {
       const t = localStorage.getItem(themeKey);
       if (t) return t;
-      return "Light";
+      return "Dark";
     } catch {
-      return "Light";
+      return "Dark";
     }
   });
 

@@ -20,7 +20,9 @@ export const Media = ({
   const [fetchPosts, { data, isLoading, error, isFetching }] =
     useLazyGetPostsQuery();
 
+  // Extract the current page of posts returned by the API.
   const postsRawData = data?.data?.[0];
+  // Checking more Posts are Avalaible
   const hasNextPage = data?.data?.[1];
 
   const { apiData: posts } = setPagesAndCallApiInfiniteScroll({

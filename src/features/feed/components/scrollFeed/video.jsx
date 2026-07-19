@@ -20,12 +20,12 @@ export const Video = ({
   isAlreadyFollowed,
   setCount,
 }) => {
-  const { user } = useAuth();
-
   const [isFollow, setFollow] = useState(isAlreadyFollowed);
 
+  // next Post = scrolled Post and data = clicked post in profile or on search feed
   const currentPost = nextPost?.user || nextPost?.postOwner ? nextPost : data;
 
+  const { user } = useAuth();
   const handleFollowClick = useFollowUser({
     userData: {
       _id: currentPost?._id,
@@ -35,19 +35,6 @@ export const Video = ({
     },
     setFollow,
   });
-
-  useEffect(() => {
-    if (videoRef?.current) {
-      videoRef?.current.play();
-    }
-  }, [currentPost?._id]);
-
-  useEffect(() => {
-    if (isAlreadyFollowed !== undefined) {
-      setFollow(isAlreadyFollowed);
-    }
-  }, [isAlreadyFollowed]);
-
   const handleUnfollowClick = useUnfollowUser({
     unfollowUserId:
       currentPost?.userId ||
@@ -57,8 +44,23 @@ export const Video = ({
     userId: user?._id,
   });
 
+  //play video on Scroll
+  useEffect(() => {
+    if (videoRef?.current) {
+      videoRef?.current.play();
+    }
+  }, [currentPost?._id]);
+
+  // sync the Followed State
+  useEffect(() => {
+    if (isAlreadyFollowed !== undefined) {
+      setFollow(isAlreadyFollowed);
+    }
+  }, [isAlreadyFollowed]);
+
   const touchStartY = useRef(0);
 
+  // handling Scroll Effect For Mobile/tabs Devices
   const handleTouchStart = (e) => {
     touchStartY.current = e.touches[0].clientY;
   };
@@ -79,8 +81,8 @@ export const Video = ({
       setCount((prev) => prev - 1);
     }
   };
-  const videoSrc = currentPost?.mediaUrl;
 
+  // video Controls Encapsulation
   const {
     handleProgressBar,
     handleClick,
@@ -90,6 +92,8 @@ export const Video = ({
     hidePlayPauseIcon,
     setHide,
   } = useVideoControls(videoRef);
+
+  const videoSrc = currentPost?.mediaUrl;
 
   return (
     <div className="video-container h-full w-full   flex justify-center gap-2">

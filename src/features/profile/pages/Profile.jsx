@@ -28,29 +28,29 @@ import {
 import { checkIsFollowed } from "../../../utils/checkisFollowed";
 
 export const Profile = () => {
-  const { iconsColor, isDark } = contextThemeSetup();
-  const navigate = useNavigate();
-  const inputRef = useRef();
-  const { user } = useAuth();
+  const [isConnectionClicked, setIsConnectionClicked] = useState(false);
   const [isLoggedInUser, setLoggedInUser] = useState(true);
+  const [isVideoTab, setVideoTab] = useState(true);
+  const [isEndOfPosts, setEndOfPosts] = useState(false);
+  const navigate = useNavigate();
+
+  const profileContainerRef = useRef(null);
+  const inputRef = useRef();
+
+  const { iconsColor, isDark } = contextThemeSetup();
+  const { user } = useAuth();
+
+  // location state Data
   const location = useLocation();
   const userData = location.state;
-
-  const [isConnectionClicked, setIsConnectionClicked] = useState(false);
 
   const userId = userData?.userId ? userData?.userId : user?._id;
   const obj = checkIsFollowed(userId);
 
-  const [isVideoTab, setVideoTab] = useState(true);
-  const [isEndOfPosts, setEndOfPosts] = useState(false);
-
-  // get Profile User
+  // get Profile User From Backend
   const { data, isLoading, error } = useGetUserByIdQuery(userId, {
     skip: !userId,
   });
-
-  const { isBottomOfContainer, setBtmContainer, handleScroll } =
-    useInfinteScroll();
 
   // get profile User Videos
   const [
@@ -62,6 +62,7 @@ export const Profile = () => {
     },
   ] = useLazyGetVideoPostsByuserIdQuery();
 
+  // get Profile User Images
   const [
     fetchImages,
     {
@@ -70,6 +71,10 @@ export const Profile = () => {
       isFetching: isFetchingImages,
     },
   ] = useLazyGetImagePostsByUserIdQuery();
+
+  // Infinite Scroll Setup
+  const { isBottomOfContainer, setBtmContainer, handleScroll } =
+    useInfinteScroll();
 
   const hasNextPage = isVideoTab
     ? userVideoPosts?.data[1]
@@ -96,12 +101,11 @@ export const Profile = () => {
     isPostsEnd: isEndOfPosts,
   });
 
-  const profileContainerRef = useRef(null);
-
+  const profileUser = data?.data[0];
   useEffect(() => {
-    if (data?.data[0]?._id !== user?._id) setLoggedInUser(false);
-    else if (data?.data[0]?._id === user?._id) setLoggedInUser(true);
-  }, [data?.data[0]]);
+    if (profileUser?._id !== user?._id) setLoggedInUser(false);
+    else if (profileUser?._id === user?._id) setLoggedInUser(true);
+  }, [profileUser?._id]);
 
   return (
     <div

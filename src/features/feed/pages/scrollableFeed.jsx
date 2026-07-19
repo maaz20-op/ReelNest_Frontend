@@ -1,5 +1,4 @@
 import { useLocation } from "react-router-dom";
-import { Media } from "../../posts/components/Media";
 import { Avatar } from "../../../components/reusableComponents/Avatar";
 import { Button } from "../../../components/reusableComponents/Button";
 import { Icons } from "../../../assets/icons";
@@ -16,17 +15,17 @@ import { ScrollUpDown } from "../components/scrollFeed/ScrollUpDown";
 import { Image } from "../components/scrollFeed/Images";
 
 export const ScrollableFeed = () => {
-  const { user } = useAuth();
-  const location = useLocation();
-
   const [nextPost, setPost] = useState(null);
   const [count, setCount] = useState(null);
-  const videoContainerRef = useRef(null);
-  const { iconsColor, isDark } = contextThemeSetup();
 
+  const { user } = useAuth();
+  const { iconsColor, isDark } = contextThemeSetup();
+  const { isCommentsOpen, setIsCommentsOpen } = useCommentsContext();
+
+  const videoContainerRef = useRef(null);
   const videoRef = useRef(null);
 
-  const { isCommentsOpen, setIsCommentsOpen } = useCommentsContext();
+  const location = useLocation();
   const data = location?.state;
   const userId =
     nextPost?.postOwner || nextPost?.user
@@ -37,6 +36,7 @@ export const ScrollableFeed = () => {
   const isAlreadyFollowed = checkIsFollowed(userId);
 
   useEffect(() => {
+    // find index of redirect post and set to Count to Play Video
     const index = data.nextPosts.findIndex((p) => p?._id === data?._id);
     setCount(index);
   }, []);
@@ -46,10 +46,6 @@ export const ScrollableFeed = () => {
       setIsCommentsOpen(false);
     };
   }, []);
-
-  const handleGoDown = () => {
-    setCount((prev) => prev + 1);
-  };
 
   useEffect(() => {
     if (!data?.nextPosts?.length) return;
@@ -67,12 +63,17 @@ export const ScrollableFeed = () => {
     setPost(data.nextPosts[count]);
   }, [count, data]);
 
+  const handleGoDown = () => {
+    setCount((prev) => prev + 1);
+  };
+
   const handleGoUp = () => {
     setCount((prev) => prev - 1);
   };
 
   return (
     <div className="h-[94vh] lg:h-full w-full overflow-hidden flex justify-center relative bg-(--bg-secondary)">
+      {/* toggle video Image tab */}
       {data?.isVideoTab ? (
         <Video
           videoRef={videoRef}

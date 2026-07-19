@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { createContext, useContext, useEffect } from "react";
 import { FaCheck } from "react-icons/fa";
+import { ImCross } from "react-icons/im";
 
 const ToastContext = createContext(null);
 
@@ -8,13 +9,14 @@ export const ToastProvider = ({ children }) => {
   const [toast, setToast] = useState(null);
   const [isSuccessMsg, setSuccessMsg] = useState(true);
 
-  const showToast = (msg) => {
+  const showToast = (msg, isSuccess) => {
     setToast(msg);
+    setSuccessMsg(isSuccess);
     setTimeout(() => setToast(null), 3000);
   };
 
   return (
-    <ToastContext.Provider value={{ showToast, setSuccessMsg }}>
+    <ToastContext.Provider value={{ showToast }}>
       {/* 1. Standard application UI stays visible */}
       {children}
 
@@ -30,7 +32,7 @@ export const ToastProvider = ({ children }) => {
             ) : (
               <div className="bg-red-700 flex justify-center items-center gap-3 p-1 rounded-full">
                 {" "}
-                <FaCheck color="white" />
+                <ImCross color="white" />
               </div>
             )}
             <span className="text-(--text-primary)">{toast}</span>

@@ -45,6 +45,24 @@ export const PostCreationPage = () => {
     }
   };
 
+  const handleSelectFile = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (file.type.startsWith("image/") || file.type.startsWith("video/")) {
+      const reader = new FileReader();
+
+      reader.onload = function (e) {
+        console.log(e.target.result);
+        file.type.startsWith("video/")
+          ? setVideoSrc(e.target.result)
+          : setImgSrc(e.target.result);
+
+        setFile(file);
+      };
+
+      reader.readAsDataURL(file);
+    }
+  };
   return (
     <div className="px-2 py-3 flex flex-col overflow-y-auto  sm:mt-20 lg:mt-0 items-center sm:grid h-full pb-13 sm:grid-rows-[400px_1fr]  lg:grid-rows-1 sm:grid-cols-2 lg:grid-cols-2">
       {/* Upload Preview */}
@@ -66,27 +84,7 @@ export const PostCreationPage = () => {
           </label>
           <input
             ref={inputRef}
-            onChange={(e) => {
-              const file = e.target.files[0];
-              if (!file) return;
-              if (
-                file.type.startsWith("image/") ||
-                file.type.startsWith("video/")
-              ) {
-                const reader = new FileReader();
-
-                reader.onload = function (e) {
-                  console.log(e.target.result);
-                  file.type.startsWith("video/")
-                    ? setVideoSrc(e.target.result)
-                    : setImgSrc(e.target.result);
-
-                  setFile(file);
-                };
-
-                reader.readAsDataURL(file);
-              }
-            }}
+            onChange={handleSelectFile}
             className="hidden"
             type="file"
             id="choosefile"
