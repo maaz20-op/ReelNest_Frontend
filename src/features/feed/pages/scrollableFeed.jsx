@@ -64,8 +64,6 @@ export const ScrollableFeed = () => {
       return;
     }
 
-    console.log(count);
-
     setPost(data.nextPosts[count]);
   }, [count, data]);
 

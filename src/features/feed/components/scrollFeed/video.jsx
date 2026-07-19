@@ -25,7 +25,7 @@ export const Video = ({
   const [isFollow, setFollow] = useState(isAlreadyFollowed);
 
   const currentPost = nextPost?.user || nextPost?.postOwner ? nextPost : data;
-  console.log(nextPost, "$$$", data);
+
   const handleFollowClick = useFollowUser({
     userData: {
       _id: currentPost?._id,
