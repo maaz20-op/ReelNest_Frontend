@@ -49,6 +49,22 @@ export const ScrollableFeed = () => {
     setPost(data?.nextPosts[count]);
   };
 
+  useEffect(() => {
+    if (!data?.nextPosts?.length) return;
+
+    if (count < 0) {
+      setCount(data.nextPosts.length - 1);
+      return;
+    }
+
+    if (count >= data.nextPosts.length) {
+      setCount(0);
+      return;
+    }
+
+    setPost(data.nextPosts[count]);
+  }, [count, data]);
+
   const handleGoUp = () => {
     if (count < 0) {
       console.log("setting arr");
@@ -72,6 +88,7 @@ export const ScrollableFeed = () => {
         <Video
           videoRef={videoRef}
           data={data}
+          setCount={setCount}
           nextPost={nextPost}
           isAlreadyFollowed={isAlreadyFollowed?.isFollow}
         />

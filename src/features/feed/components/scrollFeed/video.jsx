@@ -13,7 +13,13 @@ import { useVideoControls } from "../../../../utils/videoControls";
 import { useReducer } from "react";
 import { useRef } from "react";
 
-export const Video = ({ videoRef, nextPost, data, isAlreadyFollowed }) => {
+export const Video = ({
+  videoRef,
+  nextPost,
+  data,
+  isAlreadyFollowed,
+  setCount,
+}) => {
   const { user } = useAuth();
 
   const [isFollow, setFollow] = useState(isAlreadyFollowed);
@@ -52,47 +58,29 @@ export const Video = ({ videoRef, nextPost, data, isAlreadyFollowed }) => {
     userId: user?._id,
   });
 
-  const videoSrc = currentPost?.mediaUrl;
-
-  const touchStartX = useRef(0);
   const touchStartY = useRef(0);
 
   const handleTouchStart = (e) => {
-    touchStartX.current = e.touches[0].clientX;
     touchStartY.current = e.touches[0].clientY;
-    console.log("waijwi");
   };
 
   const handleTouchEnd = (e) => {
-    const touchEndX = e.changedTouches[0].clientX;
     const touchEndY = e.changedTouches[0].clientY;
 
-    const diffX = touchStartX.current - touchEndX;
-    const diffY = touchStartY.current - touchEndY;
+    const distance = touchStartY.current - touchEndY;
+    const threshold = 60;
 
-    const threshold = 50; // Minimum swipe distance
-
-    // Horizontal swipe
-    if (Math.abs(diffX) > Math.abs(diffY)) {
-      if (Math.abs(diffX) > threshold) {
-        if (diffX > 0) {
-          console.log("Swiped Left");
-        } else {
-          console.log("Swiped Right");
-        }
-      }
+    // Swipe Up -> Next Video
+    if (distance > threshold) {
+      setCount((prev) => prev + 1);
     }
-    // Vertical swipe
-    else {
-      if (Math.abs(diffY) > threshold) {
-        if (diffY > 0) {
-          console.log("Swiped Up");
-        } else {
-          console.log("Swiped Down");
-        }
-      }
+
+    // Swipe Down -> Previous Video
+    else if (distance < -threshold) {
+      setCount((prev) => prev - 1);
     }
   };
+  const videoSrc = currentPost?.mediaUrl;
 
   const {
     handleProgressBar,
@@ -116,7 +104,7 @@ export const Video = ({ videoRef, nextPost, data, isAlreadyFollowed }) => {
           ref={videoRef}
           onClick={() => setHide(false)}
           onTimeUpdate={handleProgressBar}
-          className="h-full w-full bg-black"
+          className="h-full w-full bg-black touch-none"
           src={videoSrc}
         />
         <div className="creater-info flex ml-8 items-center text-white gap-4 absolute top-5 w-full ">
