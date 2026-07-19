@@ -143,13 +143,13 @@ export function SearchResults() {
 
         {/* More Videos */}
 
-        {(activeTab === "Videos" || activeTab === "All") && (
+        {/* {(activeTab === "Videos" || activeTab === "All") && (
           <section>
             <h2 className="mb-5 text-2xl font-bold">More Videos</h2>
 
             <GridVideoLayoutSkeleton />
           </section>
-        )}
+        )} */}
       </div>
     </div>
   );

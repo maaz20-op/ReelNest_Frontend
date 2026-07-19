@@ -87,8 +87,7 @@ export const LoginPage = () => {
           <div
             key={indx}
             onClick={() => {
-              window.location.href =
-                "https://reel-nest-backend.vercel.app/api/v1/auth/google";
+              window.location.href = "http://localhost:3000/api/v1/auth/google";
             }}
             className="flex items-center justify-center gap-2 px-3 rounded-xl text-(--text-primary) bg-(--bg-secondary) py-2"
           >

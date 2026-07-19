@@ -9,15 +9,14 @@ import {
   useFollowUser,
   useUnfollowUser,
 } from "../../../../hooks/useFollowUser";
+import { useVideoControls } from "../../../../utils/videoControls";
+import { useReducer } from "react";
+import { useRef } from "react";
 
 export const Video = ({ videoRef, nextPost, data, isAlreadyFollowed }) => {
-  const [isPlay, setPlay] = useState(false);
   const { user } = useAuth();
-  let [isVideoTimeUpdating, setTimeUpdating] = useState(false);
+
   const [isFollow, setFollow] = useState(isAlreadyFollowed);
-  const [progressBarWidth, setWidth] = useState(0);
-  const [hidePlayPauseIcon, setHide] = useState(false);
-  console.log("$$$$$$$$", isFollow, isAlreadyFollowed);
 
   const currentPost = nextPost?.user || nextPost?.postOwner ? nextPost : data;
   console.log("nextPost", nextPost);
@@ -31,7 +30,11 @@ export const Video = ({ videoRef, nextPost, data, isAlreadyFollowed }) => {
     setFollow,
   });
 
-  console.log("os follow", isFollow);
+  useEffect(() => {
+    if (videoRef?.current) {
+      videoRef?.current.play();
+    }
+  }, [currentPost?._id]);
 
   useEffect(() => {
     if (isAlreadyFollowed !== undefined) {
@@ -48,38 +51,63 @@ export const Video = ({ videoRef, nextPost, data, isAlreadyFollowed }) => {
     setFollow,
     userId: user?._id,
   });
-  console.log("$$$$$$$$", isFollow, isAlreadyFollowed);
+
   const videoSrc = currentPost?.mediaUrl;
 
-  useEffect(() => {
-    if (!isPlay) return;
-    const timeoutId = setTimeout(() => {
-      setHide(true);
-    }, 3000);
+  const touchStartX = useRef(0);
+  const touchStartY = useRef(0);
 
-    return () => clearTimeout(timeoutId);
-  }, [isPlay]);
-
-  const handleProgressBar = () => {
-    const totalDuration = Math.floor(videoRef?.current.duration);
-    const currentPlayTime = Math.floor(videoRef?.current.currentTime);
-
-    const progress = (currentPlayTime / totalDuration) * 100;
-
-    setWidth(progress);
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
   };
 
-  const handleClick = () => {
-    setPlay((prev) => !prev);
-    if (isPlay) return videoRef?.current.pause();
+  const handleTouchEnd = (e) => {
+    const touchEndX = e.changedTouches[0].clientX;
+    const touchEndY = e.changedTouches[0].clientY;
 
-    videoRef?.current.play();
-    setHide(false);
+    const diffX = touchStartX.current - touchEndX;
+    const diffY = touchStartY.current - touchEndY;
+
+    const threshold = 50; // Minimum swipe distance
+
+    // Horizontal swipe
+    if (Math.abs(diffX) > Math.abs(diffY)) {
+      if (Math.abs(diffX) > threshold) {
+        if (diffX > 0) {
+          console.log("Swiped Left");
+        } else {
+          console.log("Swiped Right");
+        }
+      }
+    }
+    // Vertical swipe
+    else {
+      if (Math.abs(diffY) > threshold) {
+        if (diffY > 0) {
+          console.log("Swiped Up");
+        } else {
+          console.log("Swiped Down");
+        }
+      }
+    }
   };
+
+  const {
+    handleProgressBar,
+    handleClick,
+    isPlay,
+    setPlay,
+    progressBarWidth,
+    hidePlayPauseIcon,
+    setHide,
+  } = useVideoControls(videoRef);
 
   return (
     <div className="video-container h-full w-full   flex justify-center gap-2">
       <div
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
         className={` main-video-div relative h-full md:h-[95%] md:w-100 w-full `}
       >
         <video

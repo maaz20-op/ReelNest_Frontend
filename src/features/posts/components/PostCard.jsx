@@ -13,6 +13,7 @@ import { useCreateUserSavedPinsMutation } from "../../../services/pins/pin";
 import { useFollowUser } from "../../../hooks/useFollowUser";
 import { checkIsFollowed } from "../../../utils/checkisFollowed";
 import { useToastContext } from "../../../contexts/toast";
+import { useVideoControls } from "../../../utils/videoControls";
 
 export const PostCard = ({ post, setCurrentPostCommentsData }) => {
   const { _id, mediaUrl, postdata, userData, likesUsersData, likes } = post;
@@ -32,6 +33,25 @@ export const PostCard = ({ post, setCurrentPostCommentsData }) => {
     postCreaterId: userData?._id,
   });
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          videoRef?.current.play();
+          return;
+        }
+        videoRef?.current.pause();
+      },
+      { threshold: 0.4 },
+    );
+
+    if (videoRef?.current) observer.observe(videoRef.current);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [post?._id]);
+
   const handleLikeClick = likesData?.handleLikeClick;
   const localHasLiked = likesData?.localHasLiked;
   const localLikesCount = likesData?.localLikesCount;
@@ -44,6 +64,16 @@ export const PostCard = ({ post, setCurrentPostCommentsData }) => {
     userData?.fullname,
     navigate,
   );
+
+  const {
+    handleProgressBar,
+    handleClick,
+    isPlay,
+    setPlay,
+    setHide,
+    progressBarWidth,
+    hidePlayPauseIcon,
+  } = useVideoControls(videoRef);
 
   const { showToast, setSuccessMsg } = useToastContext();
   // save Post
@@ -100,14 +130,34 @@ export const PostCard = ({ post, setCurrentPostCommentsData }) => {
 
       {/* Image - video content */}
 
-      <div className="video/image-container w-full h-full bg-black rounded-2xl overflow-hidden">
+      <div className="video/image-container w-full relative h-full bg-black rounded-2xl overflow-hidden">
         <video
           ref={videoRef}
           className="w-full  object-cover h-[600px] sm:h-[540px] lg:h-[580px] 2xl:h-[620px] rounded-2xl"
           src={mediaUrl}
-          controls
+          onPlay={() => setPlay(true)}
+          onClick={() => setHide(false)}
+          onTimeUpdate={handleProgressBar}
           preload="metadata"
         ></video>
+        {!hidePlayPauseIcon && (
+          <div
+            onClick={handleClick}
+            className="play-pause-icon absolute top-[45%]  flex justify-center items-center p-4 rounded-full left-[44%] "
+          >
+            {isPlay ? (
+              <Icons.pause size={30} color="white" />
+            ) : (
+              <Icons.play size={30} color="white" />
+            )}
+          </div>
+        )}
+        <div className="progress-bar h-1 absolute bottom-0 w-full bg-gray-400">
+          <div
+            style={{ width: progressBarWidth + "%" }}
+            className="h-1 bg-red-500 "
+          ></div>
+        </div>
       </div>
 
       {/* Like comments Button */}
