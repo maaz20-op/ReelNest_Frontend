@@ -45,7 +45,7 @@ export const useUnfollowUser = ({ unfollowUserId, setFollow, userId }) => {
     e.stopPropagation();
     setFollow(false);
     showToast(`Unfollowed Successfully`, true);
-    setSuccessMsg(true);
+
     debouncedFollow();
   };
 

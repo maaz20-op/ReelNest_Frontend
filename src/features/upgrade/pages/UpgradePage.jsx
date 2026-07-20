@@ -127,6 +127,7 @@ export const Upgrade = () => {
               border="rounded-full"
               font="font-medium"
               otherStyles="w-full hover:bg-blue-700 mt-8 transition-colors"
+              fnc={() => alert("Developers Are Working on this Feature!")}
             />
           </div>
         ))}

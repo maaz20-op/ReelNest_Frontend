@@ -35,7 +35,6 @@ export const GridMediaLayoutProfile = ({
     e.stopPropagation();
 
     setActiveTooltipId((prevId) => (prevId === id ? null : id));
-    console.log(activeTooltipId);
   };
 
   const handleDeleteLoggedInUserPost = async (postId, mediaType) => {

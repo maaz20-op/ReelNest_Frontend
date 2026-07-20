@@ -11,6 +11,7 @@ import { useCommentsContext } from "../hooks/useIsCommentsOpen";
 import { contextThemeSetup } from "../../../utils/contextSetup";
 import {
   useCreateCommentMutation,
+  useDeleteCommentMutation,
   useLazyGetPostsCommentsQuery,
 } from "../../../services/comments/comment";
 import { fetchBaseQuery } from "@reduxjs/toolkit/query";
@@ -21,6 +22,7 @@ import {
 } from "../../../utils/useInfiniteScroll";
 import { Spinner } from "../../../components/reusableComponents/Spinner";
 import { VirtualList } from "../../../utils/useVirtualization";
+import { TooltipMenu } from "../../../utils/tooltip";
 
 export const Comments = ({
   postId,
@@ -34,6 +36,8 @@ export const Comments = ({
   const isFollow = checkIsFollowed(createrInfo?._id);
   const [comment, setComment] = useState("");
   const [createComment] = useCreateCommentMutation();
+  const [showMenu, setShowMenu] = useState(false);
+  const [tooltipId, settoolTipId] = useState(null);
 
   const [isEndofComments, setEndOfcomments] = useState(false);
   const [fetchComments, { data: commentData, isLoading: loading, isFetching }] =
@@ -43,6 +47,7 @@ export const Comments = ({
 
   const commentsRawData = commentData?.data[0];
   const commentsContainerRef = useRef(null);
+  const mobileCommentsContainerRef = useRef(null);
 
   const hasNextPage = commentData?.data[1];
   const { isBottomOfContainer, setBtmContainer, handleScroll } =
@@ -80,6 +85,8 @@ export const Comments = ({
       console.error(err);
     }
   };
+
+  const [deleteComment, { isLoading }] = useDeleteCommentMutation();
 
   return (
     <>
@@ -182,17 +189,59 @@ export const Comments = ({
             <VirtualList
               mainContainerRef={commentsContainerRef}
               data={comments}
-              itemRendered={({ commentOwner, text, _id }, indx) => {
+              itemRendered={({ commentOwner, text, _id, createdAt }, indx) => {
+                const date = new Date(createdAt ?? Date.now());
+                const isLoggedInUser =
+                  user?._id.toString() === commentOwner?._id.toString();
+
                 return (
                   <div
                     key={_id || indx}
-                    className="comment-div  flex items-center lg:gap-3  xl:gap-10  px-2 py-3 rounded"
+                    className="comment-div   relative  flex flex-start lg:gap-3  xl:gap-10  px-2 py-3 rounded"
                   >
                     <Avatar size="md" src={commentOwner?.profileImage} />
                     <div className="div-content w-full  overflow-hidden flex  flex-col">
-                      <h1 className="lg:text-xs xl:text-sm line-clamp-1 text-(--text-secondary) ">
-                        {commentOwner?.fullname}
-                      </h1>
+                      <div className="flex justify-between  items-center ">
+                        <h1 className="lg:text-xs xl:text-sm line-clamp-1 text-(--text-secondary) ">
+                          {commentOwner?.fullname}
+                        </h1>
+                        <div className="flex justify-center gap-2">
+                          <span className="text-(--text-muted) text-xs  pb-4 pr-2">
+                            {date.toLocaleDateString().replaceAll("/", "-")}
+                          </span>
+                          {isLoggedInUser && (
+                            <Icons.videoPreference
+                              size={14}
+                              color={iconsColor}
+                              onClick={() => {
+                                setShowMenu((prev) => !prev);
+                                settoolTipId(_id);
+                              }}
+                            />
+                          )}
+                          {isLoggedInUser && _id === tooltipId && showMenu && (
+                            <TooltipMenu
+                              size="sm"
+                              options={[
+                                {
+                                  icon: Icons.delete,
+                                  label: "Delete Comment",
+                                  action: () => {
+                                    if (!isLoading)
+                                      deleteComment({
+                                        commentId: _id,
+                                        postId,
+                                        page,
+                                        limit: commentsLimit,
+                                      });
+                                  },
+                                },
+                              ]}
+                            />
+                          )}
+                        </div>
+                      </div>
+
                       <p className="text-(--text-primary) text-xs xl:text-sm">
                         {text}
                       </p>
@@ -240,7 +289,7 @@ export const Comments = ({
           className={`
     ${isCommentsOpen ? "fixed bottom-0 right-0 left-0" : "hidden"}
     h-2/3
-    bg-(--bg-primary)
+   ${isDark ? "bg-black" : "bg-white"}
     border-2 border-(--border-color) md:hidden block p-2
   `}
         >
@@ -269,7 +318,7 @@ export const Comments = ({
           </div>
 
           <div
-            ref={commentsContainerRef}
+            ref={mobileCommentsContainerRef}
             onScroll={handleScroll}
             className="comments-container account-settings  overflow-y-auto   h-[73%]  flex flex-col gap-2"
           >
@@ -280,23 +329,65 @@ export const Comments = ({
               </div>
             )}
             <VirtualList
-              mainContainerRef={commentsContainerRef}
+              mainContainerRef={mobileCommentsContainerRef}
               data={comments}
-              itemRendered={({ commentOwner, text, _id }, indx) => (
-                <div
-                  key={_id}
-                  className="comment-div  flex items-center gap-10  px-2 py-3 rounded"
-                >
-                  <Avatar size="md" src={commentOwner?.profileImage} />
+              itemRendered={({ commentOwner, text, _id, createdAt }, indx) => {
+                const date = new Date(createdAt ?? Date.now());
+                const isLoggedInUser =
+                  user?._id.toString() === commentOwner?._id.toString();
+                return (
+                  <div
+                    key={_id}
+                    className="comment-div  relative flex flex-start gap-10  px-2 py-3 rounded"
+                  >
+                    <Avatar size="md" src={commentOwner?.profileImage} />
 
-                  <div className="div-content w-full  overflow-hidden flex  flex-col">
-                    <h1 className="text-sm line-clamp-1 text-(--text-secondary) ">
-                      {commentOwner?.fullname}
-                    </h1>
-                    <p className="text-(--text-primary)">{text}</p>
+                    <div className="div-content w-full  overflow-hidden flex  flex-col">
+                      <div className="flex justify-between  items-center ">
+                        <h1 className="text-sm line-clamp-1 text-(--text-secondary) ">
+                          {commentOwner?.fullname}
+                        </h1>
+                        <div className="flex justify-between  items-center ">
+                          <span className="text-(--text-muted) text-xs pb-4 pr-2">
+                            {date.toLocaleDateString().replaceAll("/", "-")}
+                          </span>
+                          {isLoggedInUser && (
+                            <Icons.videoPreference
+                              size={14}
+                              color={iconsColor}
+                              onClick={() => {
+                                setShowMenu((prev) => !prev);
+                                settoolTipId(_id);
+                              }}
+                            />
+                          )}
+                          {isLoggedInUser && _id === tooltipId && showMenu && (
+                            <TooltipMenu
+                              size="sm"
+                              options={[
+                                {
+                                  icon: Icons.delete,
+                                  label: "Delete Comment",
+                                  action: () => {
+                                    if (!isLoading)
+                                      deleteComment({
+                                        commentId: _id,
+                                        postId,
+                                        page,
+                                        limit: commentsLimit,
+                                      });
+                                  },
+                                },
+                              ]}
+                            />
+                          )}
+                        </div>
+                      </div>
+                      <p className="text-(--text-primary) text-sm">{text}</p>
+                    </div>
                   </div>
-                </div>
-              )}
+                );
+              }}
             />
 
             {!isEndofComments && isBottomOfContainer && <Spinner />}

@@ -108,7 +108,6 @@ export const userApi = apiSlice.injectEndpoints({
             const user = draft?.data[0];
             const updatedData = Object.fromEntries(formData);
             for (let key in updatedData) {
-              console.log("keys", key, updatedData[key]);
               user[key] = updatedData[key];
             }
           }),
@@ -177,6 +176,87 @@ export const userApi = apiSlice.injectEndpoints({
       },
     }),
 
+    blockOtherUser: builder.mutation({
+      query: (user) => ({
+        url: "/users/block",
+        method: "PATCH",
+        body: {
+          id: user?._id,
+        },
+      }),
+
+      async onQueryStarted(user, { dispatch, queryFulfilled }) {
+        const updateConnectionPatch = dispatch(
+          apiSlice.util.updateQueryData(
+            "getLoggedInUserConnection",
+            undefined,
+            (draft) => {
+              const Friends = draft?.data[2];
+              const Following = draft?.data[1];
+              if (Array.isArray(Friends) && Array.isArray(Following)) {
+                draft.data[2] = Friends.filter(
+                  (f) => f?._id.toString() !== user?._id.toString(),
+                );
+
+                draft.data[1] = Following.filter(
+                  (f) => f?._id.toString() !== user?._id.toString(),
+                );
+              }
+            },
+          ),
+        );
+        const updateBlockedUsersList = dispatch(
+          apiSlice.util.updateQueryData(
+            "getBlockedUsers",
+            undefined,
+            (draft) => {
+              const blockedUsers = draft?.data[0];
+              if (blockedUsers && Array.isArray(blockedUsers)) {
+                draft?.data[0].push(user);
+              }
+            },
+          ),
+        );
+
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          updateBlockedUsersList.undo();
+          updateConnectionPatch.undo();
+        }
+      },
+    }),
+
+    getBlockedUsers: builder.query({
+      query: () => "/users/block",
+    }),
+
+    unblockOtherUser: builder.mutation({
+      query: (blockedUserId) => ({
+        url: "/users/unblock",
+        method: "PATCH",
+        body: {
+          id: blockedUserId,
+        },
+      }),
+      async onQueryStarted(blockedUserId, { dispatch, queryFulfilled }) {
+        const updateBlockedUserList = dispatch(
+          apiSlice.util.updateQueryData(
+            "getBlockedUsers",
+            undefined,
+            (draft) => {
+              const blockedUsers = draft?.data[0];
+              if (blockedUsers && Array.isArray(blockedUsers)) {
+                draft.data[0] = blockedUsers.filter(
+                  (u) => u?._id.toString() !== blockedUserId.toString(),
+                );
+              }
+            },
+          ),
+        );
+      },
+    }),
+
     followUser: builder.mutation({
       query: (followedUser) => ({
         url: "/users/follow",
@@ -238,6 +318,9 @@ export const {
   useGetUserByIdQuery,
   useGetLoggedInUserConnectionQuery,
   useUpdateAvatarMutation,
+  useGetBlockedUsersQuery,
+  useUnblockOtherUserMutation,
+  useBlockOtherUserMutation,
   useUnfollowUserMutation,
   useDeleteUserAccountMutation,
   useUpdateUserProfileSettingsMutation,

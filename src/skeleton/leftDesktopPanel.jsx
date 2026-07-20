@@ -3,7 +3,7 @@ import { Button } from "../components/reusableComponents/Button";
 
 export const FriendsListSkeleton = ({ isDark }) => {
   return (
-    <div className="other-profile-container overflow-hidden  flex flex-col gap-2 flex-1 min-h-0  mt-5  py-5">
+    <div className="other-profile-container overflow-hidden  flex flex-col gap-2 flex-1 min-h-0   py-5">
       {[...Array(12)].map((_, indx) => (
         <div
           key={indx}

@@ -23,7 +23,7 @@ export const MessageUsersPage = () => {
   const { iconsColor, isDark } = contextThemeSetup();
   const isMsgUpdateContHoverd = showScrollBarOnHover(msgUpdateRef);
   const ismainMsgContHoverd = showScrollBarOnHover(mainMsgContainerRef);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   return (
     <div className="w-full flex  flex-col px-(--page-x-padding) min-h-0  ">

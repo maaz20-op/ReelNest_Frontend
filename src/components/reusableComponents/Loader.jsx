@@ -21,8 +21,10 @@ export const Loader = ({
         ${className}
       `}
       style={{
-        borderColor: color,
         borderTopColor: "transparent",
+        borderRightColor: color,
+        borderBottomColor: color,
+        borderLeftColor: color,
       }}
     />
   );

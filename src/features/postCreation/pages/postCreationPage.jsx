@@ -64,7 +64,7 @@ export const PostCreationPage = () => {
     }
   };
   return (
-    <div className="px-2 py-3 flex flex-col overflow-y-auto  sm:mt-20 lg:mt-0 items-center sm:grid h-full pb-13 sm:grid-rows-[400px_1fr]  lg:grid-rows-1 sm:grid-cols-2 lg:grid-cols-2">
+    <div className="px-2 py-3 flex flex-col overflow-y-auto account-settings sm:mt-20 lg:mt-0 items-center sm:grid h-full pb-13 sm:grid-rows-[400px_1fr]  lg:grid-rows-1 sm:grid-cols-2 lg:grid-cols-2">
       {/* Upload Preview */}
       <div className=" lg:h-full lg:w-full  flex gap-3 flex-col items-center p-2">
         <h1 className="text-xl text-(--text-primary)">Upload Post</h1>

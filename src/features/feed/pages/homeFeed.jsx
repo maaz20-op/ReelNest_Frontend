@@ -40,9 +40,9 @@ export const FeedPage = () => {
     <div
       onScroll={scrollData?.handleScroll}
       ref={mainScrollContainerRef}
-      className={`${isCommentsOpen ? "overflow-hidden" : "overflow-y-scroll "} min-h-0    account-settings  pl-2 lg:pl-5 xl:pl-10  py-3 md:grid md:grid-cols-[400px_1fr] lg:grid-cols-[340px_1fr] 2xl:grid-cols-[480px_1fr] xl:grid-cols-[450px_1fr] flex flex-col gap-4 `}
+      className={`${isCommentsOpen ? "overflow-hidden" : "overflow-y-scroll "} min-h-0    account-settings pl-2 lg:pl-5 xl:pl-10  py-3 md:grid md:grid-cols-[400px_1fr] lg:grid-cols-[340px_1fr] 2xl:grid-cols-[480px_1fr] xl:grid-cols-[450px_1fr] flex flex-col gap-4 `}
     >
-      <div>
+      <div className="h-screen">
         {/* Show Friends on Top Section (Mobile Devices) */}
         <FriendSection />
 

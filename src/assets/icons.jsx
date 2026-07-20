@@ -13,6 +13,7 @@ import { GiUpgrade } from "react-icons/gi";
 import { FaFile } from "react-icons/fa6";
 import { FaWandMagicSparkles } from "react-icons/fa6";
 import { FaUpload } from "react-icons/fa6";
+import { UserX } from "lucide-react";
 import { FaRegHeart } from "react-icons/fa";
 import { FaRegCommentDots } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa";
@@ -49,7 +50,7 @@ export const Icons = {
   plusCircle: GoPlusCircle,
   google: FcGoogle,
   password: RiLockPasswordLine,
-
+  blockedUser: UserX,
   settings: IoSettings,
   pencil: FaPencilAlt,
   call: IoCallSharp,

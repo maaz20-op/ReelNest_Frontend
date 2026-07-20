@@ -42,7 +42,7 @@ export const FriendsList = ({ isDark, followersList, selectedSection }) => {
   return (
     <div
       ref={elementRef}
-      className={`${noFollowers ? "flex  items-center justify-center" : ""}  p-5  ${isHoverd ? "overflow-y-auto" : "overflow-y-hidden"} w-full   account-settings  flex flex-col gap-2 flex-1 min-h-0  mt-5  pb-5 `}
+      className={`${noFollowers ? "flex  items-center justify-center" : ""}  p-5  ${isHoverd ? "overflow-y-auto" : "overflow-y-hidden"} w-full   account-settings  flex flex-col gap-2 flex-1 min-h-0  mt-5 pb-5 `}
     >
       {followersList?.length > 0 ? (
         followersList.map((data, indx) => (
@@ -63,7 +63,7 @@ export const FriendsList = ({ isDark, followersList, selectedSection }) => {
               src={data?.data?.profileImage || data?.profileImage}
             />
             <div className="div-content lg:w-40 xl:w-45 overflow-hidden flex  flex-col">
-              <h1 className="text-sm line-clamp-1 text-(--text-primary) ">
+              <h1 className="lg:text-sm line-clamp-1 text-(--text-primary) ">
                 {data?.data?.fullname || data?.fullname}
               </h1>
               <h2 className="text-sm  line-clamp-1 text-(--text-secondary)">

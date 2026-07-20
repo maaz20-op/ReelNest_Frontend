@@ -108,7 +108,7 @@ export const ScrollableFeed = () => {
               ? nextPost?.user?.username
               : data?.username,
             followers: nextPost?.user
-              ? nextPost?.followers?.followe
+              ? nextPost?.user?.followers
               : data?.followers,
           }}
         />

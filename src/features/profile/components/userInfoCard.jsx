@@ -5,20 +5,27 @@ import { Icons } from "../../../assets/icons";
 import { checkIsFollowed } from "../../../utils/checkisFollowed";
 import { useEffect, useRef, useState } from "react";
 import { contextThemeSetup } from "../../../utils/contextSetup";
-import { useUpdateAvatarMutation } from "../../../services/users/user";
+import {
+  useBlockOtherUserMutation,
+  useUpdateAvatarMutation,
+} from "../../../services/users/user";
 import { useFollowUser, useUnfollowUser } from "../../../hooks/useFollowUser";
 import { useAuth } from "../../auth/hooks/useAuth";
 import { Loader } from "../../../components/reusableComponents/Loader";
+import { TooltipMenu } from "../../../utils/tooltip";
 
 export const UserInfoCard = ({
   user,
   isLoggedInUser,
   setIsConnectionClicked,
+  connectionCate,
   isAlreadyFollowed,
 }) => {
   const navigate = useNavigate();
   const { user: loggedInUser } = useAuth();
   const [profileImgSrc, setImgSrc] = useState("");
+  const [showMenu, setShowMenu] = useState(false);
+
   const inputRef = useRef(null);
   const [isImageFullScreen, setIsImageFullScreen] = useState(false);
 
@@ -27,6 +34,25 @@ export const UserInfoCard = ({
 
   //update Avatar
   const [updateAvatar] = useUpdateAvatarMutation();
+
+  const [blockUser] = useBlockOtherUserMutation();
+
+  const getTooltipOptions = () => [
+    {
+      label: "Block User",
+      icon: Icons.blockedUser,
+      action: () => {
+        if (!isLoggedInUser) {
+          blockUser({
+            _id: user?._id,
+            fullname: user?.fullname,
+            username: user?.username,
+            profileImage: user?.profileImage,
+          });
+        }
+      },
+    },
+  ];
 
   const handleFollowClick = useFollowUser({
     userData: user,
@@ -82,13 +108,26 @@ export const UserInfoCard = ({
 
   return (
     <div className="profile-Card rounded   md:flex md:flex-row-reverse md:justify-end h-6/7 md:h-40 px-6 py-4 w-14/15 md:w-9/10  mx-auto mt-4 bg-(--bg-secondary)">
-      {isLoggedInUser && (
+      {isLoggedInUser ? (
         <div className="flex justify-end">
           <Icons.settings
             onClick={() => navigate("/settings")}
             size={23}
             color={iconsColor}
           />
+        </div>
+      ) : (
+        <div className="relative">
+          <Icons.videoPreference
+            onClick={() => {
+              setShowMenu((prev) => !prev);
+              console.log(showMenu);
+            }}
+            color={iconsColor}
+            size={23}
+          />
+
+          {showMenu && <TooltipMenu options={getTooltipOptions()} />}
         </div>
       )}
       <div className="flex flex-col md:gap-6 2xl:gap-8  md:flex-row gap-2 [&>*:last-child]:mt-3 items-center">
@@ -150,9 +189,9 @@ export const UserInfoCard = ({
           className="followers  md:w-1/2 md:text-sm mt-2 md:mt-4 justify-center flex gap-4"
         >
           {[
-            { label: "Friends", count: user?.followers?.length },
-            { label: "Following", count: user?.following?.length },
-            { label: "Followers", count: user?.following?.length },
+            { label: "Friends", count: connectionCate?.Friends?.length },
+            { label: "Following", count: connectionCate?.Following?.length },
+            { label: "Followers", count: connectionCate?.Followers?.length },
           ].map(({ label, count }, indx) => (
             <div
               key={indx}

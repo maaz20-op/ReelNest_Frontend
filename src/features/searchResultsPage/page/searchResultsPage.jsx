@@ -48,98 +48,100 @@ export function SearchResults() {
     data?.data[0].filter((p) => p?.mediaType !== "video");
 
   return (
-    <div className="min-h-0 overflow-y-auto  account-settings bg-[var(--bg-primary)] text-[var(--text-primary)]">
-      <div className="mx-auto max-w-7xl px-4 py-6">
-        {/* Tabs */}
+    <div className="min-h-0 overflow-hidden bg-[var(--bg-primary)] text-[var(--text-primary)]">
+      <div className="overflow-y-auto h-screen account-settings">
+        <div className="mx-auto max-w-7xl px-1 py-6">
+          {/* Tabs */}
 
-        <div className="sticky -top-1 z-20 mb-8 border-b border-[var(--border-color)] bg-[var(--bg-primary)] py-3">
-          <div className="flex gap-3 overflow-auto">
-            {tabs.map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`rounded-full px-5 py-2 transition
+          <div className="sticky -top-1 z-20 mb-8 border-b border-[var(--border-color)] bg-[var(--bg-primary)] py-2">
+            <div className="flex gap-5 overflow-auto account-settings">
+              {tabs.map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={`rounded-full px-5 py-2 transition
                 ${
                   activeTab === tab
                     ? "bg-[var(--accent)] text-white"
                     : "bg-[var(--bg-secondary)] hover:bg-[var(--hover-bg)]"
                 }`}
-              >
-                {tab}
-              </button>
-            ))}
+                >
+                  {tab}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
 
-        {/* Videos */}
+          {/* Videos */}
 
-        {(activeTab === "Videos" || activeTab === "All") && (
-          <section className="mb-12">
-            <div className="mb-5 flex items-center gap-2">
-              <h2 className="text-2xl font-bold">Videos</h2>
-            </div>
-            {isLoading ? (
-              <GridVideoLayoutSkeleton />
-            ) : (
-              <GridMediaLayoutProfile
-                posts={videoPosts}
-                isSearchPage={true}
-                isVideoTab={true}
-              />
-            )}
-          </section>
-        )}
+          {(activeTab === "Videos" || activeTab === "All") && (
+            <section className="mb-12">
+              <div className="mb-5 flex items-center gap-2">
+                <h2 className="text-2xl font-bold">Videos</h2>
+              </div>
+              {isLoading ? (
+                <GridVideoLayoutSkeleton />
+              ) : (
+                <GridMediaLayoutProfile
+                  posts={videoPosts}
+                  isSearchPage={true}
+                  isVideoTab={true}
+                />
+              )}
+            </section>
+          )}
 
-        {/* Accounts */}
-        {(activeTab === "Users" || activeTab === "All") && (
-          <section className="mb-12">
-            <h2 className="mb-5 text-2xl font-bold">Accounts</h2>
+          {/* Accounts */}
+          {(activeTab === "Users" || activeTab === "All") && (
+            <section className="mb-12">
+              <h2 className="mb-5 text-2xl font-bold">Accounts</h2>
 
-            <div className="space-y-4">
-              {Array.isArray(suggestedAccounts) &&
-                suggestedAccounts.map(({ data: user }) => (
-                  <div
-                    key={user._id}
-                    className="flex items-center justify-between rounded-2xl border border-[var(--border-color)] bg-[var(--bg-secondary)] p-4"
-                  >
-                    <div className="flex items-center gap-4">
-                      <Avatar size="md" src={user?.profileImage} />
+              <div className="space-y-4">
+                {Array.isArray(suggestedAccounts) &&
+                  suggestedAccounts.map(({ data: user }) => (
+                    <div
+                      key={user._id}
+                      className="flex items-center justify-between rounded-2xl border border-[var(--border-color)] bg-[var(--bg-secondary)] p-4"
+                    >
+                      <div className="flex items-center gap-4">
+                        <Avatar size="md" src={user?.profileImage} />
 
-                      <div>
-                        <h3 className="font-semibold">{user?.fullname}</h3>
+                        <div>
+                          <h3 className="font-semibold">{user?.fullname}</h3>
 
-                        <p className="text-sm text-[var(--text-secondary)]">
-                          @{user?.username}
-                        </p>
+                          <p className="text-sm text-[var(--text-secondary)]">
+                            @{user?.username}
+                          </p>
+                        </div>
                       </div>
+
+                      <Button content={"Follow"} background="bg-pink-600" />
                     </div>
+                  ))}
+              </div>
+            </section>
+          )}
 
-                    <Button content={"Follow"} background="bg-pink-600" />
-                  </div>
-                ))}
-            </div>
-          </section>
-        )}
+          {/* Images */}
+          {(activeTab === "Images" ||
+            (activeTab === "All" && imagesPosts.length !== 0)) && (
+            <section className="mb-12">
+              <div className="mb-5 flex items-center gap-2">
+                <h2 className="text-2xl font-bold">Images</h2>
+              </div>
 
-        {/* Images */}
-        {(activeTab === "Images" ||
-          (activeTab === "All" && imagesPosts.length !== 0)) && (
-          <section className="mb-12">
-            <div className="mb-5 flex items-center gap-2">
-              <h2 className="text-2xl font-bold">Images</h2>
-            </div>
-
-            {!isLoading ? (
-              <GridMediaLayoutProfile
-                posts={imagesPosts}
-                isSearchPage={true}
-                isVideoTab={false}
-              />
-            ) : (
-              <GridVideoLayoutSkeleton />
-            )}
-          </section>
-        )}
+              {!isLoading ? (
+                <GridMediaLayoutProfile
+                  posts={imagesPosts}
+                  isSearchPage={true}
+                  isVideoTab={false}
+                />
+              ) : (
+                <GridVideoLayoutSkeleton />
+              )}
+            </section>
+          )}
+        </div>
       </div>
     </div>
   );

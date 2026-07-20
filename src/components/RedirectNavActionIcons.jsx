@@ -7,7 +7,7 @@ const IconsContent = [
   { text: "Home", icon: Icons.HomeIcon, redirect: "/" },
   { text: "Messages", icon: Icons.message, redirect: "/message" },
   { text: "", icon: Icons.plusCircle, redirect: "/create/post" },
-  { text: "Upgrade", icon: Icons.upgrade, redirect: "/upgrade" },
+  { text: "blocked", icon: Icons.blockedUser, redirect: "/users/block" },
   { text: "Profile", icon: Icons.profile, redirect: "/profile" },
 ];
 

@@ -8,12 +8,15 @@ import { Avatar } from "../../../components/reusableComponents/Avatar";
 import { useNavigate } from "react-router-dom";
 import { handleRedirectToUserProfile } from "../../../utils/handleRedirectToUserProfile";
 import { useGetUserConnectionsByIdQuery } from "../../../services/users/user";
+import { ConnectionUserCardSkeleton } from "../../../skeleton/connections/connectionDivSkeleton";
 
 const tabs = ["Friends", "Followers", "Following"];
 
 export const ConnectionInfo = ({
   isConnectionInfoClicked,
   setIsConnectionClicked,
+  connectionCate,
+  isLoading,
   userId,
 }) => {
   const [activeTab, setActiveTab] = useState("Friends");
@@ -21,16 +24,6 @@ export const ConnectionInfo = ({
   const { iconsColor } = contextThemeSetup();
 
   const navigate = useNavigate();
-
-  const { data, isLoading, error } = useGetUserConnectionsByIdQuery(userId, {
-    skip: !userId,
-  });
-
-  const connectionCate = {
-    Friends: data?.data[2] || [],
-    Following: data?.data[1] || [],
-    Followers: data?.data[0] || [],
-  };
 
   if (!isConnectionInfoClicked) return null;
 
@@ -41,7 +34,7 @@ export const ConnectionInfo = ({
         user?.data?.fullname?.toLowerCase().includes(search.toLowerCase()) ||
         user?.username?.toLowerCase().includes(search.toLowerCase()),
     );
-  }, [activeTab, search]);
+  }, [activeTab, search, userId]);
 
   return (
     <div className="absolute left-1/2 bottom-0 z-50     h-[80%] md:top-20   w-full md:w-[470px]  -translate-x-1/2 rounded-2xl border border-zinc-800 bg-[var(--bg-primary)] text-white shadow-2xl overflow-hidden">
@@ -88,48 +81,48 @@ export const ConnectionInfo = ({
 
       {/* Users */}
       <div className="max-h-[420px] overflow-y-auto account-settings">
-        {users.length === 0 && (
+        {!isLoading && users.length === 0 && (
           <div className="py-10 text-center text-zinc-500">No users found.</div>
         )}
 
-        {users.map((user) => {
-          const uniqueId = crypto.randomUUID();
-          return (
-            <div
-              key={uniqueId}
-              className="flex items-center justify-between px-4 py-3 hover:bg-(--bg-secondary) transition"
-            >
-              <div className="flex items-center gap-3">
-                <Avatar
-                  size="md"
-                  src={user?.profileImage || user?.data?.profileImage}
-                />
-
-                <div>
-                  <p className="font-medium text-base text-(--text-primary)">
-                    {user.fullname || user?.data?.fullname}
-                  </p>
-                  <p className="text-sm text-(--text-secondary)">
-                    @{user.username || user?.data?.username}
-                  </p>
-                </div>
-              </div>
-
-              <button
-                onClick={() =>
-                  handleRedirectToUserProfile(
-                    user?._id,
-                    user?.fullname,
-                    navigate,
-                  )
-                }
-                className="rounded-full border border-(--border-color) px-4 py-1.5 text-sm hover:bg-(--bg-secondary) text-(--text-primary)"
+        {!isLoading ? (
+          users.map((user) => {
+            const uniqueId = crypto.randomUUID();
+            return (
+              <div
+                onClick={handleRedirectToUserProfile(
+                  user?._id,
+                  user?.fullname,
+                  navigate,
+                )}
+                key={uniqueId}
+                className="flex items-center justify-between px-4 py-3 hover:bg-(--bg-secondary) transition"
               >
-                View
-              </button>
-            </div>
-          );
-        })}
+                <div className="flex items-center gap-3">
+                  <Avatar
+                    size="md"
+                    src={user?.profileImage || user?.data?.profileImage}
+                  />
+
+                  <div>
+                    <p className="font-medium text-base text-(--text-primary)">
+                      {user.fullname || user?.data?.fullname}
+                    </p>
+                    <p className="text-sm text-(--text-secondary)">
+                      @{user.username || user?.data?.username}
+                    </p>
+                  </div>
+                </div>
+
+                <button className="rounded-full border border-(--border-color) px-4 py-1.5 text-sm hover:bg-(--bg-secondary) text-(--text-primary)">
+                  View
+                </button>
+              </div>
+            );
+          })
+        ) : (
+          <ConnectionUserCardSkeleton />
+        )}
       </div>
     </div>
   );

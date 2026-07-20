@@ -37,7 +37,7 @@ export const Header = () => {
         <div className="wrapper ">
           <div className="flex ">
             <input
-              className="lg:w-120 w-20 px-3 py-2 text-(--text-primary) text-sm outline-none border rounded-l-2xl border-(--border-color)"
+              className="lg:w-120 w-20 md:w-60 px-3 py-2 text-(--text-primary) text-sm outline-none border rounded-l-2xl border-(--border-color)"
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}

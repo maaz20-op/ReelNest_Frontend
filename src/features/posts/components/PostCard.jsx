@@ -14,10 +14,19 @@ import { useFollowUser } from "../../../hooks/useFollowUser";
 import { checkIsFollowed } from "../../../utils/checkisFollowed";
 import { useToastContext } from "../../../contexts/toast";
 import { useVideoControls } from "../../../utils/videoControls";
+import { useSavePost } from "../../../hooks/savePost";
 
 export const PostCard = ({ post, setCurrentPostCommentsData }) => {
-  const { _id, mediaUrl, postdata, userData, likesUsersData, likes } = post;
-
+  const {
+    _id,
+    mediaUrl,
+    postdata,
+    userData,
+    likesUsersData,
+    likes,
+    createdAt,
+  } = post;
+  let date = new Date(createdAt);
   const [isFollow, setFollow] = useState(false);
   const videoRef = useRef(null);
 
@@ -65,6 +74,9 @@ export const PostCard = ({ post, setCurrentPostCommentsData }) => {
     };
   }, [post?._id]);
 
+  //handle save Post
+  const handleSavePost = useSavePost(_id, userData);
+
   // following user otimistically
   const handleFollowClick = useFollowUser({ userData, setFollow });
   const isFollowed = checkIsFollowed(userData?._id);
@@ -79,33 +91,12 @@ export const PostCard = ({ post, setCurrentPostCommentsData }) => {
     hidePlayPauseIcon,
   } = useVideoControls(videoRef);
 
-  // saving user Post
-  const [savePost, { data }] = useCreateUserSavedPinsMutation();
-
-  const handleSavePostClick = async () => {
-    try {
-      showToast(`Post Saved By ${userData?.fullname}`, true);
-
-      await savePost(_id);
-      if (!data?.success) {
-        showToast(`Failed to Save Post By ${userData?.fullname}`, false);
-      } else {
-        showToast(`Post Saved By ${userData?.fullname}`, true);
-      }
-    } catch (err) {
-      console.log(err);
-      if (err || !data?.success) {
-        showToast(`Failed to Save Post By ${userData?.fullname}`, false);
-      }
-    }
-  };
-
   return (
     <div className="video-image-card py-6 flex flex-col gap-2 w-full px-2">
       {/* Profile image - username */}
       <div
         onClick={handleRedirectToCreaterProfile}
-        className="profile-info items-center p-4 flex justify-between gap-2 "
+        className="profile-info items-center  p-4 flex justify-between gap-2 "
       >
         <div className="flex gap-4">
           <Avatar size="md" src={userData?.profileImage} />
@@ -119,14 +110,21 @@ export const PostCard = ({ post, setCurrentPostCommentsData }) => {
           </div>
         </div>
 
-        <div onClick={handleFollowClick}>
-          {userData?.followers?.includes(user?._id) || isFollowed?.isFollow ? (
-            <Icons.followedIcon color={iconsColor} size={25} />
-          ) : (
-            userData?._id !== user?._id && (
-              <Icons.followIcon color={iconsColor} size={25} />
-            )
-          )}
+        <div className="flex mt-3 flex-col justify-center items-center gap-2">
+          <div onClick={handleFollowClick}>
+            {userData?.followers?.includes(user?._id) ||
+            isFollow ||
+            isFollowed?.isFollow ? (
+              <Icons.followedIcon color={iconsColor} size={25} />
+            ) : (
+              userData?._id !== user?._id && (
+                <Icons.followIcon color={iconsColor} size={25} />
+              )
+            )}
+          </div>
+          <span className="text-(--text-muted) font-medium text-xs">
+            {date.toLocaleDateString().replaceAll("/", "-")}
+          </span>
         </div>
       </div>
 
@@ -184,11 +182,7 @@ export const PostCard = ({ post, setCurrentPostCommentsData }) => {
           />
           <Icons.send color={iconsColor} size={23} />
         </div>
-        <Icons.save
-          onClick={handleSavePostClick}
-          color={iconsColor}
-          size={23}
-        />
+        <Icons.save onClick={handleSavePost} color={iconsColor} size={23} />
       </div>
 
       {/* Likes and video title */}

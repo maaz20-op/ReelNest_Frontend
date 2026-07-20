@@ -94,3 +94,16 @@ body {
 .account-settings::-webkit-scrollbar-thumb {
   background-color: #7b7676;
 }
+
+@media (max-width: 768px) {
+  .account-settings {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Old Edge */
+  }
+
+  .account-settings::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Edge */
+    width: 0;
+    height: 0;
+  }
+}

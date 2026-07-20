@@ -9,6 +9,46 @@ export const commentApi = apiSlice.injectEndpoints({
         `/comments?postId=${postId}&limit=${limit}&page=${page}`,
     }),
 
+    deleteComment: builder.mutation({
+      query: ({ postId, commentId }) => ({
+        url: "/comments",
+        method: "DELETE",
+        body: { postId, commentId },
+      }),
+
+      async onQueryStarted(
+        { postId, page, limit, commentId },
+        { dispatch, queryFulfilled },
+      ) {
+        const updateCommentsPatch = dispatch(
+          apiSlice.util.updateQueryData(
+            "getPostsComments",
+            {
+              postId,
+              page,
+              limit,
+            },
+            (draft) => {
+              const comments = draft?.data[0];
+
+              if (comments && Array.isArray(comments)) {
+                draft.data[0] = comments.filter(
+                  (comment) =>
+                    comment?._id?.toString() !== commentId.toString(),
+                );
+              }
+            },
+          ),
+        );
+
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          updateCommentsPatch.undo();
+        }
+      },
+    }),
+
     createComment: builder.mutation({
       query: ({ comment }) => ({
         url: "/comments",
@@ -47,5 +87,8 @@ export const commentApi = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useLazyGetPostsCommentsQuery, useCreateCommentMutation } =
-  commentApi;
+export const {
+  useLazyGetPostsCommentsQuery,
+  useCreateCommentMutation,
+  useDeleteCommentMutation,
+} = commentApi;

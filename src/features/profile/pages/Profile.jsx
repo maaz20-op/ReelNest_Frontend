@@ -2,14 +2,17 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Icons } from "../../../assets/icons";
 import { BorderDiv } from "../../../utils/BorderDiv";
 import { contextThemeSetup } from "../../../utils/contextSetup";
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useAuth } from "../../auth/hooks/useAuth";
 import { Button } from "../../../components/reusableComponents/Button";
 import { Avatar } from "../../../components/reusableComponents/Avatar";
 import { UserInfoCard } from "../components/userInfoCard";
 import { UserInfoCardSkeleton } from "../../../skeleton/profile/userInfoCard";
 import { GridMediaLayoutProfile } from "../components/GridMediaLayout";
-import { useGetUserByIdQuery } from "../../../services/users/user";
+import {
+  useGetUserByIdQuery,
+  useGetUserConnectionsByIdQuery,
+} from "../../../services/users/user";
 import { GiTrumpet } from "react-icons/gi";
 import { useEffect } from "react";
 import { Spinner } from "../../../components/reusableComponents/Spinner";
@@ -101,12 +104,28 @@ export const Profile = () => {
     isPostsEnd: isEndOfPosts,
   });
 
+  useEffect(() => {
+    setIsConnectionClicked(false);
+  }, [userId]);
+
   const profileUser = data?.data[0];
   useEffect(() => {
     if (profileUser?._id !== user?._id) setLoggedInUser(false);
     else if (profileUser?._id === user?._id) setLoggedInUser(true);
   }, [profileUser?._id]);
 
+  const { data: connectionData, isLoading: isConnectionLoading } =
+    useGetUserConnectionsByIdQuery(userId, {
+      skip: !userId,
+    });
+
+  const connectionCate = useMemo(() => {
+    return {
+      Friends: connectionData?.data[2] || [],
+      Following: connectionData?.data[1] || [],
+      Followers: connectionData?.data[0] || [],
+    };
+  }, [userId, connectionData?.data, isConnectionClicked]);
   return (
     <div
       onScroll={handleScroll}
@@ -122,6 +141,7 @@ export const Profile = () => {
           setIsConnectionClicked={setIsConnectionClicked}
           isLoggedInUser={isLoggedInUser}
           isAlreadyFollowed={obj.isFollow}
+          connectionCate={connectionCate}
         />
       )}
 
@@ -130,6 +150,8 @@ export const Profile = () => {
           isConnectionInfoClicked={isConnectionClicked}
           setIsConnectionClicked={setIsConnectionClicked}
           userId={userId}
+          connectionCate={connectionCate}
+          isLoading={isConnectionLoading}
         />
       )}
 

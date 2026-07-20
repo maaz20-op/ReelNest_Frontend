@@ -33,9 +33,7 @@ export const SuggestedUsers = () => {
             ref={suggestionContainerRef}
             className={`${isHoverd ? "overflow-y-auto" : "overflow-y-hidden"} account-settings  scrollbar-gutter-stable flex flex-col gap-2 flex-1 min-h-0 mt-5  py-5 `}
           >
-            {isConnectionLoading || Followers?.length === 0 ? (
-              <FriendsListSkeleton isDark={isDark} isHoverd={isHoverd} />
-            ) : (
+            {!isConnectionLoading || !Followers?.length === 0 ? (
               Array.isArray(Followers) &&
               Followers.map(({ data }, indx) => (
                 <div
@@ -46,7 +44,7 @@ export const SuggestedUsers = () => {
                         data?.fullname,
                         navigate,
                       );
-                    console.log("vclffi");
+
                     handleRedirectToFollowerProfile();
                   }}
                   key={data?._id}
@@ -74,6 +72,8 @@ export const SuggestedUsers = () => {
                   />
                 </div>
               ))
+            ) : (
+              <FriendsListSkeleton isDark={isDark} isHoverd={isHoverd} />
             )}
           </div>
         </div>
