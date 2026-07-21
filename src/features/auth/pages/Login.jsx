@@ -81,15 +81,23 @@ export const LoginPage = () => {
         </p>
 
         {[
-          { text: "Login with Google", icon: Icons.google },
-          { text: "Forgot Password?", icon: Icons.password },
-        ].map(({ text, icon: Icon }, indx) => (
-          <div
-            key={indx}
-            onClick={() => {
+          {
+            text: "Login with Google",
+            icon: Icons.google,
+            fnc: () => {
               window.location.href =
                 "https://reel-nest-backend.vercel.app/api/v1/auth/google";
-            }}
+            },
+          },
+          {
+            text: "Forgot Password?",
+            icon: Icons.password,
+            fnc: () => navigate("/forgot/password"),
+          },
+        ].map(({ text, icon: Icon, fnc }, indx) => (
+          <div
+            key={indx}
+            onClick={fnc}
             className="flex items-center justify-center gap-2 px-3 rounded-xl text-(--text-primary) bg-(--bg-secondary) py-2"
           >
             <Icon size={23} />

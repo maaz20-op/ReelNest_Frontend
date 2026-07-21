@@ -192,6 +192,7 @@ export const Comments = ({
               itemRendered={({ commentOwner, text, _id, createdAt }, indx) => {
                 const date = new Date(createdAt ?? Date.now());
                 const isLoggedInUser =
+                  commentOwner?._id &&
                   user?._id.toString() === commentOwner?._id.toString();
 
                 return (

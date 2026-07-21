@@ -6,7 +6,7 @@ import { Nav_Actions } from "../components/RedirectNavActionIcons";
 import { LeftFriendsPanelDesktop } from "../components/desktop/LeftFriendsPanel";
 import { FriendSection } from "../components/mobile/FriendsHeaderSection";
 
-const authPaths = ["/login", "/signup"];
+const authPaths = ["/login", "/signup", "/forgot/password"];
 const scrollableFeed = ["/feed"];
 const search = ["/search"];
 const homeFeed = ["/", "/profile"];

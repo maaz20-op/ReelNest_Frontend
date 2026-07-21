@@ -2,6 +2,7 @@ import { Routes, Route, BrowserRouter } from "react-router-dom";
 import React from "react";
 import { ProtectedRoute } from "../hooks/protectedRoute";
 import { DisplayBlockUsers } from "../features/blockUser/page/DisplayBlockUser";
+import { ForgotPasswordPage } from "../features/forgotPassword/page/forgotPassword";
 
 const LoginPage = React.lazy(() =>
   import("../features/auth/pages/Login").then((module) => ({
@@ -78,12 +79,14 @@ export const AppRouting = () => {
         {/* Auth Routes */}
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/forgot/password" element={<ForgotPasswordPage />} />
 
         {/* App Routes */}
 
         <Route element={<ProtectedRoute />}>
           <Route path="/" element={<FeedPage />} />
           <Route path="/profile" element={<Profile />} />
+
           <Route path="/settings" element={<AccountSettings />} />
           <Route path="/message" element={<Message_Users_Page />}></Route>
           <Route path="/search" element={<SearchResults />}></Route>
