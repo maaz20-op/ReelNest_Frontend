@@ -63,7 +63,7 @@ export const FriendsList = ({ isDark, followersList, selectedSection }) => {
               src={data?.data?.profileImage || data?.profileImage}
             />
             <div className="div-content lg:w-40 xl:w-45 overflow-hidden flex  flex-col">
-              <h1 className="lg:text-sm line-clamp-1 text-(--text-primary) ">
+              <h1 className="lg:text-sm  font-medium line-clamp-1 text-(--text-primary) ">
                 {data?.data?.fullname || data?.fullname}
               </h1>
               <h2 className="text-sm  line-clamp-1 text-(--text-secondary)">
@@ -74,8 +74,8 @@ export const FriendsList = ({ isDark, followersList, selectedSection }) => {
             <Button
               background="bg-tranparent"
               content={btnContent[selectedSection]}
-              font="font-light"
               textSize="sm"
+              font="font-medium"
               width="w-30"
               border="rounded-2xl"
               otherStyles={`${isDark ? "hover:bg-red-500" : "hover:bg-red-300"} w-40 text-xs hover:scale-[1.04] duration-300 border border-(--border-color)`}

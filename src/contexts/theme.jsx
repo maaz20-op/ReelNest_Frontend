@@ -1,7 +1,7 @@
 import { createContext, useState, useEffect, useContext } from "react";
 
 export const ThemeContext = createContext(null);
-const themeKey = "Maaz_Malaika";
+const themeKey = "ReelNest_Theme";
 export const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState(() => {
     try {

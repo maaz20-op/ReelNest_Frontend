@@ -14,15 +14,15 @@
 
 [data-mode="Light"] {
   --bg-primary: #ffffff; /* main app bg */
-  --bg-secondary: #dedede; /* cards */
+  --bg-secondary: #e8e6e6; /* cards */
   --bg-tertiary: #f1f1f1; /* hover / soft sections */
   --bg-heavy-secondary: #9f9f9f;
 
-  --text-primary: #0f0f0f; /* main text */
-  --text-secondary: #606060; /* subtitles */
+  --text-primary: #080808; /* main text */
+  --text-secondary: #585757; /* subtitles */
   --text-muted: #909090; /* timestamps / low importance */
 
-  --border-color: #e5e5e5;
+  --border-color: #cdc9c9;
 
   --accent: #ff0000; /* red for brand name */
 

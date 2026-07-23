@@ -6,6 +6,8 @@ import { BorderDiv } from "../../../utils/BorderDiv";
 import { useCreatePostMutation } from "../../../services/posts/post";
 import { Loader } from "../../../components/reusableComponents/Loader";
 import { useToastContext } from "../../../contexts/toast";
+import { AIPostCreationModal } from "../components/aiPostCreationPopup";
+import { useGenrateImageWithAiMutation } from "../../../services/Ai-features/Ai-features";
 
 export const PostCreationPage = () => {
   const inputRef = useRef(null);
@@ -15,10 +17,17 @@ export const PostCreationPage = () => {
   const [title, setTitle] = useState("");
   const [imgUrl, setImgSrc] = useState("");
   const [videoUrl, setVideoSrc] = useState("");
+  const [isAIOpen, setIsAIOpen] = useState(false);
+
   const [file, setFile] = useState({});
   const { showToast, isSuccessMsg } = useToastContext();
 
   const [createPost, { isLoading, data, error }] = useCreatePostMutation();
+  const [
+    generateImageWithAi,
+    { data: AiimageData, isLoading: isAiImageGenerating },
+  ] = useGenrateImageWithAiMutation();
+
   const ActionBtnStyle =
     "flex w-60 justify-center text-(--text-primary) items-center bg-blue-600 p-2 rounded-2xl gap-4";
 
@@ -28,20 +37,42 @@ export const PostCreationPage = () => {
   };
 
   const handleSubmit = async () => {
+    if (!title) return;
+
     const formData = new FormData();
     console.log("cliked submit");
     formData.append("media", file);
     formData.append("title", title);
 
+    formData.append("AIimg", imgUrl);
+
+    if (file?.name || imgUrl) {
+      try {
+        const res = await createPost(formData).unwrap();
+        if (res.success) {
+          setImgSrc("");
+          setVideoSrc("");
+          setFile({});
+          setTitle("");
+        }
+        showToast("Post Uploaded!", true);
+      } catch (err) {
+        console.error(err);
+        showToast("Failed to Upload Post", false);
+      }
+    }
+  };
+
+  const handleGenerateAI = async (prompt) => {
+    if (!prompt) return;
     try {
-      await createPost(formData);
-      setImgSrc("");
-      setVideoSrc("");
-      setTitle("");
-      showToast("Post Uploaded!");
+      const res = await generateImageWithAi(prompt).unwrap();
+      console.log();
+      if (res?.success) {
+        setImgSrc(res?.data[0]);
+      }
     } catch (err) {
       console.error(err);
-      showToast("Failed to Upload Post");
     }
   };
 
@@ -52,7 +83,6 @@ export const PostCreationPage = () => {
       const reader = new FileReader();
 
       reader.onload = function (e) {
-        console.log(e.target.result);
         file.type.startsWith("video/")
           ? setVideoSrc(e.target.result)
           : setImgSrc(e.target.result);
@@ -66,10 +96,10 @@ export const PostCreationPage = () => {
   return (
     <div className="px-2 py-3 flex flex-col overflow-y-auto account-settings sm:mt-20 lg:mt-0 items-center sm:grid h-full pb-13 sm:grid-rows-[400px_1fr]  lg:grid-rows-1 sm:grid-cols-2 lg:grid-cols-2">
       {/* Upload Preview */}
-      <div className=" lg:h-full lg:w-full  flex gap-3 flex-col items-center p-2">
-        <h1 className="text-xl text-(--text-primary)">Upload Post</h1>
+      <div className=" lg:h-full lg:w-full  flex gap-3 shadow-md flex-col items-center p-2">
+        <h1 className="text-xl text-(--text-primary) font-bold">Upload Post</h1>
         <div
-          className={`${!imgUrl && "animate-pulse"} h-80 w-60 flex justify-center items-center sm:h-100 sm:w-60 lg:h-120 lg:w-60 rounded-xl bg-(--bg-tertiary) `}
+          className={`${!imgUrl && "animate-pulse"} h-80 w-60 border-2 shado border-red-600  shadow-md shadow-red-600 flex justify-center items-center sm:h-100 sm:w-60 lg:h-120 lg:w-60 rounded-xl bg-(--bg-tertiary) `}
         >
           {imgUrl && <img src={imgUrl} className="object-cover" />}
           {videoUrl && <video src={videoUrl} controls />}
@@ -79,7 +109,10 @@ export const PostCreationPage = () => {
       {/* Upload Actions */}
       <div className="lg:h-full lg:w-full  flex gap-3 flex-col items-start p-4">
         <div className="flex flex-col gap-5 ">
-          <label className="text-(--text-primary)" htmlFor="choosefile">
+          <label
+            className="text-(--text-primary) font-bold"
+            htmlFor="choosefile"
+          >
             Choose From Gallery
           </label>
           <input
@@ -117,20 +150,28 @@ export const PostCreationPage = () => {
 
           <BorderDiv />
 
-          <h1 className=" text-(--text-primary)">Try AI Post Creation</h1>
+          <h1 className=" text-(--text-primary) font-bold">
+            Try AI Post Creation
+          </h1>
 
-          <button
-            onClick={(e) => e.preventDefault()}
-            className={`${ActionBtnStyle}`}
-          >
-            <span>Create with AI</span> <Icons.MagicStick color={iconsColor} />
+          <button onClick={() => setIsAIOpen(true)} className={ActionBtnStyle}>
+            <span>Create with AI</span>
+            <Icons.MagicStick color={iconsColor} />
           </button>
+
+          <AIPostCreationModal
+            isOpen={isAIOpen}
+            onClose={() => setIsAIOpen(false)}
+            onGenerate={handleGenerateAI}
+            isAiImageGenerating={isAiImageGenerating}
+            imgUrl={imgUrl}
+          />
 
           <button
             ref={submitBtnRef}
             disabled={isLoading}
             onClick={handleSubmit}
-            className="px-3 py-3 flex gap-2 justify-center mt-10 items-center bg-red-500 rounded"
+            className="px-3 py-3 flex gap-5 justify-center mt-10 items-center bg-red-600 rounded"
           >
             <span className="text-(--text-primary) font-bold">
               {" "}

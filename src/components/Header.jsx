@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../features/auth/hooks/useAuth.js";
 import { Button } from "./reusableComponents/Button.jsx";
 import { Avatar } from "./reusableComponents/Avatar.jsx";
+
 import { useState } from "react";
 import { useSearchContext } from "../contexts/seachContext.jsx";
 
@@ -37,7 +38,7 @@ export const Header = () => {
         <div className="wrapper ">
           <div className="flex ">
             <input
-              className="lg:w-120 w-20 md:w-60 px-3 py-2 text-(--text-primary) text-sm outline-none border rounded-l-2xl border-(--border-color)"
+              className="lg:w-120 w-20 md:w-60 px-3 py-2 shadow-sm text-(--text-primary) text-sm outline-none border rounded-l-2xl border-(--border-color)"
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -45,19 +46,32 @@ export const Header = () => {
             />
             <div
               onClick={handleSearch}
-              className="px-3 py-2 bg-(--bg-secondary) rounded-r-2xl"
+              className="px-3 py-2 shadow-sm bg-(--bg-secondary) rounded-r-2xl"
             >
               <SearchIcon color={iconsColor} />
             </div>
           </div>
         </div>
 
-        <div className="flex gap-2">
+        <div className="flex gap-2 ">
           <Button
-            content={isDark ? "Light" : "Dark"}
+            content={
+              isDark ? (
+                <div className="flex transition-all duration-1000 justify-center items-center gap-3">
+                  <span>Light</span>
+                  <Icons.LightMode size={20} color={iconsColor} />
+                </div>
+              ) : (
+                <div className="flex transition-all duration-1000 justify-center items-center gap-3">
+                  <span>Dark</span>{" "}
+                  <Icons.DarkMode color={iconsColor} size={20} />
+                </div>
+              )
+            }
             fnc={toggle}
             padding="md"
             border="rounded-xl"
+            otherStyles="shadow-sm mr-4"
           />
           {isLoading || error ? (
             <Avatar size="md" skeleton={true} />

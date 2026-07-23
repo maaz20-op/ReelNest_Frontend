@@ -6,7 +6,12 @@ import { useLikePostMutation } from "../../../../services/posts/post";
 import { useCommentsContext } from "../../../comments/hooks/useIsCommentsOpen";
 import { useLike } from "../../../../hooks/useLike";
 
-export const VideoActions = ({ nextPost, data }) => {
+export const VideoActions = ({
+  nextPost,
+  data,
+  setAutoScroll,
+  isAutoScroll,
+}) => {
   const { user } = useAuth();
 
   const { setIsCommentsOpen } = useCommentsContext();
@@ -24,7 +29,7 @@ export const VideoActions = ({ nextPost, data }) => {
 
   return (
     <div className="actions w-19 h-full absolute top-0 right-0 md:relative">
-      <ul className="flex text-(--text-primary) flex-col h-full gap-4 items-center justify-center">
+      <ul className="flex text-white flex-col h-full gap-4 items-center justify-center">
         {[
           {
             name: localLikesCount,
@@ -51,10 +56,8 @@ export const VideoActions = ({ nextPost, data }) => {
                     text: "Amazing post on ReelNest",
                     url: window.location.href,
                   });
-
-                  console.log("Shared successfully");
                 } catch (err) {
-                  console.log("Share cancelled", err);
+                  console.error(err);
                 }
               } else {
                 alert("Sharing is not supported on this browser.");
@@ -63,9 +66,9 @@ export const VideoActions = ({ nextPost, data }) => {
             size: 35,
           },
           {
-            name: "Loop",
+            name: `Scroll ${isAutoScroll ? "Enabled" : "Disabled"}`,
             icon: Icons?.loop,
-            fnc: () => console.log("clicked"),
+            fnc: () => setAutoScroll((prev) => !prev),
             size: 25,
           },
         ].map(
@@ -76,13 +79,13 @@ export const VideoActions = ({ nextPost, data }) => {
             <li
               onClick={fnc}
               key={indx}
-              className="flex flex-col items-center cursor-pointer"
+              className="flex flex-col justify-center  items-center cursor-pointer"
             >
               <Icon
                 size={size}
                 color={isHighlighted ? highlightColor : "white"}
               />
-              <span className="text-sm">{name}</span>
+              <span className="text-sm text-center">{name}</span>
             </li>
           ),
         )}

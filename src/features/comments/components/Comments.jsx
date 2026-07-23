@@ -23,6 +23,7 @@ import {
 import { Spinner } from "../../../components/reusableComponents/Spinner";
 import { VirtualList } from "../../../utils/useVirtualization";
 import { TooltipMenu } from "../../../utils/tooltip";
+import { CommentTextInput } from "./subComponents/sendInput";
 
 export const Comments = ({
   postId,
@@ -256,24 +257,12 @@ export const Comments = ({
               <Spinner size="md" text="md" />
             )}
           </div>
-          <div className="h-15 w-full p-2 flex items-center">
-            <form className="flex items-center gap-8   w-full">
-              <Button content="Hide" background="bg-(--bg-secondary)" />
-              <input
-                className="outline-none p-2 text-(--text-primary) rounded-2xl w-2/3 border-2 border-(--border-color)"
-                type="text"
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-                placeholder="Share your thoughts..."
-              />
-              <div
-                onClick={handleCreateComment}
-                className="flex justify-center items-center"
-              >
-                <Icons.send color={iconsColor} size={30} />
-              </div>
-            </form>
-          </div>
+          <CommentTextInput
+            comment={comment}
+            setComment={setComment}
+            iconsColor={iconsColor}
+            handleCreateComment={handleCreateComment}
+          />
         </div>
       )}
 
@@ -335,6 +324,7 @@ export const Comments = ({
               itemRendered={({ commentOwner, text, _id, createdAt }, indx) => {
                 const date = new Date(createdAt ?? Date.now());
                 const isLoggedInUser =
+                  commentOwner?._id &&
                   user?._id.toString() === commentOwner?._id.toString();
                 return (
                   <div
@@ -393,22 +383,12 @@ export const Comments = ({
 
             {!isEndofComments && isBottomOfContainer && <Spinner />}
           </div>
-          <div className="h-12   w-full p-2 py-2">
-            <form className="flex h-full items-center gap-8   w-full">
-              <input
-                className="outline-none p-2 text-(--text-primary) rounded-2xl w-2/3 border-2 border-(--border-color)"
-                type="text"
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-                placeholder="Share your thoughts..."
-              />
-              <Icons.send
-                onClick={handleCreateComment}
-                color={iconsColor}
-                size={30}
-              />
-            </form>
-          </div>
+          <CommentTextInput
+            comment={comment}
+            setComment={setComment}
+            iconsColor={iconsColor}
+            handleCreateComment={handleCreateComment}
+          />
         </div>
       )}
     </>

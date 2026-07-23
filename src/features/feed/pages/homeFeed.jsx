@@ -29,8 +29,9 @@ export const FeedPage = () => {
   // Shared scroll container used by the virtualized feed and
   // infinite scroll observer to avoid listening to window scrolling.
   const mainScrollContainerRef = useRef(null);
+  const lastScrollTop = useRef(0);
 
-  const scrollData = useInfinteScroll();
+  const scrollData = useInfinteScroll(lastScrollTop);
 
   useEffect(() => {
     return () => setIsCommentsOpen(false);

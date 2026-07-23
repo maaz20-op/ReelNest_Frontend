@@ -12,6 +12,7 @@ import {
 import { useVideoControls } from "../../../../utils/videoControls";
 import { useReducer } from "react";
 import { useRef } from "react";
+import { useCommentsContext } from "../../../comments/hooks/useIsCommentsOpen";
 
 export const Video = ({
   videoRef,
@@ -21,6 +22,8 @@ export const Video = ({
   setCount,
 }) => {
   const [isFollow, setFollow] = useState(isAlreadyFollowed);
+  const [isAutoScroll, setAutoScroll] = useState(false);
+  const { setIsCommentsOpen } = useCommentsContext();
 
   // next Post = scrolled Post and data = clicked post in profile or on search feed
   const currentPost = nextPost?.user || nextPost?.postOwner ? nextPost : data;
@@ -106,6 +109,12 @@ export const Video = ({
           onPlay={() => setPlay(true)}
           ref={videoRef}
           onClick={() => setHide(false)}
+          onEnded={() => {
+            if (isAutoScroll) {
+              setCount((prev) => prev + 1);
+              setIsCommentsOpen(false);
+            }
+          }}
           onTimeUpdate={handleProgressBar}
           className="h-full w-full bg-black touch-none"
           src={videoSrc}
@@ -186,6 +195,8 @@ export const Video = ({
         likesLength={
           nextPost?.likes ? nextPost?.likes.length : data?.likes.length
         }
+        setAutoScroll={setAutoScroll}
+        isAutoScroll={isAutoScroll}
         data={data}
         nextPost={nextPost}
       />

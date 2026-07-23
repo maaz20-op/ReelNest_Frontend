@@ -38,6 +38,7 @@ export const GridItem = ({
   const likes = post?.likes || [];
   const postdata = post?.postdata;
   const mediaType = post?.mediaType;
+  const page = post?.page;
 
   const navigate = useNavigate();
 
@@ -95,7 +96,7 @@ export const GridItem = ({
 
               {activeTooltipId === _id && (
                 <TooltipMenu
-                  options={getTooltipOptions(_id, mediaType)}
+                  options={getTooltipOptions(_id, mediaType, page)}
                   onClose={() => setActiveTooltipId(null)}
                 />
               )}
@@ -114,7 +115,7 @@ export const GridItem = ({
 
               {activeTooltipId === _id && (
                 <TooltipMenu
-                  options={getTooltipOptions(_id, mediaType)}
+                  options={getTooltipOptions(_id, mediaType, page)}
                   onClose={() => setActiveTooltipId(null)}
                 />
               )}

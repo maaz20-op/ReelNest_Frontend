@@ -42,13 +42,11 @@ export const userApi = apiSlice.injectEndpoints({
         const updateUserfollowing = dispatch(
           apiSlice.util.updateQueryData("getAuthMe", undefined, (draft) => {
             const user = draft?.data[0];
-            console.log("user following", user.following);
+
             if (user && Array.isArray(user.following)) {
               user.following = user.following.filter(
                 (id) => id !== unfollowUserId,
               );
-
-              console.log("after update", user.following);
             }
           }),
         );
@@ -104,7 +102,6 @@ export const userApi = apiSlice.injectEndpoints({
       async onQueryStarted({ formData, userId }, { dispatch, queryFulfilled }) {
         const authUserPatch = dispatch(
           apiSlice.util.updateQueryData("getAuthMe", undefined, (draft) => {
-            console.log("DSKADIOADIA");
             const user = draft?.data[0];
             const updatedData = Object.fromEntries(formData);
             for (let key in updatedData) {
@@ -117,10 +114,8 @@ export const userApi = apiSlice.injectEndpoints({
             const user = draft?.data[0];
             const updatedData = Object.fromEntries(formData);
             for (let key in updatedData) {
-              console.log("keys", key, updatedData[key]);
               user[key] = updatedData[key];
             }
-            console.log(user?.fullname);
           }),
         );
 
@@ -272,8 +267,6 @@ export const userApi = apiSlice.injectEndpoints({
             "getLoggedInUserConnection",
             undefined,
             (draft) => {
-              console.log("followed user", followedUser);
-              console.log("this is draft", current(draft?.data[1]));
               const followingArray = draft?.data[1];
               const isAlreadyFollowed = followingArray.find(
                 (f) => f?._id === followedUser?._id,
@@ -289,7 +282,6 @@ export const userApi = apiSlice.injectEndpoints({
 
         const updateUserPatch = dispatch(
           apiSlice.util.updateQueryData("getAuthMe", undefined, (draft) => {
-            console.log("user draft", current(draft));
             if (!draft || !draft?.data[0]?._id) return;
 
             const loggedInUser = draft?.data[0];

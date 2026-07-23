@@ -1,12 +1,27 @@
 import { useEffect, useState } from "react";
+import { useScrollUpAndDownContext } from "../contexts/hideHeaderOnScroll";
 
-export const useInfinteScroll = () => {
+export const useInfinteScroll = (lastScrollTop) => {
   const [isBottomOfContainer, setBtmContainer] = useState(false);
+  const { setScrollingDown } = useScrollUpAndDownContext();
 
   const handleScroll = (e) => {
     const totalHeight = e.currentTarget.scrollHeight;
     const scrolledView = e.currentTarget.scrollTop;
     const clientHeight = e.currentTarget.clientHeight;
+
+    // hide header and bottom nav on mobile devices on scrollDown
+    if (lastScrollTop) {
+      const currentScrollTop = e.target.scrollTop;
+
+      if (currentScrollTop > lastScrollTop.current) {
+        setScrollingDown(true);
+      } else {
+        setScrollingDown(false);
+      }
+
+      lastScrollTop.current = currentScrollTop;
+    }
 
     if (totalHeight <= Math.round(scrolledView + clientHeight)) {
       setBtmContainer(true);
@@ -89,5 +104,5 @@ export const setPagesAndCallApiInfiniteScroll = ({
     setPage((prev) => prev + 1);
   }, [isBottomOfContainer]);
 
-  return { apiData, page };
+  return { apiData, setApiData, page };
 };

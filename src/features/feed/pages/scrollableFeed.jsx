@@ -93,7 +93,7 @@ export const ScrollableFeed = () => {
       {/* Toggle comments and scroll up-down buttons */}
       {isCommentsOpen ? (
         <Comments
-          title={data?.title}
+          title={nextPost?.postdata ? nextPost?.postdata : data?.title}
           isAlreadyFollowed={isAlreadyFollowed?.isFollow}
           postId={postId}
           createrInfo={{

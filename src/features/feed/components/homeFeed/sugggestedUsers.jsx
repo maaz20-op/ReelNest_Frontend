@@ -53,7 +53,7 @@ export const SuggestedUsers = () => {
                   <div className="flex gap-4 lg:w-6/7  xl:w-5/6  rounded-full ">
                     <Avatar size="md" src={data?.profileImage} />
                     <div className="div-content md:text-base xl:text-sm text-xs overflow-hidden flex  flex-col">
-                      <h1 className=" line-clamp-1 text-(--text-primary) ">
+                      <h1 className=" line-clamp-1 font-medium text-(--text-primary) ">
                         {data?.fullname}
                       </h1>
                       <h2 className="text-sm  line-clamp-1 text-(--text-secondary)">

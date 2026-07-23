@@ -6,6 +6,7 @@ import { setPagesAndCallApiInfiniteScroll } from "../../../utils/useInfiniteScro
 import { VirtualList } from "../../../utils/useVirtualization";
 import { useEffect } from "react";
 import { useToastContext } from "../../../contexts/toast";
+import { useState } from "react";
 
 export const Media = ({
   setCommentsOpen,
@@ -17,6 +18,7 @@ export const Media = ({
   setCurrentPostCommentsData,
   mainScrollContainerRef,
 }) => {
+  const [isMute, setMute] = useState(true);
   const [fetchPosts, { data, isLoading, error, isFetching }] =
     useLazyGetPostsQuery();
 
@@ -38,9 +40,7 @@ export const Media = ({
     fetchData: fetchPosts,
   });
 
-  if (isLoading) return <PostCardSkeleton />;
-
-  if (error) return <p>Something went wrong.</p>;
+  if (isLoading || error) return <PostCardSkeleton />;
 
   if (!Array.isArray(posts) || posts.length === 0) {
     return <p>No posts available.</p>;
@@ -54,6 +54,8 @@ export const Media = ({
         itemRendered={(post) => (
           <PostCard
             post={post}
+            isMute={isMute}
+            setMute={setMute}
             setCurrentPostCommentsData={setCurrentPostCommentsData}
           />
         )}

@@ -5,6 +5,7 @@ import { Header } from "../components/Header";
 import { Nav_Actions } from "../components/RedirectNavActionIcons";
 import { LeftFriendsPanelDesktop } from "../components/desktop/LeftFriendsPanel";
 import { FriendSection } from "../components/mobile/FriendsHeaderSection";
+import { useScrollUpAndDownContext } from "../contexts/hideHeaderOnScroll";
 
 const authPaths = ["/login", "/signup", "/forgot/password"];
 const scrollableFeed = ["/feed"];
@@ -13,7 +14,7 @@ const homeFeed = ["/", "/profile"];
 
 export const MainLayout = ({ children }) => {
   const location = useLocation();
-
+  const { isScrollingDown } = useScrollUpAndDownContext();
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   const isAuthPage = authPaths.includes(location.pathname);
@@ -35,7 +36,9 @@ export const MainLayout = ({ children }) => {
   return (
     <div className="flex flex-col max-h-screen overflow-x-hidden h-dvh select-none max-w-screen bg-(--bg-primary)">
       {!isAuthPage && !isScrollablFeed && !mobileWidth && <Header />}
-      {!isAuthPage && !isScrollablFeed && mobileWidth && <Header />}
+      {!isAuthPage && !isScrollablFeed && mobileWidth && !isScrollingDown && (
+        <Header />
+      )}
       {!isAuthPage && isScrollablFeed && !mobileWidth && <Header />}
 
       {!isAuthPage &&
@@ -55,7 +58,7 @@ export const MainLayout = ({ children }) => {
 
         {children}
 
-        {!isAuthPage && <Nav_Actions />}
+        {!isAuthPage && !(isScrollingDown && mobileWidth) && <Nav_Actions />}
       </div>
     </div>
   );

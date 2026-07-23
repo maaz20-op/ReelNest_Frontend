@@ -51,7 +51,7 @@ export const SavedPost = () => {
     : savedPostsImage?.data[1];
   const limit = 12;
 
-  const { apiData: posts, page } = setPagesAndCallApiInfiniteScroll({
+  const { apiData: posts, setApiData } = setPagesAndCallApiInfiniteScroll({
     hasNextPage,
     setBtmContainer,
     isBottomOfContainer,
@@ -78,7 +78,7 @@ export const SavedPost = () => {
       <div
         ref={savedPostContainerRef}
         onScroll={handleScroll}
-        className="min-h-0 account-settings overflow-y-auto w-full h-full"
+        className="min-h-0 account-settings overflow-y-auto w-full h-screen"
       >
         {savedVideoPins.length === 0 && isVideoTab && (
           <div className="text-(--text-primary) h-full w-full flex justify-center items-center">
@@ -98,7 +98,7 @@ export const SavedPost = () => {
             posts={posts}
             isVideoTab={isVideoTab}
             isMyCollectionPage={true}
-            page={page}
+            setApiData={setApiData}
             limit={limit}
             mainContainerRef={savedPostContainerRef}
           />
@@ -107,6 +107,7 @@ export const SavedPost = () => {
             user={user}
             posts={posts}
             isVideoTab={isVideoTab}
+            setApiData={setApiData}
             isMyCollectionPage={true}
           />
         )}

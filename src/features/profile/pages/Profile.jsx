@@ -35,6 +35,7 @@ export const Profile = () => {
   const [isLoggedInUser, setLoggedInUser] = useState(true);
   const [isVideoTab, setVideoTab] = useState(true);
   const [isEndOfPosts, setEndOfPosts] = useState(false);
+
   const navigate = useNavigate();
 
   const profileContainerRef = useRef(null);
@@ -84,7 +85,7 @@ export const Profile = () => {
     : userImagePosts?.data[1];
   const limit = 12;
 
-  const { apiData: posts, page } = setPagesAndCallApiInfiniteScroll({
+  const { apiData: posts, setApiData } = setPagesAndCallApiInfiniteScroll({
     hasNextPage,
     isBottomOfContainer,
     setBtmContainer,
@@ -168,9 +169,9 @@ export const Profile = () => {
             <GridMediaLayoutProfile
               user={data?.data[0]}
               posts={posts}
+              setApiData={setApiData}
               isVideoTab={isVideoTab}
               mainContainerRef={profileContainerRef}
-              page={page}
               limit={limit}
             />
           ) : (
@@ -192,7 +193,7 @@ export const Profile = () => {
             isVideoTab={isVideoTab}
             posts={posts}
             mainContainerRef={profileContainerRef}
-            page={page}
+            setApiData={setApiData}
             limit={limit}
           />
         )}

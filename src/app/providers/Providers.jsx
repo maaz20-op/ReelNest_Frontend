@@ -8,21 +8,24 @@ import { CommentsProvider } from "../../features/comments/hooks/useIsCommentsOpe
 import { ConnectionProvider } from "../../contexts/useConnections";
 import { SearchContextProvider } from "../../contexts/seachContext";
 import { ToastProvider } from "../../contexts/toast";
+import { ScrollUpDownContextProvider } from "../../contexts/hideHeaderOnScroll";
 
 //All App providers
 export const AppProviders = ({ children }) => {
   return (
     <Provider store={store}>
       <ThemeProvider>
-        <ToastProvider>
-          <SearchContextProvider>
-            <ConnectionProvider>
-              <CommentsProvider>
-                <BrowserRouter>{children}</BrowserRouter>
-              </CommentsProvider>
-            </ConnectionProvider>
-          </SearchContextProvider>
-        </ToastProvider>
+        <ScrollUpDownContextProvider>
+          <ToastProvider>
+            <SearchContextProvider>
+              <ConnectionProvider>
+                <CommentsProvider>
+                  <BrowserRouter>{children}</BrowserRouter>
+                </CommentsProvider>
+              </ConnectionProvider>
+            </SearchContextProvider>
+          </ToastProvider>
+        </ScrollUpDownContextProvider>
       </ThemeProvider>
     </Provider>
   );

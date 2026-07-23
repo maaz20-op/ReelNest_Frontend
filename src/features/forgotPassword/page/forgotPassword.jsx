@@ -5,18 +5,17 @@ import {
   useVerifyOtpMutation,
 } from "../../../services/auth/auth";
 import { useNavigate } from "react-router-dom";
+import { Loader } from "../../../components/reusableComponents/Loader";
 
 export const ForgotPasswordPage = () => {
   const [email, setEmail] = useState("");
   const [showOTP, setShowOTP] = useState(false);
   const [otp, setOtp] = useState(["", "", "", ""]);
 
-  const [getOtp, { data }] = useGetOtpMutation();
-  const [verifyOtp] = useVerifyOtpMutation();
+  const [getOtp] = useGetOtpMutation();
+  const [verifyOtp, { isLoading }] = useVerifyOtpMutation();
 
   const navigate = useNavigate();
-
-  console.log(data?.data);
 
   const inputRefs = useRef([]);
 
@@ -93,15 +92,13 @@ export const ForgotPasswordPage = () => {
   const handleVerifyCode = async (e) => {
     e.preventDefault();
 
-    if (!email || !otp.length === 3 || !Array.isArray(otp)) return;
+    if (!email || otp.includes("") || !Array.isArray(otp)) return;
     const otpString = otp.join("");
-    console.log(otpString);
 
     try {
       const res = await verifyOtp(otpString).unwrap();
       if (res?.data[0]?.fullname) {
         navigate("/");
-        console.log(res);
       }
     } catch (err) {
       console.error(err);
@@ -184,10 +181,12 @@ export const ForgotPasswordPage = () => {
 
               <button
                 onClick={handleVerifyCode}
+                disabled={isLoading}
                 type="button"
-                className="rounded-xl bg-red-700 hover:bg-red-600 transition py-3 font-semibold text-white"
+                className="rounded-xl flex gap-2 justify-center items-center bg-red-700 hover:bg-red-600 transition py-3 font-semibold text-white"
               >
-                Verify Code
+                <h1>Verify Code</h1>{" "}
+                {isLoading && <Loader size="sm" color="white" />}
               </button>
             </>
           )}

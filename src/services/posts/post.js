@@ -52,16 +52,12 @@ export const postApi = apiSlice.injectEndpoints({
           apiSlice.util.updateQueryData(
             queryKey,
             { limit, page, userId, isVideoTab },
+
             (draft) => {
               if (draft?.data && Array.isArray(draft.data[0])) {
-                // 3. Post ka index dundo
-                const index = draft.data[0].findIndex(
-                  (p) => p?._id?.toString() === postId?.toString(),
+                draft.data[0] = draft.data[0].filter(
+                  (p) => p?._id?.toString() !== postId?.toString(),
                 );
-
-                if (index !== -1) {
-                  draft.data[0].splice(index, 1);
-                }
               }
             },
           ),
@@ -89,16 +85,11 @@ export const postApi = apiSlice.injectEndpoints({
             "getVideoPostsByuserId",
             String(userId),
             (draft) => {
-              console.log("this is darft", current(draft));
               const post = draft?.data[0].find(
                 (p) => String(p._id) === String(postId),
               );
               if (post && !post.likes.includes(loggedInUser)) {
-                console.log("liked push");
-
                 post.likes.push(loggedInUser);
-              } else {
-                console.log("already liked");
               }
             },
           ),

@@ -1,6 +1,17 @@
-import { Search, PlusIcon } from "lucide-react";
+import {
+  Search,
+  PlusIcon,
+  MessageCircle,
+  House,
+  Sun,
+  Moon,
+  Lock,
+  Globe,
+  SendHorizontal,
+} from "lucide-react";
 import { GoVideo } from "react-icons/go";
 import { CgProfile } from "react-icons/cg";
+import { FaVolumeUp } from "react-icons/fa";
 import { MdOutlineMessage } from "react-icons/md";
 import { GoPlusCircle } from "react-icons/go";
 import { FcGoogle } from "react-icons/fc";
@@ -32,19 +43,22 @@ import { RiUserFollowFill } from "react-icons/ri";
 import { IoPersonAdd } from "react-icons/io5";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { MdDeleteForever } from "react-icons/md";
+import { IoVolumeMute } from "react-icons/io5";
 
 export const Icons = {
   search: Search,
   share: IoIosShareAlt,
   delete: MdDeleteForever,
   videoPreference: BsThreeDotsVertical,
-  HomeIcon: GoVideo,
+  HomeIcon: House,
+  LightMode: Sun,
+  DarkMode: Moon,
   plus: PlusIcon,
   profile: CgProfile,
   loop: ImLoop,
   arrowUp: FaArrowUp,
   arrowDown: FaArrowDown,
-  message: MdOutlineMessage,
+  message: MessageCircle,
   play: FaPlay,
   pause: IoMdPause,
   plusCircle: GoPlusCircle,
@@ -64,7 +78,11 @@ export const Icons = {
   heart: FaHeart,
   comments: FaRegCommentDots,
   comments2: FaComment,
-  send: LuSend,
+  send: SendHorizontal,
   save: CiSaveUp2,
   back: IoMdArrowBack,
+  mute: IoVolumeMute,
+  unmute: FaVolumeUp,
+  private: Lock,
+  public: Globe,
 };

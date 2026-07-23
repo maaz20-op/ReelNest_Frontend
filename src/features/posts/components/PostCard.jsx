@@ -16,7 +16,12 @@ import { useToastContext } from "../../../contexts/toast";
 import { useVideoControls } from "../../../utils/videoControls";
 import { useSavePost } from "../../../hooks/savePost";
 
-export const PostCard = ({ post, setCurrentPostCommentsData }) => {
+export const PostCard = ({
+  post,
+  setCurrentPostCommentsData,
+  isMute,
+  setMute,
+}) => {
   const {
     _id,
     mediaUrl,
@@ -92,7 +97,7 @@ export const PostCard = ({ post, setCurrentPostCommentsData }) => {
   } = useVideoControls(videoRef);
 
   return (
-    <div className="video-image-card py-6 flex flex-col gap-2 w-full px-2">
+    <div className="video-image-card py-6 flex flex-col gap-2  max-w-full px-2">
       {/* Profile image - username */}
       <div
         onClick={handleRedirectToCreaterProfile}
@@ -101,10 +106,10 @@ export const PostCard = ({ post, setCurrentPostCommentsData }) => {
         <div className="flex gap-4">
           <Avatar size="md" src={userData?.profileImage} />
           <div className="user-name flex flex-col leading-4 justify-center">
-            <h1 className="text-(--text-primary) text-sm">
+            <h1 className="text-(--text-primary) font-bold text-sm">
               {userData?.fullname}
             </h1>
-            <h2 className="text-(--text-secondary) text-sm">
+            <h2 className="text-(--text-secondary) font-medium text-sm">
               @{userData?.username}
             </h2>
           </div>
@@ -136,8 +141,12 @@ export const PostCard = ({ post, setCurrentPostCommentsData }) => {
           className="w-full  object-cover h-[600px] sm:h-[540px] lg:h-[580px] 2xl:h-[620px] rounded-2xl"
           src={mediaUrl}
           onPlay={() => setPlay(true)}
-          onClick={() => setHide(false)}
+          onClick={() => {
+            setHide(false);
+            setMute((prev) => !prev);
+          }}
           onTimeUpdate={handleProgressBar}
+          muted={isMute}
           preload="metadata"
         ></video>
         {!hidePlayPauseIcon && (
@@ -152,6 +161,22 @@ export const PostCard = ({ post, setCurrentPostCommentsData }) => {
             )}
           </div>
         )}
+        <div
+          onClick={() => setMute((prev) => !prev)}
+          className="mute-unmute h-5 w-5 sm:h-7 sm:w-7 flex justify-center items-center rounded-full bg-black absolute bottom-2 right-1"
+        >
+          {isMute ? (
+            <Icons.mute
+              size={window.innerWidth > 450 ? 20 : 14}
+              color="white"
+            />
+          ) : (
+            <Icons.unmute
+              size={window.innerWidth > 450 ? 20 : 14}
+              color="white"
+            />
+          )}
+        </div>
         <div className="progress-bar h-1 absolute bottom-0 w-full bg-gray-400">
           <div
             style={{ width: progressBarWidth + "%" }}
@@ -180,13 +205,31 @@ export const PostCard = ({ post, setCurrentPostCommentsData }) => {
             color={isCommentsOpen ? "red" : iconsColor}
             size={23}
           />
-          <Icons.send color={iconsColor} size={23} />
+          <Icons.send
+            onClick={async () => {
+              if (navigator.share) {
+                try {
+                  await navigator.share({
+                    title: "Check this out!",
+                    text: "Amazing post on ReelNest",
+                    url: window.location.href,
+                  });
+                } catch (err) {
+                  console.error(err);
+                }
+              } else {
+                alert("Sharing is not supported on this browser.");
+              }
+            }}
+            color={iconsColor}
+            size={23}
+          />
         </div>
         <Icons.save onClick={handleSavePost} color={iconsColor} size={23} />
       </div>
 
       {/* Likes and video title */}
-      <div className="mt-4 text-sm">
+      <div className="mt-4 text-sm  flex flex-col gap-3">
         {likesUsersData?.length > 0 && Array.isArray(likesUsersData) ? (
           <div className="text-(--text-secondary) flex items-center gap-2">
             <div className="relative h-12 w-10 ">
@@ -211,9 +254,12 @@ export const PostCard = ({ post, setCurrentPostCommentsData }) => {
         ) : (
           <div className="text-(--text-secondary) ">No Likes Yet!</div>
         )}
-        <div className="flex gap-1 flex-col sm:flex-row text-(--text-primary) ">
-          <p>{userData?.username || "user"}_posted: </p>
-          <p className="text-(--text-secondary) ">
+        <div className="flex flex-col gap-1 text-(--text-primary) w-full min-w-0">
+          <p className="line-clamp-1 font-bold">
+            {userData?.username || "ReelNest_User"}_posted:
+          </p>
+
+          <p className="text-(--text-secondary) text-xs md:text-sm break-words whitespace-normal w-full ">
             {postdata || "Reelnest Video"}
           </p>
         </div>

@@ -8,6 +8,7 @@ import { useDeleteLoggedInUserPostMutation } from "../../../services/posts/post"
 import { GridItem } from "./GridItem";
 import { useDeleteSavedPostMutation } from "../../../services/pins/pin";
 import { VirtualList } from "../../../utils/useVirtualization";
+import { useUpdateUiAfterDeletePost } from "../../../utils/optimisticDeletePost";
 
 export const GridMediaLayoutProfile = ({
   user,
@@ -16,7 +17,8 @@ export const GridMediaLayoutProfile = ({
   isMyCollectionPage = false,
   isSearchPage = false,
   limit,
-  page,
+  setDeletePost,
+  setApiData,
   mainContainerRef,
 }) => {
   const { user: loggedInUser } = useAuth();
@@ -37,44 +39,65 @@ export const GridMediaLayoutProfile = ({
     setActiveTooltipId((prevId) => (prevId === id ? null : id));
   };
 
-  const handleDeleteLoggedInUserPost = async (postId, mediaType) => {
+  const handleDeleteLoggedInUserPost = async (postId, mediaType, page) => {
+    if (!postId) return;
+
+    const { updatePostsUi, rollBack } = useUpdateUiAfterDeletePost({
+      setApiData,
+      postId,
+      posts,
+    });
+
+    updatePostsUi();
+
     try {
-      await deletePost({
+      const res = await deletePost({
         postId,
         page: page,
         limit: limit,
         userId: loggedInUser?._id,
         isVideoTab,
         mediaType,
-      });
-      console.log("tyring to delete ...", {
-        postId,
-        page: page,
-        limit: limit,
-        userId: loggedInUser?._id,
-        mediaType,
-      });
+      }).unwrap();
+
+      if (!res.success) rollBack();
     } catch (err) {
+      rollBack();
       console.error(err);
     }
   };
 
-  const handleDeleteSavedPost = async (postId, mediaType) => {
+  const handleDeleteSavedPost = async (postId, mediaType, page) => {
+    if (!postId) return;
+    const { updatePostsUi, rollBack } = useUpdateUiAfterDeletePost({
+      setApiData,
+      postId,
+      posts,
+    });
+
+    updatePostsUi();
     try {
-      await deleteSavedPost({ postId, mediaType, page, limit });
+      const res = await deleteSavedPost({
+        postId,
+        mediaType,
+        page,
+        limit,
+      }).unwrap();
+      if (!res.success) rollBack();
     } catch (err) {
+      rollBack();
       console.error(err);
     }
   };
 
-  const getTooltipOptions = (postId, mediaType) => [
+  const getTooltipOptions = (postId, mediaType, page) => [
     {
       label: isMyCollectionPage ? "Delete Saved Post" : "Delete Post",
       icon: Icons.delete,
       action: () =>
         isMyCollectionPage
-          ? handleDeleteSavedPost(postId, mediaType)
-          : handleDeleteLoggedInUserPost(postId, mediaType),
+          ? handleDeleteSavedPost(postId, mediaType, page)
+          : handleDeleteLoggedInUserPost(postId, mediaType, page),
     },
     {
       label: "Edit Caption",
