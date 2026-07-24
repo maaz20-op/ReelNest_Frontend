@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { handleRedirectToUserProfile } from "../../../utils/handleRedirectToUserProfile";
 import { useGetUserConnectionsByIdQuery } from "../../../services/users/user";
 import { ConnectionUserCardSkeleton } from "../../../skeleton/connections/connectionDivSkeleton";
+import { useAuth } from "../../auth/hooks/useAuth";
 
 const tabs = ["Friends", "Followers", "Following"];
 
@@ -23,6 +24,7 @@ export const ConnectionInfo = ({
   const [activeTab, setActiveTab] = useState("Friends");
   const [search, setSearch] = useState("");
   const { iconsColor } = contextThemeSetup();
+  const { user: loggedInUser } = useAuth();
 
   if (!isConnectionInfoClicked) return null;
 
@@ -33,7 +35,7 @@ export const ConnectionInfo = ({
         user?.data?.fullname?.toLowerCase().includes(search.toLowerCase()) ||
         user?.username?.toLowerCase().includes(search.toLowerCase()),
     );
-  }, [activeTab, search, userId]);
+  }, [activeTab, setActiveTab, search, userId]);
 
   return (
     <div className="absolute left-1/2 bottom-0 z-50     h-[80%] md:top-20   w-full md:w-[470px]  -translate-x-1/2 rounded-2xl border border-zinc-800 bg-[var(--bg-primary)] text-white shadow-2xl overflow-hidden">
@@ -97,20 +99,23 @@ export const ConnectionInfo = ({
                 key={uniqueId}
                 className="flex items-center justify-between px-4 py-3 hover:bg-(--bg-secondary) transition"
               >
-                <div className="flex items-center gap-3">
-                  <Avatar
-                    size="md"
-                    src={user?.profileImage || user?.data?.profileImage}
-                  />
+                <div className="flex relative items-center gap-3">
+                  <Avatar size="md" src={user?.profileImage} />
 
                   <div>
-                    <p className="font-medium text-base text-(--text-primary)">
-                      {user.fullname || user?.data?.fullname}
+                    <p className="font-medium  text-base text-(--text-primary)">
+                      {user.fullname}
                     </p>
                     <p className="text-sm text-(--text-secondary)">
-                      @{user.username || user?.data?.username}
+                      @{user.username}
                     </p>
                   </div>
+
+                  {loggedInUser?._id === user?._id && (
+                    <span className="px-[4px] py-[2px] absolute top-0 -left-4 bg-pink-900 text-xs rounded-xl text-pink-300">
+                      You
+                    </span>
+                  )}
                 </div>
 
                 <button className="rounded-full border border-(--border-color) px-4 py-1.5 text-sm hover:bg-(--bg-secondary) text-(--text-primary)">
