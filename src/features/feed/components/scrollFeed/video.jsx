@@ -13,6 +13,8 @@ import { useVideoControls } from "../../../../utils/videoControls";
 import { useReducer } from "react";
 import { useRef } from "react";
 import { useCommentsContext } from "../../../comments/hooks/useIsCommentsOpen";
+import { handleRedirectToUserProfile } from "../../../../utils/handleRedirectToUserProfile";
+import { useNavigate } from "react-router-dom";
 
 export const Video = ({
   videoRef,
@@ -24,9 +26,13 @@ export const Video = ({
   const [isFollow, setFollow] = useState(isAlreadyFollowed);
   const [isAutoScroll, setAutoScroll] = useState(false);
   const { setIsCommentsOpen } = useCommentsContext();
+  const navigate = useNavigate();
 
   // next Post = scrolled Post and data = clicked post in profile or on search feed
   const currentPost = nextPost?.user || nextPost?.postOwner ? nextPost : data;
+  const currentPostUser = nextPost?.user
+    ? nextPost?.user
+    : nextPost?.postOwner || data;
 
   const { user } = useAuth();
   const handleFollowClick = useFollowUser({
@@ -119,7 +125,18 @@ export const Video = ({
           className="h-full w-full bg-black touch-none"
           src={videoSrc}
         />
-        <div className="creater-info flex ml-8 items-center text-white gap-4 absolute top-5 w-full ">
+        <div
+          onClick={() => {
+            const handleRedirect = handleRedirectToUserProfile(
+              currentPostUser?.userId || currentPostUser?._id,
+              currentPostUser?.fullname,
+              navigate,
+            );
+
+            handleRedirect();
+          }}
+          className="creater-info flex ml-8 items-center text-white gap-4 absolute top-5 w-full "
+        >
           <Avatar
             size="md"
             src={
@@ -142,13 +159,17 @@ export const Video = ({
           </div>
           <Button
             content={
-              isFollow ? (
+              isFollow &&
+              !(
+                nextPost?.user?._id === user?._id ||
+                nextPost?.postOwner?._id === user?._id
+              ) ? (
                 <div className="flex gap-2 items-center">
                   <h1>Followed </h1>
                   <Icons.followedIcon color="white" size={19} />{" "}
                 </div>
-              ) : nextPost ? (
-                nextPost?.user?._id ||
+              ) : nextPost?.user || nextPost?.postOwner ? (
+                nextPost?.user?._id.toString() === user?._id.toString() ||
                 nextPost?.postOwner?._id === user?._id ? (
                   "You"
                 ) : (

@@ -35,6 +35,7 @@ export const Profile = () => {
   const [isLoggedInUser, setLoggedInUser] = useState(true);
   const [isVideoTab, setVideoTab] = useState(true);
   const [isEndOfPosts, setEndOfPosts] = useState(false);
+  const [isBlockedUser, setBlockedUser] = useState(false);
 
   const navigate = useNavigate();
 
@@ -115,6 +116,12 @@ export const Profile = () => {
     else if (profileUser?._id === user?._id) setLoggedInUser(true);
   }, [profileUser?._id]);
 
+  useEffect(() => {
+    if (!isLoggedInUser && user) {
+      setBlockedUser(user?.blockedUserId.includes(userId.toString()));
+    }
+  }, [isLoggedInUser, userId, user]);
+
   const { data: connectionData, isLoading: isConnectionLoading } =
     useGetUserConnectionsByIdQuery(userId, {
       skip: !userId,
@@ -127,6 +134,7 @@ export const Profile = () => {
       Followers: connectionData?.data[0] || [],
     };
   }, [userId, connectionData?.data, isConnectionClicked]);
+
   return (
     <div
       onScroll={handleScroll}
@@ -139,18 +147,21 @@ export const Profile = () => {
       ) : (
         <UserInfoCard
           user={data?.data[0]}
+          isBlockedUser={isBlockedUser}
           setIsConnectionClicked={setIsConnectionClicked}
           isLoggedInUser={isLoggedInUser}
+          setBlockedUser={setBlockedUser}
           isAlreadyFollowed={obj.isFollow}
           connectionCate={connectionCate}
         />
       )}
 
-      {isConnectionClicked && (
+      {isConnectionClicked && !isBlockedUser && (
         <ConnectionInfo
           isConnectionInfoClicked={isConnectionClicked}
           setIsConnectionClicked={setIsConnectionClicked}
           userId={userId}
+          navigate={navigate}
           connectionCate={connectionCate}
           isLoading={isConnectionLoading}
         />
@@ -165,7 +176,7 @@ export const Profile = () => {
         {isVideoTab ? (
           isUserVideoPostsLoading || !userVideoPosts ? (
             <GridVideoLayoutSkeleton />
-          ) : posts.length > 0 ? (
+          ) : posts.length > 0 && !isBlockedUser ? (
             <GridMediaLayoutProfile
               user={data?.data[0]}
               posts={posts}
@@ -176,18 +187,35 @@ export const Profile = () => {
             />
           ) : (
             <div className="flex flex-col justify-center h-100 items-center gap-6">
-              <img className="h-30 w-30" src="/no-posts.svg" alt="no-friends" />
+              {!isBlockedUser && (
+                <img
+                  className="h-30 w-30"
+                  src="/no-posts.svg"
+                  alt="no-friends"
+                />
+              )}
               <div className="flex flex-col gap-0 justify-center items-center">
                 <p className="w-50   text-center text-(--text-secondary)">
-                  No Posts Uploaded By{" "}
+                  {isBlockedUser ? (
+                    <span className="flex flex-col justify-center items-center gap-3">
+                      <Icons.private size={35} color={iconsColor} />
+                      <span className="font-bold">
+                        Account Not Found of this User!
+                      </span>
+                    </span>
+                  ) : (
+                    "No Posts Uploaded By"
+                  )}
                 </p>
-                <span className="text-(--text-primary)">
-                  {userId === user?._id ? "You" : userData?.name}!
-                </span>
+                {!isBlockedUser && (
+                  <span className="text-(--text-primary)">
+                    {userId === user?._id ? "You" : userData?.name}!
+                  </span>
+                )}
               </div>
             </div>
           )
-        ) : (
+        ) : posts.length > 0 ? (
           <GridMediaLayoutProfile
             user={data?.data[0]}
             isVideoTab={isVideoTab}
@@ -196,6 +224,26 @@ export const Profile = () => {
             setApiData={setApiData}
             limit={limit}
           />
+        ) : (
+          <div className="flex mt-50 flex-col gap-0 justify-center items-center">
+            <p className="w-50   text-center text-(--text-secondary)">
+              {isBlockedUser ? (
+                <span className="flex flex-col justify-center items-center gap-3">
+                  <Icons.private size={35} color={iconsColor} />
+                  <span className="font-bold">
+                    Account Not Found of this User!
+                  </span>
+                </span>
+              ) : (
+                "No Posts Uploaded By"
+              )}
+            </p>
+            {!isBlockedUser && (
+              <span className="text-(--text-primary)">
+                {userId === user?._id ? "You" : userData?.name}!
+              </span>
+            )}
+          </div>
         )}
         {isBottomOfContainer && !isEndOfPosts && <Spinner />}
       </div>

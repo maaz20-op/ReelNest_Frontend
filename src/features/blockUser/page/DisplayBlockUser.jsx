@@ -1,15 +1,13 @@
 import React from "react";
-import {
-  useGetBlockedUsersQuery,
-  useUnblockOtherUserMutation,
-} from "../../../services/users/user";
+import { useGetBlockedUsersQuery } from "../../../services/users/user";
 import { DisplayBlockedUsersSkeleton } from "../../../skeleton/displayBlockedUsers/displayBlockedUser";
+import { useBlockUnBlockUser } from "../../../hooks/useBlockUnblockUser";
 
 export const DisplayBlockUsers = () => {
   const { data, isLoading } = useGetBlockedUsersQuery();
   const users = data?.data[0];
 
-  const [unblock] = useUnblockOtherUserMutation();
+  const { handleUnBlockUser } = useBlockUnBlockUser();
 
   if (isLoading) return <DisplayBlockedUsersSkeleton />;
 
@@ -79,7 +77,9 @@ export const DisplayBlockUsers = () => {
 
                 {/* Action Button */}
                 <button
-                  onClick={() => unblock(_id)}
+                  onClick={() =>
+                    handleUnBlockUser({ _id, fullname, username, profileImage })
+                  }
                   className="w-full py-2 px-4 rounded-lg font-medium text-sm text-white transition-colors duration-200"
                   style={{ backgroundColor: "var(--follow-btn-bg)" }}
                 >

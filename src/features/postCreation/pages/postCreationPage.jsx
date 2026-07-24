@@ -40,7 +40,7 @@ export const PostCreationPage = () => {
     if (!title) return;
 
     const formData = new FormData();
-    console.log("cliked submit");
+
     formData.append("media", file);
     formData.append("title", title);
 

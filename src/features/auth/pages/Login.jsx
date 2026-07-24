@@ -14,9 +14,8 @@ export const LoginPage = () => {
   const navigate = useNavigate();
   const [loginUser, { isLoading }] = useLoginUserMutation();
 
-  if (user && user?.fullname) navigate(-1);
-
   const handleSubmit = async (e) => {
+    if (user && user?.fullname) navigate("/");
     e.preventDefault();
     if (!email || !password) return;
     const res = await loginUser({ email, password });

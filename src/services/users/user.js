@@ -38,7 +38,6 @@ export const userApi = apiSlice.injectEndpoints({
         { unfollowUserId, userId },
         { dispatch, queryFulfilled },
       ) {
-        console.log(unfollowUserId);
         const updateUserfollowing = dispatch(
           apiSlice.util.updateQueryData("getAuthMe", undefined, (draft) => {
             const user = draft?.data[0];
@@ -58,7 +57,7 @@ export const userApi = apiSlice.injectEndpoints({
             (draft) => {
               let followingList = draft?.data[1];
               let friends = draft?.data[2];
-              console.log(current(draft));
+
               if (Array.isArray(followingList) && Array.isArray(friends)) {
                 followingList = followingList.filter(
                   (fu) => fu?._id.toString() !== unfollowUserId.toString(),
@@ -70,7 +69,6 @@ export const userApi = apiSlice.injectEndpoints({
 
                 draft.data[1] = followingList;
                 draft.data[2] = friends;
-                console.log(friends, followingList);
               }
             },
           ),

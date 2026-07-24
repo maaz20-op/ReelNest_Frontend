@@ -13,16 +13,19 @@ import { useFollowUser, useUnfollowUser } from "../../../hooks/useFollowUser";
 import { useAuth } from "../../auth/hooks/useAuth";
 import { Loader } from "../../../components/reusableComponents/Loader";
 import { TooltipMenu } from "../../../utils/tooltip";
+import { useBlockUnBlockUser } from "../../../hooks/useBlockUnblockUser";
 
 export const UserInfoCard = ({
   user,
   isLoggedInUser,
   setIsConnectionClicked,
+  setBlockedUser,
+  isBlockedUser,
   connectionCate,
   isAlreadyFollowed,
 }) => {
   const navigate = useNavigate();
-  const { user: loggedInUser } = useAuth();
+  const { user: loggedInUser, isLoading } = useAuth();
   const [profileImgSrc, setImgSrc] = useState("");
   const [showMenu, setShowMenu] = useState(false);
 
@@ -31,6 +34,8 @@ export const UserInfoCard = ({
 
   const [currentFollow, setFollow] = useState(isAlreadyFollowed);
   const { iconsColor, isDark } = contextThemeSetup();
+  const { handleBlockUser, handleUnBlockUser } =
+    useBlockUnBlockUser(setBlockedUser);
 
   //update Avatar
   const [updateAvatar] = useUpdateAvatarMutation();
@@ -39,16 +44,15 @@ export const UserInfoCard = ({
 
   const getTooltipOptions = () => [
     {
-      label: "Block User",
+      label: isBlockedUser ? "UnBlock" : "Block",
       icon: Icons.blockedUser,
       action: () => {
-        if (!isLoggedInUser) {
-          blockUser({
-            _id: user?._id,
-            fullname: user?.fullname,
-            username: user?.username,
-            profileImage: user?.profileImage,
-          });
+        if (!user) return;
+        console.log(loggedInUser, isBlockedUser);
+        if (!isBlockedUser) {
+          handleBlockUser(user);
+        } else {
+          handleUnBlockUser(user);
         }
       },
     },
@@ -135,7 +139,13 @@ export const UserInfoCard = ({
               <Avatar
                 fn={() => setIsImageFullScreen(false)}
                 size="full"
-                src={profileImgSrc ? profileImgSrc : user?.profileImage}
+                src={
+                  isBlockedUser
+                    ? "https://iili.io/FnrRren.png"
+                    : profileImgSrc
+                      ? profileImgSrc
+                      : user?.profileImage
+                }
               />
             </div>
           )}
@@ -144,7 +154,13 @@ export const UserInfoCard = ({
             <Avatar
               fn={handleAvatarClick}
               size="xl"
-              src={profileImgSrc ? profileImgSrc : user?.profileImage}
+              src={
+                isBlockedUser
+                  ? "https://iili.io/FnrRren.png"
+                  : profileImgSrc
+                    ? profileImgSrc
+                    : user?.profileImage
+              }
             />
 
             {isLoggedInUser && (
@@ -169,16 +185,17 @@ export const UserInfoCard = ({
           <div className="content flex flex-col justify-center md:w-full  items-center">
             <h1 className="text-base line-clamp-1 font-md text-(--text-primary)">
               {" "}
-              {user?.fullname || "Guest"}
+              {isBlockedUser ? "ReelNest User" : user?.fullname || "Guest"}
             </h1>
             <h2 className="text-sm md:text-base text-(--text-secondary) lg:text-sm">
-              @{user?.username || "user"}
+              @{isBlockedUser ? "reelnestu-user" : user?.username || "user"}
             </h2>
           </div>
         </div>
         <p className="user-bio md:text-sm  line-clamp-2 md:w-30 lg:w-30 xl:w-45 lg:line-clamp-3 mt-2 md:mt-4 text-md text-center text-(--text-secondary)">
-          {user?.bio ||
-            "This is Malaika Qamar, my husband is maaz and we are happy family"}
+          {isBlockedUser
+            ? "No Details Found of This User!"
+            : user?.bio || "Write your bio which describes your nature!"}
         </p>
 
         <div
@@ -195,7 +212,9 @@ export const UserInfoCard = ({
               className="flex flex-col justify-center text-sm items-center gap-2"
             >
               <h2 className="text-(--text-primary)">{label}</h2>
-              <h3 className="text-(--text-secondary)">| {count} |</h3>
+              <h3 className="text-(--text-secondary)">
+                | {isBlockedUser ? "N/A" : count} |
+              </h3>
             </div>
           ))}
         </div>
@@ -206,7 +225,12 @@ export const UserInfoCard = ({
           border="rounded-2xl"
           width="w-40 md:w-60 lg:w-40 xl:w-60"
           content={
-            isLoggedInUser ? (
+            isBlockedUser ? (
+              <div className="flex gap-2 items-center">
+                <p>UnBlock</p>
+                <Icons.unblockProfile color="white" size={19} />
+              </div>
+            ) : isLoggedInUser ? (
               "My Collection"
             ) : currentFollow ? (
               <div className="flex gap-2 items-center">
@@ -221,11 +245,13 @@ export const UserInfoCard = ({
             )
           }
           fnc={
-            isLoggedInUser
-              ? showLoggedInUserCollections
-              : currentFollow
-                ? handleUnfollowClick
-                : handleFollowClick
+            isBlockedUser
+              ? () => handleUnBlockUser(user)
+              : isLoggedInUser
+                ? showLoggedInUserCollections
+                : currentFollow
+                  ? handleUnfollowClick
+                  : handleFollowClick
           }
           otherStyles="md:text-sm "
         />

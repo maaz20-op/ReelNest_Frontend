@@ -6,12 +6,14 @@ import {
   Sun,
   Moon,
   Lock,
+  LockOpen,
   Globe,
   SendHorizontal,
 } from "lucide-react";
 import { GoVideo } from "react-icons/go";
 import { CgProfile } from "react-icons/cg";
 import { FaVolumeUp } from "react-icons/fa";
+import { FaLock } from "react-icons/fa6";
 import { MdOutlineMessage } from "react-icons/md";
 import { GoPlusCircle } from "react-icons/go";
 import { FcGoogle } from "react-icons/fc";
@@ -83,6 +85,7 @@ export const Icons = {
   back: IoMdArrowBack,
   mute: IoVolumeMute,
   unmute: FaVolumeUp,
-  private: Lock,
+  private: FaLock,
   public: Globe,
+  unblockProfile: LockOpen,
 };

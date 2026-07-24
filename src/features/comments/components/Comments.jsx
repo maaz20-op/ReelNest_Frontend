@@ -24,6 +24,8 @@ import { Spinner } from "../../../components/reusableComponents/Spinner";
 import { VirtualList } from "../../../utils/useVirtualization";
 import { TooltipMenu } from "../../../utils/tooltip";
 import { CommentTextInput } from "./subComponents/sendInput";
+import { handleRedirectToUserProfile } from "../../../utils/handleRedirectToUserProfile";
+import { useNavigate } from "react-router-dom";
 
 export const Comments = ({
   postId,
@@ -39,6 +41,8 @@ export const Comments = ({
   const [createComment] = useCreateCommentMutation();
   const [showMenu, setShowMenu] = useState(false);
   const [tooltipId, settoolTipId] = useState(null);
+
+  const navigate = useNavigate();
 
   const [isEndofComments, setEndOfcomments] = useState(false);
   const [fetchComments, { data: commentData, isLoading: loading, isFetching }] =
@@ -201,7 +205,18 @@ export const Comments = ({
                     key={_id || indx}
                     className="comment-div   relative  flex flex-start lg:gap-3  xl:gap-10  px-2 py-3 rounded"
                   >
-                    <Avatar size="md" src={commentOwner?.profileImage} />
+                    <Avatar
+                      fn={() => {
+                        const handleRedirect = handleRedirectToUserProfile(
+                          commentOwner?._id,
+                          commentOwner.fullname,
+                          navigate,
+                        );
+                        handleRedirect();
+                      }}
+                      size="md"
+                      src={commentOwner?.profileImage}
+                    />
                     <div className="div-content w-full  overflow-hidden flex  flex-col">
                       <div className="flex justify-between  items-center ">
                         <h1 className="lg:text-xs xl:text-sm line-clamp-1 text-(--text-secondary) ">
@@ -331,7 +346,18 @@ export const Comments = ({
                     key={_id}
                     className="comment-div  relative flex flex-start gap-10  px-2 py-3 rounded"
                   >
-                    <Avatar size="md" src={commentOwner?.profileImage} />
+                    <Avatar
+                      fn={() => {
+                        const handleRedirect = handleRedirectToUserProfile(
+                          commentOwner?._id,
+                          commentOwner.fullname,
+                          navigate,
+                        );
+                        handleRedirect();
+                      }}
+                      size="md"
+                      src={commentOwner?.profileImage}
+                    />
 
                     <div className="div-content w-full  overflow-hidden flex  flex-col">
                       <div className="flex justify-between  items-center ">

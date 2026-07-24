@@ -16,14 +16,13 @@ export const ConnectionInfo = ({
   isConnectionInfoClicked,
   setIsConnectionClicked,
   connectionCate,
+  navigate,
   isLoading,
   userId,
 }) => {
   const [activeTab, setActiveTab] = useState("Friends");
   const [search, setSearch] = useState("");
   const { iconsColor } = contextThemeSetup();
-
-  const navigate = useNavigate();
 
   if (!isConnectionInfoClicked) return null;
 
