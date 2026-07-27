@@ -38,7 +38,7 @@ export const ChatScreen = ({
     if (chatContainerRef.current && customScroll) {
       chatContainerRef.current.scrollBy({
         top: 800,
-        behavior: "instant", // Fast ke liye "auto" likhein
+        behavior: "instant",
       });
     }
   };
