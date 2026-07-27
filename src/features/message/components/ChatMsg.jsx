@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Avatar } from "../../../components/reusableComponents/Avatar";
 import { Icons } from "../../../assets/icons";
 import { socket } from "../../../socketConnection/messagesSocket";
@@ -25,12 +25,20 @@ export const ChatScreen = ({
   const messagesEndRef = useRef(null);
   const chatContainerRef = useRef(null);
 
-  // Reliable scroll-to-bottom helper for scrollable containers
-  const scrollToBottom = (behavior = "smooth") => {
-    if (chatContainerRef.current) {
+  const oldContainerChatHeight = useRef(0);
+
+  // Helper to force scroll to bottom
+  const scrollToBottom = (behavior, customScroll = false) => {
+    if (chatContainerRef.current && !customScroll) {
       chatContainerRef.current.scrollTo({
         top: chatContainerRef.current.scrollHeight,
-        behavior,
+        behavior: "instant",
+      });
+    }
+    if (chatContainerRef.current && customScroll) {
+      chatContainerRef.current.scrollBy({
+        top: 800,
+        behavior: "instant", // Fast ke liye "auto" likhein
       });
     }
   };
@@ -47,7 +55,11 @@ export const ChatScreen = ({
   const hasNextPage = data?.data[1];
   const limit = 20;
 
-  const { apiData: msgs, setApiData } = setPagesAndCallApiInfiniteScroll({
+  const {
+    apiData: msgs,
+    setApiData,
+    page,
+  } = setPagesAndCallApiInfiniteScroll({
     hasNextPage,
     reverse: true,
     setBtmContainer,
@@ -64,24 +76,21 @@ export const ChatScreen = ({
     },
   });
 
-  // 1. Instant jump to bottom when switching chats
-  useEffect(() => {
-    if (selectedChatUser?._id && msgs?.length) {
-      setTimeout(() => scrollToBottom("auto"), 50);
-    }
-  }, [selectedChatUser?._id]);
+  useLayoutEffect(() => {
+    const id = setTimeout(() => scrollToBottom("auto", true), 500);
+    return () => clearTimeout(id);
+  }, [msgs]);
 
-  // 2. Scroll to bottom when a new message arrives or is sent
-  useEffect(() => {
-    if (msgs?.length) {
-      scrollToBottom("smooth");
+  useLayoutEffect(() => {
+    if (page === 1 && selectedChatUser?._id) {
+      setTimeout(() => scrollToBottom("auto"), 500);
     }
-  }, [msgs?.length]);
+  }, [page, selectedChatUser?._id, chatContainerRef?.current]);
 
-  // 3. Handle incoming Socket events
   useEffect(() => {
     const handleIncomingMessage = (incomingMsg) => {
       setApiData((prev) => [...(prev || []), incomingMsg]);
+      setTimeout(() => scrollToBottom("smooth"), 50);
     };
 
     socket.on("chat-msg", handleIncomingMessage);
@@ -117,7 +126,8 @@ export const ChatScreen = ({
       },
     ]);
 
-    setMessage(""); // Clear input state
+    setMessage(""); // Reset input field
+    setTimeout(() => scrollToBottom("smooth"), 50); // Scroll down only for your new message
   };
 
   const handleKeyDown = (e) => {
