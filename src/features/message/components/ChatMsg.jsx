@@ -126,7 +126,7 @@ export const ChatScreen = ({
       },
     ]);
 
-    setMessage(""); // Reset input field
+    setMessage("");
     setTimeout(() => scrollToBottom("smooth"), 50);
   };
 
