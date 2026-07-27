@@ -47,7 +47,6 @@ export const FeedPage = () => {
         {/* Show Friends on Top Section (Mobile Devices) */}
         <FriendSection />
 
-        {/* Media (Videos Images) for Home Feed*/}
         <Media
           isBottomOfContainer={scrollData?.isBottomOfContainer}
           iconsColor={iconsColor}
