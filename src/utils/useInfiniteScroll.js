@@ -1,14 +1,21 @@
 import { useEffect, useState } from "react";
 import { useScrollUpAndDownContext } from "../contexts/hideHeaderOnScroll";
 
-export const useInfinteScroll = (lastScrollTop) => {
+export const useInfinteScroll = (lastScrollTop, reverseScroll) => {
   const [isBottomOfContainer, setBtmContainer] = useState(false);
   const { setScrollingDown } = useScrollUpAndDownContext();
 
   const handleScroll = (e) => {
     const totalHeight = e.currentTarget.scrollHeight;
     const scrolledView = e.currentTarget.scrollTop;
-    const clientHeight = e.currentTarget.clientHeight;
+    const clientHeight = e.currentTarget.scrollTop;
+
+    console.log(
+      "scrollHeight",
+      e.currentTarget.scrollHeight,
+      "scrolltop",
+      scrolledView + clientHeight,
+    );
 
     // hide header and bottom nav on mobile devices on scrollDown
     if (lastScrollTop) {
@@ -23,8 +30,14 @@ export const useInfinteScroll = (lastScrollTop) => {
       lastScrollTop.current = currentScrollTop;
     }
 
-    if (totalHeight <= Math.round(scrolledView + clientHeight)) {
-      setBtmContainer(true);
+    if (reverseScroll) {
+      if (!scrolledView) {
+        setBtmContainer(true);
+      }
+    } else {
+      if (totalHeight <= Math.round(scrolledView + clientHeight)) {
+        setBtmContainer(true);
+      }
     }
   };
 
@@ -44,6 +57,7 @@ export const setPagesAndCallApiInfiniteScroll = ({
   setEndOfPosts,
   isBottomOfContainer,
   isFetching,
+  reverse = false,
   fetchData,
   userId,
   queryObject,
@@ -85,7 +99,9 @@ export const setPagesAndCallApiInfiniteScroll = ({
           const newUniquePosts = postsRawData.filter(
             (p) => !existingIds.has(p._id),
           );
-          return [...prev, ...newUniquePosts];
+          return reverse
+            ? [...newUniquePosts, ...prev]
+            : [...prev, ...newUniquePosts];
         });
       }
       setBtmContainer(false);

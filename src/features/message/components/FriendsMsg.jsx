@@ -1,28 +1,65 @@
-import { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Avatar } from "../../../components/reusableComponents/Avatar";
 import { useConnectionsData } from "../../../hooks/userConnectionData";
-
-export const FriendsMsgUI = () => {
+import { FriendsMessageListSkeleton } from "../../../skeleton/message/friendsMsgList";
+import { socket } from "../../../socketConnection/messagesSocket";
+export const FriendsMsgUI = ({
+  setIsChatUserBoxSelected,
+  setTargetChatUser,
+  onlineUsers,
+  setOnlineUsers,
+}) => {
   const connectionData = useConnectionsData();
-
+  const isLoading = connectionData?.isLoading;
   const friends = connectionData?.connectionList?.Friends || [];
+
+  useEffect(() => {
+    socket.on("check-online-friends", (data) => {
+      console.log("online users", data);
+      setOnlineUsers(data);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!friends) return;
+    const friendsMapped = friends.map((val) => val?.username);
+
+    socket.emit("check-online-friends", {
+      friends: friendsMapped,
+    });
+  }, [friends[0]?._id]);
+
+  if (isLoading) return <FriendsMessageListSkeleton />;
   return (
-    <div className="flex  flex-col gap-2 mt-5 px-2 py-3">
-      {friends.map(({ profileImage }, indx) => (
+    <div className="flex h-screen flex-col gap-2 mt-5 px-2 py-3">
+      {friends.map((user, indx) => (
         <div
+          onClick={() => {
+            setIsChatUserBoxSelected(true);
+            setTargetChatUser(user);
+          }}
           key={indx}
           className="msg-div cursor-pointer  flex items-center justify-between hover:bg-(--bg-secondary) gap-3 px-1 py-3 rounded"
         >
-          <Avatar size="md" src={profileImage} />
+          <div className="relative flex justify-center items-center">
+            <Avatar size="md" src={user?.profileImage} />
+            {onlineUsers.includes(user?.username) && (
+              <span className="bg-green-600 h-3 w-3 rounded-full absolute right-0 bottom-0"></span>
+            )}
+          </div>
 
           <p className="text-(--text-primary) w-2/3 font-light line-clamp-1">
-            Hi this is maaz app
+            Start Chating with {user?.fullname}
           </p>
-          <div className="flex flex-col gap-1 w-1/6">
-            <span className="bg-red-600 flex ml-auto justify-center items-center text-(--text-primary) p-1 h-5 w-5 rounded-full">
-              1
-            </span>
-            <span className="  text-xs text-(--text-muted)">12:00 pm</span>
+          <div className="flex  gap-1 w-1/4 lg:w-1/5">
+            {onlineUsers.includes(user?.username) && (
+              <React.Fragment>
+                <span className="bg-green-600 flex ml-auto justify-center items-center text-(--text-primary) p-1 h-3 w-3 rounded-full" />
+                <span className="  text-xs text-(--text-muted)">
+                  Active Nester
+                </span>
+              </React.Fragment>
+            )}
           </div>
         </div>
       ))}
