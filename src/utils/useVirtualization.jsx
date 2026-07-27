@@ -6,7 +6,6 @@ export const VirtualList = ({
   itemRendered,
   mainContainerRef,
 }) => {
-  // Safe check: agar data nahi hai toh kuch render mat karo
   if (!Array.isArray(data) || data.length === 0) return null;
 
   return isGrid ? (
