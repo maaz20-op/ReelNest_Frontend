@@ -52,14 +52,16 @@ export const FriendsMsgUI = ({
             Start Chating with {user?.fullname}
           </p>
           <div className="flex  gap-1 w-1/4 lg:w-1/5">
-            {onlineUsers.includes(user?.username) && (
-              <React.Fragment>
-                <span className="bg-green-600 flex ml-auto justify-center items-center text-(--text-primary) p-1 h-3 w-3 rounded-full" />
-                <span className="  text-xs text-(--text-muted)">
-                  Active Nester
-                </span>
-              </React.Fragment>
-            )}
+            <React.Fragment>
+              <span
+                className={`${onlineUsers.includes(user?.username) ? "bg-green-600" : "bg-zinc-400"} flex ml-auto justify-center items-center text-(--text-primary) p-1 h-3 w-3 rounded-full`}
+              />
+              <span className="  text-xs text-(--text-muted)">
+                {onlineUsers.includes(user?.username)
+                  ? " Active Nester"
+                  : "Not Active"}
+              </span>
+            </React.Fragment>
           </div>
         </div>
       ))}
