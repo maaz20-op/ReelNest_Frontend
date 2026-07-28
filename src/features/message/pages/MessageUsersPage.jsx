@@ -33,7 +33,7 @@ export const MessageUsersPage = () => {
   }, [user?.username]);
 
   return (
-    <div className=" min-h-0  ">
+    <div className=" min-h-0   h-full">
       <div className="w-full flex    flex-col px-(--page-x-padding) h-full">
         {/* Header */}
         <div className="py-4 ">
@@ -43,7 +43,7 @@ export const MessageUsersPage = () => {
         </div>
 
         {/* Messages Area */}
-        <div className="grid grid-cols-1  lg:grid-cols-2 flex-1 min-h-0 h-full gap-20   border-t-2 border-(--border-color)">
+        <div className="grid grid-cols-1 lg:grid-cols-[40%_1fr]   xl:grid-cols-2 flex-1  gap-20 h-[30%]   border-t-2 border-(--border-color)">
           {/* Friends Msg UI */}
           {window.innerWidth < 1024 && !isChatUserBoxClicked && (
             <div
@@ -75,14 +75,12 @@ export const MessageUsersPage = () => {
           {/* Main Chat Screen */}
 
           {isChatUserBoxClicked && selectedChatUser?.username && (
-            <div className="h-[70vh] lg:h-[80vh]">
-              <ChatScreen
-                selectedChatUser={selectedChatUser}
-                iconsColor={iconsColor}
-                onlineUsers={onlineUsers}
-                isDark={isDark}
-              />
-            </div>
+            <ChatScreen
+              selectedChatUser={selectedChatUser}
+              iconsColor={iconsColor}
+              onlineUsers={onlineUsers}
+              isDark={isDark}
+            />
           )}
 
           {!isChatUserBoxClicked && window.innerWidth > 1024 && (

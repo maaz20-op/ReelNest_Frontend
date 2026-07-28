@@ -140,7 +140,7 @@ export const ChatScreen = ({
   if (isLoading || error) return <ChatScreenSkeleton />;
 
   return (
-    <div className="chat-screen flex flex-col h-full w-full bg-(--bg-primary) overflow-hidden">
+    <div className="chat-screen flex flex-col h-[90%] lg:h-[80vh] w-full bg-(--bg-primary) overflow-hidden">
       {/* 1. HEADER SECTION */}
       <div className="header-chat-screen w-full h-20 border-b border-(--border-color) bg-(--bg-primary) z-10">
         <div className="user-info flex items-center justify-between px-4 py-3">
@@ -159,7 +159,7 @@ export const ChatScreen = ({
           <div className="flex gap-2">
             {onlineUsers.includes(selectedChatUser?.username) && (
               <React.Fragment>
-                <span className="bg-green-600 flex ml-auto justify-center items-center text-(--text-primary) p-1 h-4 w-4 rounded-full" />
+                <span className=" flex ml-auto justify-center items-center text-(--text-primary) p-1 h-4 w-4 rounded-full" />
                 <span className="text-xs text-(--text-muted)">
                   Active Nester
                 </span>
@@ -193,7 +193,7 @@ export const ChatScreen = ({
       <div
         onScroll={handleScroll}
         ref={chatContainerRef}
-        className="main-msg-screen h-screen account-settings flex-1 overflow-y-auto p-4 space-y-4"
+        className="main-msg-screen  account-settings flex-1 overflow-y-auto p-4 space-y-4"
       >
         <VirtualList
           mainContainerRef={chatContainerRef}
