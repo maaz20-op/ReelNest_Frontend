@@ -74,6 +74,7 @@ export const Comments = ({
   });
 
   const handleCreateComment = async () => {
+    console.log(postId);
     const commentObj = {
       text: comment,
       postId: postId,

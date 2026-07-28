@@ -95,7 +95,7 @@ export const ScrollableFeed = () => {
         <Comments
           title={nextPost?.postdata ? nextPost?.postdata : data?.title}
           isAlreadyFollowed={isAlreadyFollowed?.isFollow}
-          postId={postId}
+          postId={nextPost?._id ? nextPost?.postId || nextPost?._id : data?._id}
           createrInfo={{
             avatar: nextPost?.user
               ? nextPost?.user?.profileImage

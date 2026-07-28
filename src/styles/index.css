@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+body {
+  font-family: "Poppins", sans-serif;
+}
+
 :root {
   --page-left-padding: 80px;
   --page-x-padding: 40px;

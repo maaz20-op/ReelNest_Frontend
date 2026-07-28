@@ -11,7 +11,7 @@ export const useLike = ({ currentPost, postCreaterId, likesArray }) => {
   const initialTotalLikes = likesArray.length;
   const initialHasUserLiked = likesArray.includes(userId);
 
-  const postId = currentPost?._id;
+  const postId = currentPost?.postId || currentPost?._id;
   const [localHasLiked, setLocalHasLiked] = useState(initialHasUserLiked);
   const [localLikesCount, setLocalLikesCount] = useState(initialTotalLikes);
   const [likePost] = useLikePostMutation();
