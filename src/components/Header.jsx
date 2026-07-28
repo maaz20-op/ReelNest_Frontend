@@ -55,6 +55,7 @@ export const Header = () => {
 
         <div className="flex gap-2 ">
           <Button
+            otherStyles="hidden lg:block"
             content={
               isDark ? (
                 <div className="flex transition-all duration-1000 justify-center items-center gap-3">
