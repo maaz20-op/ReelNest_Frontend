@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Avatar } from "../../../components/reusableComponents/Avatar";
 import { useConnectionsData } from "../../../hooks/userConnectionData";
 import { FriendsMessageListSkeleton } from "../../../skeleton/message/friendsMsgList";
-import { socket } from "../../../socketConnection/messagesSocket";
+import { useSocketContext } from "../../../contexts/socketContext";
+
 export const FriendsMsgUI = ({
   setIsChatUserBoxSelected,
   setTargetChatUser,
@@ -12,6 +13,7 @@ export const FriendsMsgUI = ({
   const connectionData = useConnectionsData();
   const isLoading = connectionData?.isLoading;
   const friends = connectionData?.connectionList?.Friends || [];
+  const { socket } = useSocketContext();
 
   useEffect(() => {
     socket.on("check-online-friends", (data) => {

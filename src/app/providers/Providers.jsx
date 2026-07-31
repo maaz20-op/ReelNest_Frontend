@@ -9,23 +9,32 @@ import { ConnectionProvider } from "../../contexts/useConnections";
 import { SearchContextProvider } from "../../contexts/seachContext";
 import { ToastProvider } from "../../contexts/toast";
 import { ScrollUpDownContextProvider } from "../../contexts/hideHeaderOnScroll";
+import { PeerProvider } from "../../contexts/peerContext";
+import { IncomingCallPopupProvider } from "../../contexts/incomingCallPopupContext";
+import { SocketProvider } from "../../contexts/socketContext";
 
 //All App providers
 export const AppProviders = ({ children }) => {
   return (
     <Provider store={store}>
       <ThemeProvider>
-        <ScrollUpDownContextProvider>
-          <ToastProvider>
-            <SearchContextProvider>
-              <ConnectionProvider>
-                <CommentsProvider>
-                  <BrowserRouter>{children}</BrowserRouter>
-                </CommentsProvider>
-              </ConnectionProvider>
-            </SearchContextProvider>
-          </ToastProvider>
-        </ScrollUpDownContextProvider>
+        <SocketProvider>
+          <IncomingCallPopupProvider>
+            <ScrollUpDownContextProvider>
+              <PeerProvider>
+                <ToastProvider>
+                  <SearchContextProvider>
+                    <ConnectionProvider>
+                      <CommentsProvider>
+                        <BrowserRouter>{children}</BrowserRouter>
+                      </CommentsProvider>
+                    </ConnectionProvider>
+                  </SearchContextProvider>
+                </ToastProvider>
+              </PeerProvider>
+            </ScrollUpDownContextProvider>
+          </IncomingCallPopupProvider>
+        </SocketProvider>
       </ThemeProvider>
     </Provider>
   );

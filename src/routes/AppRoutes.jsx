@@ -3,10 +3,18 @@ import React from "react";
 import { ProtectedRoute } from "../hooks/protectedRoute";
 import { DisplayBlockUsers } from "../features/blockUser/page/DisplayBlockUser";
 import { ForgotPasswordPage } from "../features/forgotPassword/page/forgotPassword";
+import { SocketProvider } from "../contexts/socketContext";
+import { SocketLayout } from "../layouts/SocketLayout";
 
 const LoginPage = React.lazy(() =>
   import("../features/auth/pages/Login").then((module) => ({
     default: module.LoginPage,
+  })),
+);
+
+const VideoCallScreenPage = React.lazy(() =>
+  import("../features/videoCall/pages/videoCallScreen").then((module) => ({
+    default: module.VideoCallScreenPage,
   })),
 );
 
@@ -88,8 +96,12 @@ export const AppRouting = () => {
           <Route path="/profile" element={<Profile />} />
 
           <Route path="/settings" element={<AccountSettings />} />
-          <Route path="/message" element={<Message_Users_Page />}></Route>
+
+          <Route path="/message" element={<Message_Users_Page />} />
+          <Route path="/videoCall" element={<VideoCallScreenPage />} />
+
           <Route path="/search" element={<SearchResults />}></Route>
+
           <Route path="/users/block" element={<DisplayBlockUsers />} />
           <Route path="/upgrade" element={<Upgrade />} />
           <Route path="/create/post" element={<PostCreationPage />} />

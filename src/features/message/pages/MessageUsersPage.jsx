@@ -5,25 +5,23 @@ import { ChatScreen } from "../components/ChatMsg";
 import { FriendsMsgUI } from "../components/FriendsMsg";
 import { showScrollBarOnHover } from "../../../utils/showSideBarOnHover";
 import { Avatar } from "../../../components/reusableComponents/Avatar";
-import { socket } from "../../../socketConnection/messagesSocket";
 import { useAuth } from "../../auth/hooks/useAuth";
+import { CallConfirmationPrompt } from "../components/subComponents/callConfrimationPrompt";
+import { useSocketContext } from "../../../contexts/socketContext";
 
 export const MessageUsersPage = () => {
   const msgUpdateRef = useRef(null);
   const mainMsgContainerRef = useRef(null);
   const [onlineUsers, setOnlineUsers] = useState([]);
+
   const { user } = useAuth();
+  const { socket } = useSocketContext();
 
   const { iconsColor, isDark } = contextThemeSetup();
   const isMsgUpdateContHoverd = showScrollBarOnHover(msgUpdateRef);
   const [isChatUserBoxClicked, setIsChatUserBoxSelected] = useState(false);
   const ismainMsgContHoverd = showScrollBarOnHover(mainMsgContainerRef);
   const [selectedChatUser, setTargetChatUser] = useState(null);
-
-  useEffect(() => {
-    socket.connect();
-    return () => socket.disconnect();
-  }, []);
 
   useEffect(() => {
     if (!user?.username) return;

@@ -7,7 +7,7 @@ import { LeftFriendsPanelDesktop } from "../components/desktop/LeftFriendsPanel"
 import { FriendSection } from "../components/mobile/FriendsHeaderSection";
 import { useScrollUpAndDownContext } from "../contexts/hideHeaderOnScroll";
 
-const authPaths = ["/login", "/signup", "/forgot/password"];
+const authPaths = ["/login", "/signup", "/forgot/password", "/videoCall"];
 const scrollableFeed = ["/feed"];
 const search = ["/search"];
 const homeFeed = ["/", "/profile"];

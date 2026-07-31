@@ -1,7 +1,7 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Avatar } from "../../../components/reusableComponents/Avatar";
 import { Icons } from "../../../assets/icons";
-import { socket } from "../../../socketConnection/messagesSocket";
+
 import { useAuth } from "../../auth/hooks/useAuth";
 import { useLazyGetMessagesQuery } from "../../../services/message/message";
 import { ChatScreenSkeleton } from "../../../skeleton/message/mainChatScreen";
@@ -12,6 +12,9 @@ import {
 } from "../../../utils/useInfiniteScroll";
 import { Spinner } from "../../../components/reusableComponents/Spinner";
 import { VirtualList } from "../../../utils/useVirtualization";
+import { useNavigate } from "react-router-dom";
+import { CallConfirmationPrompt } from "./subComponents/callConfrimationPrompt";
+import { useSocketContext } from "../../../contexts/socketContext";
 
 export const ChatScreen = ({
   selectedChatUser,
@@ -24,8 +27,9 @@ export const ChatScreen = ({
 
   const messagesEndRef = useRef(null);
   const chatContainerRef = useRef(null);
-
   const oldContainerChatHeight = useRef(0);
+
+  const { socket } = useSocketContext();
 
   // Helper to force scroll to bottom
   const scrollToBottom = (behavior, customScroll = false) => {
@@ -45,6 +49,7 @@ export const ChatScreen = ({
 
   const { showToast } = useToastContext();
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const [fetchMessages, { data, isFetching, isLoading, error }] =
     useLazyGetMessagesQuery();
@@ -177,6 +182,14 @@ export const ChatScreen = ({
               <Icons.call size={23} color={iconsColor} />
             </button>
             <button
+              onClick={() => {
+                if (!selectedChatUser?.fullname) return;
+                navigate("/videoCall", {
+                  state: {
+                    user: selectedChatUser,
+                  },
+                });
+              }}
               type="button"
               className={`${
                 isDark ? "hover:bg-red-500/20" : "hover:bg-red-100"

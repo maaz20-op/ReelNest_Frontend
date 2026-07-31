@@ -10,13 +10,6 @@ export const useInfinteScroll = (lastScrollTop, reverseScroll) => {
     const scrolledView = e.currentTarget.scrollTop;
     const clientHeight = e.currentTarget.scrollTop;
 
-    console.log(
-      "scrollHeight",
-      e.currentTarget.scrollHeight,
-      "scrolltop",
-      scrolledView + clientHeight,
-    );
-
     // hide header and bottom nav on mobile devices on scrollDown
     if (lastScrollTop) {
       const currentScrollTop = e.target.scrollTop;
