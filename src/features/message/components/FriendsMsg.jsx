@@ -17,7 +17,6 @@ export const FriendsMsgUI = ({
 
   useEffect(() => {
     socket.on("check-online-friends", (data) => {
-      console.log("online users", data);
       setOnlineUsers(data);
     });
   }, []);

@@ -8,7 +8,7 @@ export const useSocketContext = () => {
 };
 
 export const SocketProvider = ({ children }) => {
-  const socket = io("http://localhost:3000", {
+  const socket = io("https://neuron-pavilion-reappoint.ngrok-free.dev", {
     transports: ["websocket", "polling"],
     withCredentials: true,
   });

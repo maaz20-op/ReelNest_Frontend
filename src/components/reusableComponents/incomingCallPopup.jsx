@@ -1,10 +1,14 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import { useSocketContext } from "../../contexts/socketContext";
 
 export const IncomingCallPopup = ({
   callingUser,
   setIsCallIncoming,
   setCallAccepted,
 }) => {
+  const { socket } = useSocketContext();
+
   return (
     <div className="fixed top-12 left-1/2 -translate-x-1/2 z-50 w-[90%] sm:w-[400px] md:w-[450px] lg:w-[480px] xl:w-[500px] 2xl:w-[540px] p-4 sm:p-5 md:p-6 rounded-2xl shadow-2xl border transition-all duration-300 ease-in-out bg-[var(--bg-secondary)] border-[var(--border-color)] text-[var(--text-primary)]">
       {/* Header / Subtitle */}
@@ -16,7 +20,7 @@ export const IncomingCallPopup = ({
             <span className="relative inline-flex rounded-full h-3 w-3 bg-[var(--success)]" />
           </span>
           <span className="text-xs sm:text-sm font-medium tracking-wide uppercase text-[var(--text-secondary)]">
-            Incoming Audio Call
+            Incoming Video Call
           </span>
         </div>
 
@@ -30,7 +34,7 @@ export const IncomingCallPopup = ({
         {/* Avatar with Ring */}
         <div className="relative flex-shrink-0">
           <img
-            src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80"
+            src={callingUser?.profileImage}
             alt="Caller Avatar"
             className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full object-cover border-2 border-[var(--border-color)]"
           />
@@ -41,10 +45,10 @@ export const IncomingCallPopup = ({
         {/* Name & Info */}
         <div className="flex-1 min-w-0">
           <h3 className="text-base sm:text-lg md:text-xl font-semibold truncate text-[var(--text-primary)]">
-            Sarah Jenkins
+            {callingUser?.fullname}
           </h3>
           <p className="text-xs sm:text-sm truncate text-[var(--text-secondary)]">
-            Product Designer @ Acme Corp
+            @{callingUser?.username}
           </p>
         </div>
       </div>
@@ -53,6 +57,14 @@ export const IncomingCallPopup = ({
       <div className="flex items-center justify-between gap-3 pt-2">
         {/* Decline Button */}
         <button
+          onClick={() => {
+            setCallAccepted(false);
+            setIsCallIncoming(false);
+            socket.emit("call:ended", {
+              to: callingUser?.username,
+              declined: true,
+            });
+          }}
           type="button"
           className="flex-1 flex items-center justify-center gap-2 py-2.5 sm:py-3 px-4 rounded-xl font-medium text-xs sm:text-sm md:text-base text-white transition-all transform active:scale-95 hover:opacity-90 shadow-lg bg-[var(--error)]"
         >

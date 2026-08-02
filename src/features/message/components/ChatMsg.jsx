@@ -3,7 +3,10 @@ import { Avatar } from "../../../components/reusableComponents/Avatar";
 import { Icons } from "../../../assets/icons";
 
 import { useAuth } from "../../auth/hooks/useAuth";
-import { useLazyGetMessagesQuery } from "../../../services/message/message";
+import {
+  useDeleteMessageMutation,
+  useLazyGetMessagesQuery,
+} from "../../../services/message/message";
 import { ChatScreenSkeleton } from "../../../skeleton/message/mainChatScreen";
 import { useToastContext } from "../../../contexts/toast";
 import {
@@ -15,6 +18,7 @@ import { VirtualList } from "../../../utils/useVirtualization";
 import { useNavigate } from "react-router-dom";
 import { CallConfirmationPrompt } from "./subComponents/callConfrimationPrompt";
 import { useSocketContext } from "../../../contexts/socketContext";
+import { TooltipMenu } from "../../../utils/tooltip";
 
 export const ChatScreen = ({
   selectedChatUser,
@@ -26,10 +30,13 @@ export const ChatScreen = ({
   const [isEndOfMessages, setEndOfMessages] = useState(false);
 
   const messagesEndRef = useRef(null);
+  const [isToolTipOpen, setToolTipOpen] = useState(false);
+  const [currentToolTipId, setCurrentToolTipId] = useState(null);
   const chatContainerRef = useRef(null);
   const oldContainerChatHeight = useRef(0);
 
   const { socket } = useSocketContext();
+  const [deleteMsg] = useDeleteMessageMutation();
 
   // Helper to force scroll to bottom
   const scrollToBottom = (behavior, customScroll = false) => {
@@ -165,7 +172,7 @@ export const ChatScreen = ({
             {onlineUsers.includes(selectedChatUser?.username) && (
               <React.Fragment>
                 <span className=" flex ml-auto justify-center items-center text-(--text-primary) p-1 h-4 w-4 rounded-full" />
-                <span className="text-xs text-(--text-muted)">
+                <span className="text-[8px] sm:text-xs  text-(--text-muted)">
                   Active Nester
                 </span>
               </React.Fragment>
@@ -242,7 +249,35 @@ export const ChatScreen = ({
                   </div>
                 )}
                 {isMe && (
-                  <div className="flex flex-col items-end my-2">
+                  <div
+                    onClick={() => {
+                      setToolTipOpen((prev) => !prev);
+                      setCurrentToolTipId(msg?._id);
+                    }}
+                    className="flex relative flex-col items-end my-2"
+                  >
+                    {isToolTipOpen && currentToolTipId === msg?._id && (
+                      <TooltipMenu
+                        className="top-16"
+                        options={[
+                          {
+                            action: () => {
+                              if (msg?._id) {
+                                deleteMsg(msg?._id);
+                                setApiData((prev) =>
+                                  prev.filter(
+                                    (allMsgs) =>
+                                      allMsgs?._id.toString() !==
+                                      msg?._id.toString(),
+                                  ),
+                                );
+                              }
+                            },
+                            label: "Delete",
+                          },
+                        ]}
+                      />
+                    )}
                     <div className="flex gap-2">
                       <span className="text-(--text-secondary) text-xs">
                         {date}

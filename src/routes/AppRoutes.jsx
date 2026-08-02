@@ -1,10 +1,11 @@
-import { Routes, Route, BrowserRouter } from "react-router-dom";
-import React from "react";
+import { Routes, Route, BrowserRouter, useNavigate } from "react-router-dom";
+import React, { useEffect } from "react";
 import { ProtectedRoute } from "../hooks/protectedRoute";
 import { DisplayBlockUsers } from "../features/blockUser/page/DisplayBlockUser";
 import { ForgotPasswordPage } from "../features/forgotPassword/page/forgotPassword";
 import { SocketProvider } from "../contexts/socketContext";
 import { SocketLayout } from "../layouts/SocketLayout";
+import { useIncomingCallPopupContext } from "../utils/useIncomingCallContext";
 
 const LoginPage = React.lazy(() =>
   import("../features/auth/pages/Login").then((module) => ({
@@ -81,6 +82,11 @@ const SavedPost = React.lazy(() =>
 );
 
 export const AppRouting = () => {
+  const navigate = useNavigate();
+  const { isCallAccepted } = useIncomingCallPopupContext();
+  useEffect(() => {
+    if (isCallAccepted) navigate("/videoCall");
+  }, [isCallAccepted]);
   return (
     <>
       <Routes>

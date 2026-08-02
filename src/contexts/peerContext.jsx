@@ -9,40 +9,97 @@ import {
 } from "react";
 import { useSocketContext } from "./socketContext";
 import { useIncomingCallPopupContext } from "../utils/useIncomingCallContext";
+import { useAuth } from "../features/auth/hooks/useAuth";
+import { useToastContext } from "./toast";
 
 export const PeerContext = createContext(null);
 
 export const PeerProvider = ({ children }) => {
-  const [myStream, setMyStream] = useState(null);
   const iceCandidatesQueue = useRef([]);
   const peerRef = useRef(null);
+  const [isCallPromptOpen, setIsCallPromptOpen] = useState(true);
+
+  const [remoteStream, setRemoteStream] = useState(null);
   const [isPeerTrigger, setPeerTrigger] = useState(0);
+  const { user } = useAuth();
+
   const { socket } = useSocketContext();
 
-  const { setIsCallIncoming } = useIncomingCallPopupContext();
+  const { setIsCallIncoming, setCallingUser, callingUser, isCallAccepted } =
+    useIncomingCallPopupContext();
 
   const getActivePeer = useCallback(() => {
-    // Agar connection uninitialized hai ya close ho chuka hai
     if (!peerRef.current || peerRef.current.signalingState === "closed") {
+      const username = import.meta.env.VITE_TURN_SERVER_USERNAME;
+      const credential = import.meta.env.VITE_TURN_SERVER_API_KEY;
+
       const temporaryFreshPeer = new RTCPeerConnection({
+        // iceServers: [
+        //   { urls: "stun:stun.relay.metered.ca:80" },
+        //   {
+        //     urls: "turn:global.relay.metered.ca:80",
+        //     username,
+        //     credential,
+        //   },
+        //   {
+        //     urls: "turn:global.relay.metered.ca:80?transport=tcp",
+        //     username,
+        //     credential,
+        //   },
+        //   {
+        //     urls: "turn:global.relay.metered.ca:443",
+        //     username,
+        //     credential,
+        //   },
+        //   {
+        //     urls: "turns:global.relay.metered.ca:443?transport=tcp",
+        //     username,
+        //     credential,
+        //   },
+        // ],
         iceServers: [
-          { urls: "stun:stun.l.google.com:19302" },
+          // Standard Free STUN Server
           {
-            urls: "turn:openrelay.metered.ca:80",
-            username: "openrelayproject",
-            credential: "openrelayproject",
+            urls: "stun:stun.l.google.com:19302",
           },
+          // Metered TURN Server (Standard UDP Port 80)
           {
-            urls: "turn:openrelay.metered.ca:443",
-            username: "openrelayproject",
-            credential: "openrelayproject",
+            urls: "turn:reelnest-turn-server.metered.live:80",
+            username: "e1991c4309e092b68a28f791",
+            credential: "bc87383f04063714a916d853fcd7a129b142",
           },
+          // Metered TURN Server (TCP Port 443 - Firewalls Bypass)
           {
-            urls: "turns:openrelay.metered.ca:443?transport=tcp",
-            username: "openrelayproject",
-            credential: "openrelayproject",
+            urls: "turn:reelnest-turn-server.metered.live:443?transport=tcp",
+            username: "e1991c4309e092b68a28f791",
+            credential: "bc87383f04063714a916d853fcd7a129b142",
+          },
+          // Metered TURNS Server (Encrypted SSL/TLS - High Reliability)
+          {
+            urls: "turns:reelnest-turn-server.metered.live:443?transport=tcp",
+            username: "e1991c4309e092b68a28f791",
+            credential: "bc87383f04063714a916d853fcd7a129b142",
           },
         ],
+        //backup
+        // iceServers: [
+        //   { urls: "stun:stun.l.google.com:19302" },
+        //   {
+        //     urls: "turn:openrelay.metered.ca:80",
+        //     username: "openrelayproject",
+        //     credential: "openrelayproject",
+        //   },
+        //   {
+        //     urls: "turn:openrelay.metered.ca:443",
+        //     username: "openrelayproject",
+        //     credential: "openrelayproject",
+        //   },
+        //   {
+        //     urls: "turns:openrelay.metered.ca:443?transport=tcp",
+        //     username: "openrelayproject",
+        //     credential: "openrelayproject",
+        //   },
+        // ],
       });
       setPeerTrigger((prev) => prev + 1);
       // FIXED: Sahi instance assign karein ref ko
@@ -58,7 +115,6 @@ export const PeerProvider = ({ children }) => {
       const peer = getActivePeer();
 
       stream.getTracks().forEach((track) => {
-        // FIXED: Condition variable assignment ko sahi kiya (`const alreadyAdded`)
         const alreadyAdded = peer
           .getSenders()
           .some((sender) => sender.track === track);
@@ -71,9 +127,34 @@ export const PeerProvider = ({ children }) => {
     [getActivePeer],
   );
 
-  const flushIceQueue = useCallback(async () => {
+  useEffect(() => {
     const peer = getActivePeer();
 
+    peer.onicecandidate = (event) => {
+      if (!event.candidate || !user?.username || !callingUser?.username) return;
+
+      socket.emit("ice-candidate", {
+        from: user?.username,
+        to: callingUser?.username,
+        candidate: event.candidate,
+      });
+    };
+
+    peer.ontrack = (event) => {
+      if (event?.streams?.[0]) {
+        setRemoteStream(event.streams[0]);
+      }
+    };
+
+    return () => {
+      peer.onicecandidate = null;
+      peer.ontrack = null;
+    };
+  }, [getActivePeer, user?.username, callingUser?.username]);
+
+  const flushIceQueue = useCallback(async () => {
+    const peer = getActivePeer();
+    console.log(iceCandidatesQueue.length, iceCandidatesQueue);
     while (iceCandidatesQueue.current.length > 0) {
       const candidate = iceCandidatesQueue.current.shift();
 
@@ -106,6 +187,7 @@ export const PeerProvider = ({ children }) => {
 
         const ans = await peer.createAnswer();
         await peer.setLocalDescription(ans);
+        console.log("answer", ans);
         return ans;
       } catch (err) {
         console.error("error to create answer", err);
@@ -117,13 +199,15 @@ export const PeerProvider = ({ children }) => {
   const setRemoteAnswer = useCallback(
     async (answer) => {
       const peer = getActivePeer();
+      console.log("setting rmewote answer", answer);
       try {
         await peer.setRemoteDescription(new RTCSessionDescription(answer));
 
-        // Safe delay taake internals register ho sakein
         setTimeout(async () => {
           await flushIceQueue();
         }, 50);
+
+        setIsCallPromptOpen(false);
       } catch (error) {
         console.error("Critical Error in setRemoteAnswer:", error);
       }
@@ -134,10 +218,10 @@ export const PeerProvider = ({ children }) => {
   const handleRemoteCandidate = useCallback(
     async ({ candidate }) => {
       const peer = getActivePeer();
+      console.log("remote coandate", candidate);
       try {
         if (peer && peer.remoteDescription && peer.remoteDescription.type) {
           await peer.addIceCandidate(new RTCIceCandidate(candidate));
-          console.log("Direct ICE Candidate added successfully!");
         } else {
           iceCandidatesQueue.current.push(candidate);
         }
@@ -145,32 +229,36 @@ export const PeerProvider = ({ children }) => {
         console.error("Error adding ice candidate:", error);
       }
     },
-    [getActivePeer], // iceCandidatesQueue ref hai, dependency mein zaroorat nahi hai
+    [getActivePeer],
   );
 
-  const handleIncomingCall = useCallback(
-    async ({ username, offer, from }) => {
+  const handleIncomingCallRequest = useCallback(
+    async ({ username, offer, from, callingUser }) => {
+      console.log(callingUser);
       setIsCallIncoming(true);
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: true,
-      });
-
-      setMyStream(stream);
-      sendMyStream(stream);
-
-      const ans = await createAnswer(offer);
-
-      socket.emit("call-accepted", { from, answer: ans });
+      setCallingUser(callingUser);
     },
     [createAnswer, getActivePeer, socket],
   );
 
-  useEffect(() => {
-    socket.on("call-user", handleIncomingCall);
+  const handleRemoteCallEndedBeforeOffer = useCallback(
+    ({ callended, isCallEndedBeforeRemoteExpect }) => {
+      if (isCallEndedBeforeRemoteExpect) setIsCallIncoming(false);
+    },
+    [socket],
+  );
 
-    return () => handleIncomingCall;
-  }, [handleIncomingCall]);
+  useEffect(() => {
+    socket.on("initialize-call-request", handleIncomingCallRequest);
+    socket.on("ice-candidate", handleRemoteCandidate);
+    socket.on("call:ended", handleRemoteCallEndedBeforeOffer);
+
+    return () => {
+      socket.off("ice-candidate", handleRemoteCandidate);
+      socket.off("initialize-call-request", handleIncomingCallRequest);
+      socket.off("call:ended", handleRemoteCallEndedBeforeOffer);
+    };
+  }, [handleRemoteCandidate, handleIncomingCallRequest]);
 
   const stopPeerConnection = useCallback(
     ({
@@ -195,12 +283,11 @@ export const PeerProvider = ({ children }) => {
         if (setMyStream) setMyStream(null);
         if (setRemoteStream) setRemoteStream(null);
 
-        if (peerRef.current) {
+        if (peerRef?.current) {
           peerRef.current.onicecandidate = null;
           peerRef.current.ontrack = null;
           peerRef.current.close();
 
-          // FIXED: Variable ko null karein taake agli call par getActivePeer bilkul naya instance banaye
           peerRef.current = null;
           iceCandidatesQueue.current = [];
         }
@@ -208,25 +295,25 @@ export const PeerProvider = ({ children }) => {
         console.error("Error to Stop Call:", err);
       }
     },
-    [], // getActivePeer nikal diya taake cleanup logic robust rahe
+    [],
   );
 
   return (
     <PeerContext.Provider
       value={{
         createOffer,
-        myStream,
-        setMyStream,
-        handleIncomingCall,
+        remoteStream,
+        isCallPromptOpen,
+        setIsCallPromptOpen,
         createAnswer,
         isPeerTrigger,
-        stopPeerConnection,
-        handleRemoteCandidate,
         setRemoteAnswer,
+        stopPeerConnection,
         get peer() {
           return peerRef.current;
         },
         sendMyStream,
+        setRemoteStream,
       }}
     >
       {children}

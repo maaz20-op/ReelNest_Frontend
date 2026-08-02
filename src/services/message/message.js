@@ -8,7 +8,16 @@ const messageApi = apiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
+    deleteMessage: builder.mutation({
+      query: (msgId) => ({
+        url: "/messages",
+        method: "DELETE",
+        body: {
+          _id: msgId,
+        },
+      }),
+    }),
   }),
 });
 
-export const { useLazyGetMessagesQuery } = messageApi;
+export const { useLazyGetMessagesQuery, useDeleteMessageMutation } = messageApi;
