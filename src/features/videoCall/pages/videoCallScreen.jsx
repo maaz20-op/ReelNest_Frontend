@@ -249,7 +249,6 @@ export const VideoCallScreenPage = () => {
         ref={localVideoRef}
         className="absolute z-10 bottom-12 right-4 h-36 w-24 md:h-44 md:w-32 rounded-xl object-cover -scale-x-100 border border-white/20 shadow-lg"
         playsInline
-        muted
         autoPlay
       />
 
