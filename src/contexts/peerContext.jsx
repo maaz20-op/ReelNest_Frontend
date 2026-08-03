@@ -34,53 +34,54 @@ export const PeerProvider = ({ children }) => {
       const credential = import.meta.env.VITE_TURN_SERVER_API_KEY;
 
       const temporaryFreshPeer = new RTCPeerConnection({
-        // iceServers: [
-        //   { urls: "stun:stun.relay.metered.ca:80" },
-        //   {
-        //     urls: "turn:global.relay.metered.ca:80",
-        //     username,
-        //     credential,
-        //   },
-        //   {
-        //     urls: "turn:global.relay.metered.ca:80?transport=tcp",
-        //     username,
-        //     credential,
-        //   },
-        //   {
-        //     urls: "turn:global.relay.metered.ca:443",
-        //     username,
-        //     credential,
-        //   },
-        //   {
-        //     urls: "turns:global.relay.metered.ca:443?transport=tcp",
-        //     username,
-        //     credential,
-        //   },
-        // ],
         iceServers: [
-          // Standard Free STUN Server
+          { urls: "stun:stun.relay.metered.ca:80" },
           {
-            urls: "stun:stun.l.google.com:19302",
+            urls: "turn:global.relay.metered.ca:80",
+            username,
+            credential,
           },
-          // Metered TURN Server (Standard UDP Port 80)
           {
-            urls: "turn:reelnest-turn-server.metered.live:80",
-            username: "e1991c4309e092b68a28f791",
-            credential: "bc87383f04063714a916d853fcd7a129b142",
+            urls: "turn:global.relay.metered.ca:80?transport=tcp",
+            username,
+            credential,
           },
-          // Metered TURN Server (TCP Port 443 - Firewalls Bypass)
           {
-            urls: "turn:reelnest-turn-server.metered.live:443?transport=tcp",
-            username: "e1991c4309e092b68a28f791",
-            credential: "bc87383f04063714a916d853fcd7a129b142",
+            urls: "turn:global.relay.metered.ca:443",
+            username,
+            credential,
           },
-          // Metered TURNS Server (Encrypted SSL/TLS - High Reliability)
           {
-            urls: "turns:reelnest-turn-server.metered.live:443?transport=tcp",
-            username: "e1991c4309e092b68a28f791",
-            credential: "bc87383f04063714a916d853fcd7a129b142",
+            urls: "turns:global.relay.metered.ca:443?transport=tcp",
+            username,
+            credential,
           },
         ],
+
+        // iceServers: [
+        //   // Standard Free STUN Server
+        //   {
+        //     urls: "stun:stun.l.google.com:19302",
+        //   },
+        //   // Metered TURN Server (Standard UDP Port 80)
+        //   {
+        //     urls: "turn:reelnest-turn-server.metered.live:80",
+        //     username: "e1991c4309e092b68a28f791",
+        //     credential: "bc87383f04063714a916d853fcd7a129b142",
+        //   },
+        //   // Metered TURN Server (TCP Port 443 - Firewalls Bypass)
+        //   {
+        //     urls: "turn:reelnest-turn-server.metered.live:443?transport=tcp",
+        //     username: "e1991c4309e092b68a28f791",
+        //     credential: "bc87383f04063714a916d853fcd7a129b142",
+        //   },
+        //   // Metered TURNS Server (Encrypted SSL/TLS - High Reliability)
+        //   {
+        //     urls: "turns:reelnest-turn-server.metered.live:443?transport=tcp",
+        //     username: "e1991c4309e092b68a28f791",
+        //     credential: "bc87383f04063714a916d853fcd7a129b142",
+        //   },
+        // ],
         //backup
         // iceServers: [
         //   { urls: "stun:stun.l.google.com:19302" },
