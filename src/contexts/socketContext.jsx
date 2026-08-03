@@ -8,7 +8,7 @@ export const useSocketContext = () => {
 };
 
 export const SocketProvider = ({ children }) => {
-  const socket = io("https://neuron-pavilion-reappoint.ngrok-free.dev", {
+  const socket = io("https://reelnestbackend-production.up.railway.app", {
     transports: ["websocket", "polling"],
     withCredentials: true,
   });
