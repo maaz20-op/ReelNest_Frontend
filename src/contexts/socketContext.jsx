@@ -8,10 +8,14 @@ export const useSocketContext = () => {
 };
 
 export const SocketProvider = ({ children }) => {
-  const socket = io("https://reelnestbackend-production.up.railway.app", {
-    transports: ["websocket", "polling"],
-    withCredentials: true,
-  });
+  const socket = io(
+    import.meta.env.VITE_BACKEND_DEVELOPMENT_SOCKET_SERVER ||
+      import.meta.env.VITE_BACKEND_SOCKET_SERVER_RAILWAY,
+    {
+      transports: ["websocket", "polling"],
+      withCredentials: true,
+    },
+  );
   return (
     <SocketContext.Provider value={{ socket: socket }}>
       {children}

@@ -137,7 +137,7 @@ export const LoginPage = () => {
               type="button"
               onClick={() => {
                 window.location.href =
-                  "https://reel-nest-backend.vercel.app/api/v1/auth/google";
+                  "https://reel-nest-backend2.vercel.app/api/v1/auth/google";
               }}
               className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-(--text-primary) bg-white/10 dark:bg-slate-800/40 hover:bg-white/20 dark:hover:bg-slate-800/70 border border-white/10 dark:border-slate-700/40 transition-all duration-200 active:scale-[0.98] font-medium text-xs shadow-sm"
             >
