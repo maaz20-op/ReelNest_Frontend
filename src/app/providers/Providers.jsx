@@ -6,7 +6,7 @@ import { Provider } from "react-redux";
 import { store } from "../config/store";
 import { CommentsProvider } from "../../features/comments/hooks/useIsCommentsOpen";
 import { ConnectionProvider } from "../../contexts/useConnections";
-import { SearchContextProvider } from "../../contexts/seachContext";
+import { SearchContextProvider } from "../../contexts/searchContext";
 import { ToastProvider } from "../../contexts/toast";
 import { ScrollUpDownContextProvider } from "../../contexts/hideHeaderOnScroll";
 import { PeerProvider } from "../../contexts/peerContext";

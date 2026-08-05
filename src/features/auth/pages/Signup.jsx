@@ -23,7 +23,7 @@ export const SignupPage = () => {
         email,
         password,
       });
-      if (res?.data) navigate("/login");
+      if (res?.data) navigate("/");
     }
   };
 

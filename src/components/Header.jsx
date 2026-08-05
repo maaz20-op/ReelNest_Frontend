@@ -8,7 +8,7 @@ import { Button } from "./reusableComponents/Button.jsx";
 import { Avatar } from "./reusableComponents/Avatar.jsx";
 
 import { useState } from "react";
-import { useSearchContext } from "../contexts/seachContext.jsx";
+import { useSearchContext } from "../contexts/searchContext.jsx";
 
 export const Header = () => {
   const { isDark, toggle, iconsColor } = contextThemeSetup();
