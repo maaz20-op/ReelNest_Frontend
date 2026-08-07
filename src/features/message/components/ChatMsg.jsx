@@ -66,7 +66,7 @@ export const ChatScreen = ({
   });
 
   if (isLoading || error) return <ChatScreenSkeleton />;
-  console.log(msgs);
+
   return (
     <div className="chat-screen flex flex-col h-[90%] lg:h-[80vh] w-full bg-(--bg-primary) overflow-hidden">
       {/* 1. HEADER SECTION */}
