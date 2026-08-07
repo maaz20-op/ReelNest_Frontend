@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { contextThemeSetup } from "../../../../../utils/contextSetup";
 import { Avatar } from "../../../../../components/reusableComponents/Avatar";
 import { Icons } from "../../../../../assets/icons";
-
+import React from "react";
 export const ChatMsgHeader = ({ selectedChatUser, onlineUsers }) => {
   const navigate = useNavigate();
   const { isDark, iconsColor } = contextThemeSetup();
