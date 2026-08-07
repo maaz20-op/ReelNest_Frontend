@@ -3,10 +3,6 @@ import { io } from "socket.io-client";
 
 const SocketContext = React.createContext(null);
 
-export const useSocketContext = () => {
-  return useContext(SocketContext);
-};
-
 export const SocketProvider = ({ children }) => {
   const socket = io(
     import.meta.env.VITE_BACKEND_DEVELOPMENT_SOCKET_SERVER ||
@@ -21,4 +17,8 @@ export const SocketProvider = ({ children }) => {
       {children}
     </SocketContext.Provider>
   );
+};
+
+export const useSocketContext = () => {
+  return useContext(SocketContext);
 };
