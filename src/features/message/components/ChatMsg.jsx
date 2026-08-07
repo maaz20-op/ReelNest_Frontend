@@ -79,6 +79,7 @@ export const ChatScreen = ({
     data,
     isPostsEnd: isEndOfMessages,
     setEndOfPosts: setEndOfMessages,
+    userId: selectedChatUser?._id,
     isBottomOfContainer,
     isFetching,
     fetchData: fetchMessages,
