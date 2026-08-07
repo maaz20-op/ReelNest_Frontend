@@ -8,6 +8,7 @@ import { Avatar } from "../../../components/reusableComponents/Avatar";
 import { useAuth } from "../../auth/hooks/useAuth";
 import { CallConfirmationPrompt } from "../components/subComponents/callConfrimationPrompt";
 import { useSocketContext } from "../../../contexts/socketContext";
+import React from "react";
 
 export const MessageUsersPage = () => {
   const msgUpdateRef = useRef(null);
