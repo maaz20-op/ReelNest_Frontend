@@ -3,10 +3,15 @@ import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import { analyzer } from "vite-bundle-analyzer";
 
-// https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
+  plugins: [
+    react({
+      jsxRuntime: "automatic", // Forces automatic JSX transformation across all chunks
+    }),
+    tailwindcss(),
+    analyzer({ analyzerMode: "static", openAnalyzer: false }),
+  ],
   optimizeDeps: {
-    include: ["react-window"],
+    include: ["react", "react-dom", "react-window"],
   },
 });
