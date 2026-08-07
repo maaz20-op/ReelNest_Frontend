@@ -12,7 +12,7 @@ import { GridVideoLayoutSkeleton } from "../../../skeleton/video/GridVideoSkelet
 import { useConnectionsData } from "../../../hooks/userConnectionData";
 import { Avatar } from "../../../components/reusableComponents/Avatar";
 import { Button } from "../../../components/reusableComponents/Button";
-import { useSearchContext } from "../../../contexts/seachContext";
+import { useSearchContext } from "../../../contexts/searchContext";
 import { useLazyGetSearchResultsQuery } from "../../../services/posts/post";
 import { useFollowUser } from "../../../hooks/useFollowUser";
 
