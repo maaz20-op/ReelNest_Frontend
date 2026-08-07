@@ -51,6 +51,7 @@ export const ChatScreen = ({
     handleScroll,
     deleteMsg,
     message,
+    setMessage,
     isLoading,
     error,
     page,
@@ -62,6 +63,8 @@ export const ChatScreen = ({
     selectedChatUser,
     oldUser,
     chatContainerRef,
+    onlineUsers,
+    user,
     messagesEndRef,
   });
 
@@ -88,7 +91,11 @@ export const ChatScreen = ({
       />
 
       {/* 3. TYPING AREA SECTION */}
-      <ChatMsgTypingArea sendMessage={sendMessage} message={message} />
+      <ChatMsgTypingArea
+        setMessage={setMessage}
+        sendMessage={sendMessage}
+        message={message}
+      />
     </div>
   );
 };

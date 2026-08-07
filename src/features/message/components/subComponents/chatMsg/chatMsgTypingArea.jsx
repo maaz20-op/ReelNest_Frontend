@@ -1,6 +1,6 @@
 import { Icons } from "../../../../../assets/icons";
 
-export const ChatMsgTypingArea = ({ sendMessage, message }) => {
+export const ChatMsgTypingArea = ({ sendMessage, message, setMessage }) => {
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();

@@ -12,6 +12,8 @@ import { useSocketContext } from "../../../../../../contexts/socketContext";
 export const getMessageFunctions = ({
   selectedChatUser,
   oldUser,
+  onlineUsers,
+  user,
   chatContainerRef,
 }) => {
   const [fetchMessages, { data, isFetching, isLoading, error }] =
@@ -130,6 +132,7 @@ export const getMessageFunctions = ({
     sendMessage,
     handleScroll,
     deleteMsg,
+    setMessage,
     isLoading,
     error,
     msgs,
