@@ -5,21 +5,50 @@ import { Button } from "../../../components/reusableComponents/Button";
 import { useLoginUserMutation } from "../../../services/auth/auth";
 import { Loader } from "../../../components/reusableComponents/Loader";
 import { useAuth } from "../hooks/useAuth";
+import { FaExclamationTriangle } from "react-icons/fa";
+import { useToastContext } from "../../../contexts/toast";
 
 export const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { user } = useAuth();
+  const [errorMsg, setErrorMsg] = useState();
 
   const navigate = useNavigate();
   const [loginUser, { isLoading }] = useLoginUserMutation();
+  const { showToast } = useToastContext();
 
   const handleSubmit = async (e) => {
-    if (user && user?.fullname) navigate("/");
     e.preventDefault();
-    if (!email || !password) return;
-    const res = await loginUser({ email, password });
-    if (res?.data) navigate("/");
+
+    try {
+      switch (true) {
+        case email.length === 0:
+          setErrorMsg("Email can't be Empty!");
+          return;
+        case !email.includes("@"):
+          setErrorMsg("Email must be valid email!");
+          return;
+
+        // === password checks ===
+
+        case !password.length === 0:
+          setErrorMsg("password can't be Empty");
+          return;
+
+        default:
+          setErrorMsg("");
+      }
+
+      const res = await loginUser({ email, password }).unwrap();
+      console.log(res?.data?.error);
+      if (res?.data && res?.success) {
+        navigate("/");
+        showToast("Login Successfull!", true);
+      }
+    } catch (err) {
+      showToast(`${err?.data?.error || "Something Went Wrong"}`, false);
+    }
   };
 
   return (
@@ -128,6 +157,11 @@ export const LoginPage = () => {
             <span className="bg-transparent px-2 text-[9px] sm:text-[10px] font-semibold text-(--text-secondary) uppercase tracking-wider whitespace-nowrap absolute">
               Or continue with
             </span>
+          </div>
+
+          <div className="text-xs flex gap-2 text-red-700 font-medium">
+            {errorMsg && <FaExclamationTriangle color="yellow" />}
+            <p>{errorMsg}</p>
           </div>
 
           {/* ⚡ Social & Utility Actions */}

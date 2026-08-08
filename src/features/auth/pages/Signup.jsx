@@ -4,26 +4,111 @@ import { Icons } from "../../../assets/icons";
 import { Button } from "../../../components/reusableComponents/Button";
 import { useSignupUserMutation } from "../../../services/auth/auth";
 import { Loader } from "../../../components/reusableComponents/Loader";
+import { FaExclamationTriangle } from "react-icons/fa";
+import { useAuth } from "../hooks/useAuth";
+import { useToastContext } from "../../../contexts/toast";
 
 export const SignupPage = () => {
   const [fullname, setFullname] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
 
-  const [signupUser, { isLoading }] = useSignupUserMutation();
+  const [signupUser, { isLoading, data }] = useSignupUserMutation();
   const navigate = useNavigate();
-
+  const { showToast } = useToastContext();
   const handleSignup = async (e) => {
     e.preventDefault();
-    if (fullname && username && email && password) {
-      const res = await signupUser({
-        fullname,
-        username,
-        email,
-        password,
-      });
-      if (res?.data) navigate("/");
+
+    try {
+      switch (true) {
+        // Rule 1: Check if empty (greater than 0 but less than 4)
+        case fullname.length === 0:
+          setErrorMsg("Name cannot be empty.");
+          return;
+
+        case fullname.length < 4:
+          setErrorMsg("Name must be at least 4 characters long.");
+          return;
+
+        // Rule 2: Check if it exceeds 16 characters
+        case fullname.length > 16:
+          setErrorMsg("Name cannot exceed 16 characters.");
+          return;
+
+        // Rule 3: Check if it contains numbers (\d matches any digit)
+        case /\d/.test(fullname):
+          setErrorMsg("Name must not contain numbers.");
+          return;
+
+        // Rule 4: Check if it contains symbols (matches anything that is NOT a letter or space)
+        case /[^a-zA-Z\s]/.test(fullname):
+          setErrorMsg("Name must not contain symbols.");
+          return;
+
+        // --- USERNAME VALIDATION RULES ---
+
+        // Rule 1: Check if empty
+        case username.length === 0:
+          setErrorMsg("Username cannot be empty.");
+          return;
+
+        // Rule 2: Check if it exceeds 11 characters
+        case username.length > 11:
+          setErrorMsg("Username cannot exceed 11 characters.");
+          return;
+
+        // Rule 3: Check if it contains invalid characters
+        // This RegEx checks if the string contains anything OTHER than letters, numbers, or underscores
+        case /[^a-zA-Z0-7_]/.test(username):
+          setErrorMsg(
+            "Username can only contain letters, numbers, and underscores.",
+          );
+          return;
+
+        // === EMAIL CHECKS ===
+        case email.length === 0:
+          setErrorMsg("Email cannot be empty.");
+          return;
+
+        // Checks if the email does NOT contain the "@" character
+        case !email.includes("@"):
+          setErrorMsg("Invalid email address. Missing '@' symbol.");
+          return;
+
+        // === PASSWORD CHECKS ===
+        case password.length === 0:
+          setErrorMsg("Password cannot be empty.");
+          return;
+
+        case password.length < 8:
+          setErrorMsg("Password must be at least 8 characters long.");
+          return;
+
+        // Optional: What happens if the name passes all rules
+        default:
+          setErrorMsg(""); // Clear error if everything is valid
+          console.log("Name is valid!");
+      }
+
+      if (fullname && username && email && password) {
+        const res = await signupUser({
+          fullname,
+          username,
+          email,
+          password,
+        }).unwrap();
+        console.log(res?.data, res.success, res?.data?.[0]);
+        if (res?.data && res.success && res?.data?.[0]) {
+          navigate("/");
+          showToast("Your Account Created On ReelNest!", true);
+        } else {
+          showToast("Failed to Create Account, Try Again!", false);
+        }
+      }
+    } catch (err) {
+      showToast("Failed to Create Account, Try Again After Sometime!", false);
     }
   };
 
@@ -127,7 +212,7 @@ export const SignupPage = () => {
             />
           </div>
 
-          {/* ❤️ Primary Action Button */}
+          {/*  Primary Action Button */}
           <div className="mt-1">
             <Button
               fnc={handleSignup}
@@ -153,6 +238,11 @@ export const SignupPage = () => {
             />
           </div>
 
+          <div className="text-xs flex gap-2 text-red-700 font-medium">
+            {errorMsg && <FaExclamationTriangle color="yellow" />}
+            <p>{errorMsg}</p>
+          </div>
+
           {/* Login Redirect Link */}
           <p className="text-center text-[11px] sm:text-xs text-(--text-primary)">
             Already have an account?{" "}
@@ -164,27 +254,6 @@ export const SignupPage = () => {
               Login now
             </button>
           </p>
-
-          {/* Divider */}
-          <div className="relative my-1.5 sm:my-2 flex items-center justify-center">
-            <div className="border-t border-gray-300/30 dark:border-slate-700/60 w-full" />
-            <span className="bg-transparent px-2 text-[9px] sm:text-[10px] font-semibold text-(--text-secondary) uppercase tracking-wider whitespace-nowrap absolute">
-              Or signup with
-            </span>
-          </div>
-
-          {/* ⚡ Google Auth Button */}
-          <button
-            type="button"
-            onClick={() => {
-              window.location.href =
-                "https://reel-nest-backend.vercel.app/api/v1/auth/google";
-            }}
-            className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-(--text-primary) bg-white/10 dark:bg-slate-800/40 hover:bg-white/20 dark:hover:bg-slate-800/70 border border-white/10 dark:border-slate-700/40 transition-all duration-200 active:scale-[0.98] font-medium text-xs shadow-sm"
-          >
-            {Icons.google && <Icons.google className="w-4 h-4" />}
-            <span>Signup with Google</span>
-          </button>
         </form>
       </div>
     </div>

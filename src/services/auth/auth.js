@@ -50,6 +50,7 @@ export const authApi = apiSlice.injectEndpoints({
         method: "POST",
         body: body,
       }),
+      invalidatesTags: ["User"],
     }),
   }),
 });
