@@ -4,8 +4,10 @@ import { useAuth } from "../features/auth/hooks/useAuth";
 export const ProtectedRoute = () => {
   const { user, isLoading } = useAuth();
   const location = useLocation();
+  const logout = localStorage.getItem("logout");
+  const parseLogout = JSON.parse(logout);
 
-  if (!user && !isLoading) {
+  if (parseLogout) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 

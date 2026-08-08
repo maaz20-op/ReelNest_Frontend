@@ -11,7 +11,7 @@ import { useToastContext } from "../../../contexts/toast";
 export const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { user } = useAuth();
+  const { user, setUser } = useAuth();
   const [errorMsg, setErrorMsg] = useState();
 
   const navigate = useNavigate();
@@ -41,8 +41,10 @@ export const LoginPage = () => {
       }
 
       const res = await loginUser({ email, password }).unwrap();
-      console.log(res?.data?.error);
+
       if (res?.data && res?.success) {
+        localStorage.setItem("logout", false);
+        setUser(res.data[0]);
         navigate("/");
         showToast("Login Successfull!", true);
       }

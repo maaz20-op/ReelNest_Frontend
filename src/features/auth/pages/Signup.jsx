@@ -101,6 +101,7 @@ export const SignupPage = () => {
         }).unwrap();
         console.log(res?.data, res.success, res?.data?.[0]);
         if (res?.data && res.success && res?.data?.[0]) {
+          localStorage.setItem("logout", false);
           navigate("/");
           showToast("Your Account Created On ReelNest!", true);
         } else {

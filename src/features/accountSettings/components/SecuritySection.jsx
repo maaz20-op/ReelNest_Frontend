@@ -23,8 +23,11 @@ export const SecuritySection = () => {
 
     try {
       const res = await logoutUser().unwrap();
-      console.log(res);
-      if (res?.success && res) navigate("/login");
+
+      if (res?.success && res) {
+        localStorage.setItem("logout", true);
+        navigate("/login");
+      }
     } catch (err) {
       console.error(err);
     }
@@ -33,13 +36,13 @@ export const SecuritySection = () => {
   const handleDeleteAccount = async (e) => {
     e.preventDefault();
 
-    // try {
-    //   const res = await deleteUserAccount().unwrap();
-    //   console.log(res);
-    //   if (res?.success && res) navigate("/signup");
-    // } catch (err) {
-    //   console.error(err);
-    // }
+    try {
+      const res = await deleteUserAccount().unwrap();
+      console.log(res);
+      if (res?.success && res) navigate("/signup");
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const updateSecurtiySettings = async (e) => {
