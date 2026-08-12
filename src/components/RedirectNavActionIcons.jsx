@@ -20,7 +20,7 @@ export const Nav_Actions = () => {
       {IconsContent.map(({ text, icon: Icon, redirect }, indx) => (
         <div
           onClick={() => navigate(redirect)}
-          className="flex flex-col justify-center hover:scale-0.5  items-center px-3 lg:py-2   rounded-xl hover:bg-(--bg-tertiary)"
+          className="flex flex-col justify-center hover:scale-0.5 active:bg-(--bg-tertiary)  items-center px-3 lg:py-2   rounded-xl hover:bg-(--bg-tertiary)"
           key={indx}
         >
           <Icon color={iconsColor} className="h-5 w-5 lg:h-6 lg:w-6" />
