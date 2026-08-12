@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { Avatar } from "../../../../components/reusableComponents/Avatar";
 import { Button } from "../../../../components/reusableComponents/Button";
 import { useConnectionsData } from "../../../../hooks/userConnectionData";
@@ -6,7 +7,6 @@ import { FriendsListSkeleton } from "../../../../skeleton/leftDesktopPanel";
 import { contextThemeSetup } from "../../../../utils/contextSetup";
 import { showScrollBarOnHover } from "../../../../utils/showSideBarOnHover";
 import { handleRedirectToUserProfile } from "../../../../utils/handleRedirectToUserProfile";
-import { useNavigate } from "react-router-dom";
 
 export const SuggestedUsers = () => {
   const { isDark } = contextThemeSetup();
@@ -16,68 +16,73 @@ export const SuggestedUsers = () => {
   const navigate = useNavigate();
 
   const suggestionContainerRef = useRef(null);
-  const isHoverd = showScrollBarOnHover(suggestionContainerRef);
-  const handleRedirectToFollowerProfile = handleRedirectToUserProfile();
+  const isHovered = showScrollBarOnHover(suggestionContainerRef);
+  const redirectToUserProfile = handleRedirectToUserProfile();
 
   return (
-    <div className="justify-center h-full    hidden md:flex w-full items-start pt-12">
-      <div className="2xl:w-85 fixed xl:w-80 lg:w-70">
-        <div className="flex flex-col w-full p-2 rounded-2xl border-2 border-(--border-color) h-125">
-          <div className="p-2 border-b-2 border-(--border-color)">
-            <h1 className="text-(--text-primary) text-center ">
+    // This says: Hide it by default, show on md, but force hide it strictly between 1024px and 1100px
+    <aside className="w-full h-full hidden  md:block max-[1100px]:lg:hidden  lg:pl-4">
+      {/* Sticky positioning instead of fixed prevents overlap */}
+      <div className="fixed  top-40 w-full max-w-75   min-[760px]:right-12 screen1100:right-32 lg:max-w-86 mx-auto">
+        <div className="flex flex-col w-full p-3 rounded-2xl border-2 border-(--border-color) h-[500px] bg-(--bg-primary)">
+          {/* Header */}
+          <div className="pb-3 border-b-2 border-(--border-color)">
+            <h1 className="text-(--text-primary) text-center font-semibold text-base xl:text-lg">
               Suggestions For You
             </h1>
           </div>
 
+          {/* Users List Container */}
           <div
             ref={suggestionContainerRef}
-            className={`${isHoverd ? "overflow-y-auto" : "overflow-y-hidden"} account-settings  scrollbar-gutter-stable flex flex-col gap-2 flex-1 min-h-0 mt-5  py-5 `}
+            className={`${
+              isHovered ? "overflow-y-auto" : "overflow-y-hidden"
+            } account-settings scrollbar-gutter-stable flex flex-col gap-3 flex-1 min-h-0 mt-3 py-2`}
           >
-            {!isConnectionLoading || !Followers?.length === 0 ? (
-              Array.isArray(Followers) &&
-              Followers.map(({ data }, indx) => (
+            {isConnectionLoading ? (
+              <FriendsListSkeleton isDark={isDark} isHoverd={isHovered} />
+            ) : Array.isArray(Followers) && Followers.length > 0 ? (
+              Followers.map(({ data }) => (
                 <div
-                  onClick={() => {
-                    const handleRedirectToFollowerProfile =
-                      handleRedirectToUserProfile(
-                        data?._id,
-                        data?.fullname,
-                        navigate,
-                      );
-
-                    handleRedirectToFollowerProfile();
-                  }}
                   key={data?._id}
-                  className="friend-div md:gap-4 lg:gap-2 flex items-center justify-between hover:bg-(--bg-secondary) lg:px-1 lg:py-1 2xl:px-2 2xl:py-3 rounded"
+                  onClick={() =>
+                    redirectToUserProfile(data?._id, data?.fullname, navigate)
+                  }
+                  className="friend-div flex items-center justify-between gap-2 p-2 hover:bg-(--bg-secondary) rounded-xl cursor-pointer transition-colors duration-200"
                 >
-                  <div className="flex gap-4 lg:w-6/7  xl:w-5/6  rounded-full ">
+                  {/* User Avatar + Info */}
+                  <div className="flex items-center gap-3 min-w-0 flex-1">
                     <Avatar size="md" src={data?.profileImage} />
-                    <div className="div-content md:text-base xl:text-sm text-xs overflow-hidden flex  flex-col">
-                      <h1 className=" line-clamp-1 font-medium text-(--text-primary) ">
+                    <div className="div-content text-xs xl:text-sm overflow-hidden flex flex-col min-w-0">
+                      <h1 className="truncate font-medium text-(--text-primary)">
                         {data?.fullname}
                       </h1>
-                      <h2 className="text-sm  line-clamp-1 text-(--text-secondary)">
+                      <h2 className="text-xs truncate text-(--text-secondary)">
                         @{data?.username}
                       </h2>
                     </div>
                   </div>
 
+                  {/* View Profile Action */}
                   <Button
                     background={isDark ? "bg-pink-400" : "bg-pink-100"}
                     content="View Profile"
                     font="font-medium"
-                    width="w-30"
-                    textSize="sm"
-                    otherStyles={`${isDark ? "hover:bg-pink-600" : "hover:bg-pink-300"} lg:text-xs xl:text-sm `}
+                    textSize="xs"
+                    otherStyles={`${
+                      isDark ? "hover:bg-pink-500" : "hover:bg-pink-200"
+                    } lg:px-2.5 lg:py-1.5 text-[10px] lg:text-[14px] whitespace-nowrap`}
                   />
                 </div>
               ))
             ) : (
-              <FriendsListSkeleton isDark={isDark} isHoverd={isHoverd} />
+              <p className="text-center text-sm text-(--text-secondary) mt-5">
+                No suggestions available
+              </p>
             )}
           </div>
         </div>
       </div>
-    </div>
+    </aside>
   );
 };

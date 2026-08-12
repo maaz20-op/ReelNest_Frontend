@@ -9,6 +9,10 @@ body {
   --page-x-padding: 40px;
 }
 
+@theme {
+  --breakpoint-screen1100: 1100px;
+}
+
 @media (max-width: 780px) {
   :root {
     --page-left-padding: 16px;

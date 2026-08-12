@@ -26,6 +26,7 @@ export const UserInfoCard = ({
 }) => {
   const navigate = useNavigate();
   const { user: loggedInUser, isLoading } = useAuth();
+
   const [profileImgSrc, setImgSrc] = useState("");
   const [showMenu, setShowMenu] = useState(false);
 
@@ -111,7 +112,7 @@ export const UserInfoCard = ({
   };
 
   return (
-    <div className="profile-Card rounded   md:flex md:flex-row-reverse md:justify-end h-6/7 md:h-40 px-6 py-4 w-14/15 md:w-9/10 lg:w-[97%] mx-auto mt-4 bg-(--bg-secondary)">
+    <div className="profile-Card rounded  lg:justify-between md:flex md:flex-row-reverse md:justify-end h-6/7 md:h-40 px-6 py-4 w-14/15 md:w-[98%] lg:w-[97%] mx-auto mt-4 bg-(--bg-secondary)">
       {isLoggedInUser ? (
         <div className="flex justify-end">
           <Icons.settings
@@ -192,7 +193,7 @@ export const UserInfoCard = ({
             </h2>
           </div>
         </div>
-        <p className="user-bio md:text-sm  line-clamp-2 md:w-30 lg:w-30 xl:w-45 lg:line-clamp-3 mt-2 md:mt-4 text-md text-center text-(--text-secondary)">
+        <p className="user-bio md:text-sm  line-clamp-2 md:w-[30%]  min-[1130px]:lg:w-[35%]  min-[1200px]:lg:w-[40%] xl:w-45 min-[1400px]:xl:w-[50%]  lg:line-clamp-3 mt-2 md:mt-4 text-md text-center text-(--text-secondary)">
           {isBlockedUser
             ? "No Details Found of This User!"
             : user?.bio || "Write your bio which describes your nature!"}
@@ -223,7 +224,6 @@ export const UserInfoCard = ({
           padding="md"
           background={isDark ? "bg-pink-800" : "bg-pink-400"}
           border="rounded-2xl"
-          width="w-40 md:w-60 lg:w-40 xl:w-60"
           content={
             isBlockedUser ? (
               <div className="flex gap-2 items-center">
@@ -253,7 +253,7 @@ export const UserInfoCard = ({
                   ? handleUnfollowClick
                   : handleFollowClick
           }
-          otherStyles="md:text-sm "
+          otherStyles="md:text-sm text-base hover:scale-105 active:scale-105  md:w-40 lg:w-[40%]"
         />
       </div>
     </div>

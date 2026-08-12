@@ -19,12 +19,7 @@ export const useLike = ({ currentPost, postCreaterId, likesArray }) => {
   }, [initialHasUserLiked, postId, user?._id, initialTotalLikes]);
   const [localLikesCount, setLocalLikesCount] = useState(initialTotalLikes);
   const [likePost] = useLikePostMutation();
-  console.log(
-    initialHasUserLiked,
-    localHasLiked,
-    likesArray.length,
-    postCreaterId,
-  );
+
   const debouncedLikePost = useMemo(() => {
     return debounce(async (shouldLike) => {
       try {
@@ -44,7 +39,7 @@ export const useLike = ({ currentPost, postCreaterId, likesArray }) => {
 
   const handleLikeClick = () => {
     const nextLikedState = !localHasLiked?.current;
-    console.log(currentPost);
+
     localHasLiked.current = nextLikedState;
     setLocalLikesCount((prev) => (nextLikedState ? prev + 1 : prev - 1));
     if (nextLikedState) {
@@ -57,7 +52,7 @@ export const useLike = ({ currentPost, postCreaterId, likesArray }) => {
 
     debouncedLikePost(nextLikedState);
   };
-  console.log("has liked", localHasLiked);
+
   return {
     handleLikeClick,
     localLikesCount,

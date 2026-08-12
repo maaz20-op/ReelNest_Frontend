@@ -62,18 +62,38 @@ export const PostCard = ({
   // Automatically play/pause the video based on its visibility
   // to avoid playing off-screen media.
   useEffect(() => {
+    const videoElement = videoRef?.current;
+
+    if (!videoElement) return;
+
+    let videoPromise = null;
+
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          videoRef?.current.play();
-          return;
+      async ([entry]) => {
+        try {
+          if (entry.isIntersecting) {
+            if (
+              videoElement.src &&
+              videoElement.readyState >= 1 &&
+              videoElement.src !== window.location.href
+            )
+              videoPromise = videoElement.play();
+            await videoPromise;
+          } else {
+            if (videoPromise !== null) await videoPromise;
+
+            if (!videoElement.pause) videoElement.pause();
+          }
+        } catch (err) {
+          if (err.name !== "AbortError" && err.name !== "NotSupportedError") {
+            console.error("Video play error:", err);
+          }
         }
-        videoRef?.current.pause();
       },
       { threshold: 0.4 },
     );
 
-    if (videoRef?.current) observer.observe(videoRef.current);
+    observer.observe(videoElement);
 
     return () => {
       observer.disconnect();
@@ -137,19 +157,31 @@ export const PostCard = ({
       {/* Image - video content */}
 
       <div className="video/image-container w-full relative h-full bg-black lg:rounded-2xl overflow-hidden">
-        <video
-          ref={videoRef}
-          className="w-full  object-cover h-[600px] sm:h-[540px] lg:h-[580px] 2xl:h-[620px] lg:rounded-2xl"
-          src={mediaUrl}
-          onPlay={() => setPlay(true)}
-          onClick={() => {
-            setHide(false);
-            setMute((prev) => !prev);
-          }}
-          onTimeUpdate={handleProgressBar}
-          muted={isMute}
-          preload="metadata"
-        ></video>
+        {Boolean(
+          mediaUrl && typeof mediaUrl === "string" && mediaUrl.trim(),
+        ) && (
+          <video
+            key={
+              mediaUrl
+            } /* IMPORTANT: Re-mounts video when mediaUrl changes */
+            ref={videoRef}
+            className="w-full object-cover h-[600px] sm:h-[540px] lg:h-[580px] 2xl:h-[620px] lg:rounded-2xl"
+            src={mediaUrl}
+            onPlay={() => setPlay(true)}
+            onClick={() => {
+              setHide(false);
+              setMute((prev) => !prev);
+            }}
+            onTimeUpdate={handleProgressBar}
+            muted={isMute}
+            preload="metadata"
+            onError={(e) => {
+              console.warn("Video failed to load for URL:", mediaUrl);
+            }}
+          >
+            Your browser does not support the video tag.
+          </video>
+        )}
         {!hidePlayPauseIcon && (
           <div
             onClick={handleClick}

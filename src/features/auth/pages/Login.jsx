@@ -5,14 +5,17 @@ import { Button } from "../../../components/reusableComponents/Button";
 import { useLoginUserMutation } from "../../../services/auth/auth";
 import { Loader } from "../../../components/reusableComponents/Loader";
 import { useAuth } from "../hooks/useAuth";
-import { FaExclamationTriangle } from "react-icons/fa";
+
+import { FaExclamationTriangle, FaRegEyeSlash, FaRegEye } from "react-icons/fa";
 import { useToastContext } from "../../../contexts/toast";
 
 export const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
   const { user, setUser } = useAuth();
   const [errorMsg, setErrorMsg] = useState();
+  const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
   const [loginUser, { isLoading }] = useLoginUserMutation();
@@ -97,7 +100,7 @@ export const LoginPage = () => {
           </div>
 
           {/* Password Input */}
-          <div className="relative group">
+          <div className="relative group flex">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-red-500 transition-colors">
               {Icons.password ? (
                 <Icons.password className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
@@ -106,16 +109,27 @@ export const LoginPage = () => {
               )}
             </div>
             <input
-              type="password"
+              type={`${showPassword ? "text" : "password"}`}
               placeholder="Enter your password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
               required
               className="w-full pl-9 sm:pl-10 pr-3 py-2 sm:py-2.5 text-xs sm:text-sm rounded-xl border border-gray-300/40 dark:border-slate-700/60 bg-white/5 text-(--text-primary) placeholder-gray-400 focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition-all duration-200"
             />
+
+            <div
+              onClick={() => {
+                setShowPassword((prev) => !prev);
+              }}
+              className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-auto text-gray-400 group-focus-within:text-red-500 transition-colors"
+            >
+              {showPassword ? <FaRegEyeSlash /> : <FaRegEye />}
+            </div>
           </div>
 
-          {/* ❤️ Primary Action Button */}
+          {/*  Primary Action Button */}
           <div className="mt-1">
             <Button
               fnc={handleSubmit}
