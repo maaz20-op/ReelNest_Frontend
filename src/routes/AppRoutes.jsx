@@ -13,6 +13,12 @@ const LoginPage = React.lazy(() =>
   })),
 );
 
+const NotFoundPage = React.lazy(() =>
+  import("../features/notFound/pages/notFound").then((module) => ({
+    default: module.NotFoundPage,
+  })),
+);
+
 const VideoCallScreenPage = React.lazy(() =>
   import("../features/videoCall/pages/videoCallScreen").then((module) => ({
     default: module.VideoCallScreenPage,
@@ -114,6 +120,7 @@ export const AppRouting = () => {
           <Route path="/profile/collection" element={<SavedPost />} />
           <Route path="/feed" element={<ScrollableFeed />} />
         </Route>
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </>
   );

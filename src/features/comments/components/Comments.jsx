@@ -72,7 +72,7 @@ export const Comments = ({
     },
     isFetching,
   });
-
+  console.log(createrInfo);
   const handleCreateComment = async () => {
     console.log(postId);
     const commentObj = {
@@ -120,7 +120,10 @@ export const Comments = ({
                 </h1>
               </div>
               <div className="user-info flex gap-3">
-                <Avatar src={createrInfo?.avatar} size="lg" />
+                <Avatar
+                  src={createrInfo?.profileImage || createrInfo?.avatar}
+                  size="lg"
+                />
                 <div className="user-name flex flex-col items-start  lg:text-xs xl:text-base justify-center">
                   <h1 className="text-(--text-primary) line-clamp-1">
                     {createrInfo?.fullname}

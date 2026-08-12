@@ -26,7 +26,6 @@ import { getMessageFunctions } from "./subComponents/chatMsg/hook/getMessageFunc
 
 export const ChatScreen = ({
   selectedChatUser,
-
   iconsColor,
   isDark,
   onlineUsers,

@@ -34,7 +34,7 @@ export const MainLayout = ({ children }) => {
   }, []);
 
   return (
-    <div className="flex flex-col max-h-screen overflow-x-hidden h-dvh select-none max-w-screen bg-(--bg-primary)">
+    <div className="flex flex-col max-h-screen overflow-x-hidden h-dvh  select-none max-w-screen bg-(--bg-primary)">
       {!isAuthPage && !isScrollablFeed && !mobileWidth && <Header />}
       {!isAuthPage && !isScrollablFeed && mobileWidth && !isScrollingDown && (
         <Header />

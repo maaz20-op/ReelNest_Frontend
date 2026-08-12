@@ -31,6 +31,7 @@ export const PostCard = ({
     likes,
     createdAt,
   } = post;
+
   let date = new Date(createdAt);
   const [isFollow, setFollow] = useState(false);
   const videoRef = useRef(null);
@@ -233,13 +234,12 @@ export const PostCard = ({
         {likesUsersData?.length > 0 && Array.isArray(likesUsersData) ? (
           <div className="text-(--text-secondary) flex items-center gap-2">
             <div className="relative h-12 w-10 ">
-              <span className="absolute top-0 right-4">
-                <Avatar size="sm" src={likesUsersData?.[0]?.profileImage} />
-              </span>
-              <span className="absolute top-0">
-                <Avatar size="sm" src={likesUsersData?.[1]?.profileImage} />
-              </span>
-            </div>{" "}
+              {likesUsersData.map(({ profileImage }, i) => (
+                <span key={i} className={`absolute left-${i + 1}`}>
+                  <Avatar size="sm" src={profileImage} />
+                </span>
+              ))}
+            </div>
             Liked by{" "}
             <span className="text-(--text-primary)">
               {likesUsersData?.[0]?.name?.split(" ")[0]},{" "}
