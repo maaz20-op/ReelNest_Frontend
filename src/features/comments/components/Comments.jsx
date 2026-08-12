@@ -296,7 +296,7 @@ export const Comments = ({
       ) : (
         <div
           className={`
-    ${isCommentsOpen ? "fixed bottom-0 right-0 left-0" : "hidden"}
+    ${isCommentsOpen ? "fixed bottom-0 right-0 left-0 z-120" : "hidden"}
     h-2/3
    ${isDark ? "bg-black" : "bg-white"}
     border-2 border-(--border-color) md:hidden block p-2
