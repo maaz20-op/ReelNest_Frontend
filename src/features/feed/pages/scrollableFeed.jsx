@@ -72,7 +72,7 @@ export const ScrollableFeed = () => {
   };
 
   return (
-    <div className="h-[94vh] lg:h-full w-full overflow-hidden flex justify-center relative bg-(--bg-secondary)">
+    <div className="h-[92%] lg:h-full w-full overflow-hidden flex justify-center relative bg-(--bg-secondary)">
       {/* toggle video Image tab */}
       {data?.isVideoTab ? (
         <Video
