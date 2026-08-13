@@ -21,6 +21,8 @@ export const PostCard = ({
   post,
   setCurrentPostCommentsData,
   isMute,
+  posts,
+  setApiData,
   setMute,
   user,
 }) => {
@@ -53,6 +55,8 @@ export const PostCard = ({
   const likesData = useLike({
     likesArray: likes,
     currentPost: post,
+    setApiData,
+    posts,
     postCreaterId: userData?._id,
   });
   const handleLikeClick = likesData?.handleLikeClick;

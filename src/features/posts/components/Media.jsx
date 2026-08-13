@@ -29,7 +29,7 @@ export const Media = ({
   // Checking more Posts are Avalaible
   const hasNextPage = data?.data?.[1];
 
-  const { apiData: posts } = setPagesAndCallApiInfiniteScroll({
+  const { apiData: posts, setApiData } = setPagesAndCallApiInfiniteScroll({
     hasNextPage,
     setBtmContainer,
     postsRawData,
@@ -56,6 +56,9 @@ export const Media = ({
         itemRendered={(post) => (
           <PostCard
             post={post}
+            user={user}
+            posts={posts}
+            setApiData={setApiData}
             isMute={isMute}
             setMute={setMute}
             setCurrentPostCommentsData={setCurrentPostCommentsData}
