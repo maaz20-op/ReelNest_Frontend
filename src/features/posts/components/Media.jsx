@@ -7,6 +7,7 @@ import { VirtualList } from "../../../utils/useVirtualization";
 import { useEffect } from "react";
 import { useToastContext } from "../../../contexts/toast";
 import { useState } from "react";
+import { useAuth } from "../../auth/hooks/useAuth";
 
 export const Media = ({
   setCommentsOpen,
@@ -21,6 +22,7 @@ export const Media = ({
   const [isMute, setMute] = useState(true);
   const [fetchPosts, { data, isLoading, error, isFetching }] =
     useLazyGetPostsQuery();
+  const { user } = useAuth();
 
   // Extract the current page of posts returned by the API.
   const postsRawData = data?.data?.[0];

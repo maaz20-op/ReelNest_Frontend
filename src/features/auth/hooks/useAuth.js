@@ -2,15 +2,11 @@ import { useNavigate } from "react-router-dom";
 import { useGetAuthMeQuery } from "../../../services/auth/auth";
 import { useState } from "react";
 import { useEffect } from "react";
+import { useContext } from "react";
+import { AuthContext } from "../../../contexts/authContext";
 
 export const useAuth = () => {
-  const { data, isLoading, error } = useGetAuthMeQuery();
-  const [user, setUser] = useState(null);
-  //const user = data?.data[0];
-
-  useEffect(() => {
-    setUser(data?.data[0]);
-  }, [data]);
+  const { data, isLoading, error, setUser, user } = useContext(AuthContext);
 
   if (isLoading) {
     return { user: null, setUser, isLoading, error };

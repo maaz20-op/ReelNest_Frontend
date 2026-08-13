@@ -8,6 +8,7 @@ export const apiSlice = createApi({
       import.meta.env.VITE_REELNEST_BACKEND_URL_RAILWAY_SERVER,
     credentials: "include",
   }),
+
   endpoints: () => ({}),
   tagTypes: ["Following", "User"],
 });

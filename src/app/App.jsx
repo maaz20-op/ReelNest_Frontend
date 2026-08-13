@@ -5,7 +5,6 @@ import { ErrorFallback } from "../utils/ErrorBoundary";
 import { ErrorBoundary } from "react-error-boundary";
 
 function App() {
-  console.log("app rendering");
   return (
     <div className="app ">
       {/* All the Routes of App */}

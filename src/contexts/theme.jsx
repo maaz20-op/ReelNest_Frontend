@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect, useContext } from "react";
+import { createContext, useState, useEffect, useContext, useMemo } from "react";
 
 export const ThemeContext = createContext(null);
 const themeKey = "ReelNest_Theme";
@@ -24,10 +24,13 @@ export const ThemeProvider = ({ children }) => {
     setTheme((prev) => (prev == "Dark" ? "Light" : "Dark"));
   };
 
-  const value = {
-    toggle,
-    isDark,
-  };
+  const value = useMemo(
+    () => ({
+      toggle,
+      isDark,
+    }),
+    [theme, toggle, isDark],
+  );
 
   return (
     <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>

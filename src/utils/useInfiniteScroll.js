@@ -1,38 +1,44 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useScrollUpAndDownContext } from "../contexts/hideHeaderOnScroll";
 
 export const useInfinteScroll = (lastScrollTop, reverseScroll) => {
   const [isBottomOfContainer, setBtmContainer] = useState(false);
   const { setScrollingDown } = useScrollUpAndDownContext();
 
-  const handleScroll = (e) => {
-    const totalHeight = e.currentTarget.scrollHeight;
-    const scrolledView = e.currentTarget.scrollTop;
-    const clientHeight = e.currentTarget.scrollTop;
+  const handleScroll = useCallback(
+    (e) => {
+      const target = e.currentTarget;
+      const totalHeight = target.scrollHeight;
+      const scrolledView = target.scrollTop;
+      const clientHeight = target.clientHeight;
 
-    // hide header and bottom nav on mobile devices on scrollDown
-    if (lastScrollTop) {
-      const currentScrollTop = e.target.scrollTop;
+      // Hide/Show Header
+      if (lastScrollTop && lastScrollTop.current !== undefined) {
+        const currentScrollTop = target.scrollTop;
+        const previousScrollTop = lastScrollTop.current;
 
-      if (currentScrollTop > lastScrollTop.current) {
-        setScrollingDown(true);
+        if (currentScrollTop > previousScrollTop && currentScrollTop > 50) {
+          setScrollingDown((prev) => (prev !== true ? true : prev));
+        } else if (currentScrollTop < previousScrollTop) {
+          setScrollingDown((prev) => (prev !== false ? false : prev));
+        }
+
+        lastScrollTop.current = currentScrollTop;
+      }
+
+      // Infinite Scroll logic
+      if (reverseScroll) {
+        if (scrolledView === 0) {
+          setBtmContainer(true);
+        }
       } else {
-        setScrollingDown(false);
+        if (Math.ceil(scrolledView + clientHeight) >= totalHeight - 10) {
+          setBtmContainer(true);
+        }
       }
-
-      lastScrollTop.current = currentScrollTop;
-    }
-
-    if (reverseScroll) {
-      if (!scrolledView) {
-        setBtmContainer(true);
-      }
-    } else {
-      if (totalHeight <= Math.round(scrolledView + clientHeight)) {
-        setBtmContainer(true);
-      }
-    }
-  };
+    },
+    [lastScrollTop, reverseScroll, setScrollingDown],
+  );
 
   return {
     setBtmContainer,
