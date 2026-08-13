@@ -31,7 +31,7 @@ export const LoginPage = () => {
   useEffect(() => {
     let isMounted = true;
 
-    if (!userLoading && user?._id && !isSubmit && !error) {
+    if (!userLoading && user?._id && !error) {
       if (isMounted) {
         showToast(
           "You are already logged in. To switch accounts, please log out first!",
