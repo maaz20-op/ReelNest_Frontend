@@ -2,7 +2,10 @@ import { useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { Icons } from "../../../assets/icons";
 import { Button } from "../../../components/reusableComponents/Button";
-import { useLoginUserMutation } from "../../../services/auth/auth";
+import {
+  useLazyGetAuthMeQuery,
+  useLoginUserMutation,
+} from "../../../services/auth/auth";
 import { Loader } from "../../../components/reusableComponents/Loader";
 import { useAuth } from "../hooks/useAuth";
 
@@ -13,11 +16,11 @@ import { AuthContext } from "../../../contexts/authContext";
 export const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const [getUser, { data, isLoading: userLoading }] = useLazyGetAuthMeQuery();
   const {
     user,
     refetch,
-    isLoading: userLoading,
+    isLoading: userDataLoading,
     error,
   } = useContext(AuthContext);
   const [errorMsg, setErrorMsg] = useState("");
@@ -73,13 +76,16 @@ export const LoginPage = () => {
 
     try {
       const res = await loginUser({ email, password }).unwrap();
-
+      console.log(res);
       if (res?.data && res?.success) {
         localStorage.setItem("logout", "false");
         setSubmit(true);
-        refetch();
-        navigate("/");
-        showToast("Login Successful!", true);
+        const answer = await getUser().unwrap();
+        console.log("this is my res", answer);
+        if (res?.success) {
+          navigate("/");
+          showToast("Login Successful!", true);
+        }
       }
     } catch (err) {
       console.log(err);
@@ -173,17 +179,17 @@ export const LoginPage = () => {
               border="rounded-xl shadow-md shadow-red-600/30 hover:shadow-red-600/50"
               disable={isLoading}
               content={
-                !isLoading ? (
-                  <span className="font-semibold text-white tracking-wide text-xs sm:text-sm py-0.5 inline-block">
-                    Login
-                  </span>
-                ) : (
+                isLoading || userLoading ? (
                   <div className="flex justify-center items-center gap-2 py-0.5">
                     <span className="font-medium text-white text-xs sm:text-sm">
                       Logging In...
                     </span>
                     <Loader size="sm" color="white" />
                   </div>
+                ) : (
+                  <span className="font-semibold text-white tracking-wide text-xs sm:text-sm py-0.5 inline-block">
+                    Login
+                  </span>
                 )
               }
               width="w-full"

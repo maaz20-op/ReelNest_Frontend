@@ -74,7 +74,7 @@ export const authApi = apiSlice.injectEndpoints({
 });
 
 export const {
-  useGetAuthMeQuery,
+  useLazyGetAuthMeQuery,
   useSignupUserMutation,
   useGetOtpMutation,
   useLogoutUserMutation,

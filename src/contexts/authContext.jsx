@@ -1,11 +1,17 @@
 import { createContext, useMemo } from "react";
-import { useGetAuthMeQuery } from "../services/auth/auth";
+import { useLazyGetAuthMeQuery } from "../services/auth/auth";
+import { useEffect } from "react";
 
 export const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   // Fetch user profile data globally
-  const { data, isLoading, isFetching, error, refetch } = useGetAuthMeQuery();
+  const [getUser, { data, isLoading, isFetching, error, refetch }] =
+    useLazyGetAuthMeQuery();
+
+  useEffect(() => {
+    getUser();
+  }, []);
 
   // DERIVE state instead of storing it in a local useState hook.
   // This ensures isLoading and user switch states at the exact same millisecond.
