@@ -103,7 +103,7 @@ body {
   background-color: #7b7676;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 780px) {
   .account-settings {
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none; /* IE/Old Edge */

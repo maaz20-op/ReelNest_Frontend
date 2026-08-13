@@ -143,6 +143,7 @@ export const PeerProvider = ({ children }) => {
 
     peer.ontrack = (event) => {
       if (event?.streams?.[0]) {
+        console.log(event.streams[0]);
         setRemoteStream(event.streams[0]);
       }
     };

@@ -99,11 +99,6 @@ export const GridMediaLayoutProfile = ({
           ? handleDeleteSavedPost(postId, mediaType, page)
           : handleDeleteLoggedInUserPost(postId, mediaType, page),
     },
-    {
-      label: "Edit Caption",
-      icon: Icons.pencil,
-      action: () => console.log("clicked"),
-    },
   ];
 
   return !isSearchPage ? (
