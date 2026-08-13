@@ -41,7 +41,7 @@ export const LoginPage = () => {
         if (!isAlreayLogin) setAlreadyLogin(true);
       }
     } else {
-      isAlreayLogin(false);
+      setAlreadyLogin(false);
     }
 
     return () => {
