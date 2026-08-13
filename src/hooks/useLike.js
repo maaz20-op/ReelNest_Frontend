@@ -1,27 +1,26 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { debounce } from "../utils/debounce";
-import { useLikePostMutation, postApi } from "../services/posts/post"; // Apni exact post api slice import karein
+import { useLikePostMutation } from "../services/posts/post";
 import { useAuth } from "../features/auth/hooks/useAuth";
-import { useDispatch } from "react-redux";
-import { current } from "@reduxjs/toolkit";
 
 export const useLike = ({ currentPost, postCreaterId, likesArray }) => {
   const { user } = useAuth();
   const userId = user?._id;
-  const dispatch = useDispatch();
 
   const initialTotalLikes = likesArray?.length || 0;
   const initialHasUserLiked = likesArray ? likesArray.includes(userId) : false;
-
   const postId = currentPost?.postId || currentPost?._id;
-  const localHasLiked = useRef(initialHasUserLiked);
+
+  // 1. REF SE STATE PAR SHIFT: `dispatch` na hone par reactive status maintain karne ke liye state zaroori hai
+  const [localHasLiked, setLocalHasLiked] = useState(initialHasUserLiked);
   const [localLikesCount, setLocalLikesCount] = useState(initialTotalLikes);
   const [likePost] = useLikePostMutation();
 
+  // 2. EFFECT PROPS SYNC: Jab bhi database/props badlein tabhi local state sync ho
   useEffect(() => {
-    localHasLiked.current = initialHasUserLiked;
+    setLocalHasLiked(initialHasUserLiked);
     setLocalLikesCount(initialTotalLikes);
-  }, [initialHasUserLiked, postId, userId, initialTotalLikes]);
+  }, [initialHasUserLiked, initialTotalLikes, postId, userId]);
 
   const debouncedLikePost = useMemo(() => {
     return debounce(async (shouldLike) => {
@@ -32,59 +31,37 @@ export const useLike = ({ currentPost, postCreaterId, likesArray }) => {
           loggedInUser: userId,
         }).unwrap();
       } catch (error) {
-        console.error("Mutation failed, rolling back cache:", error);
+        console.error("Mutation failed, rolling back UI states:", error);
 
-        dispatch(
-          postApi.util.updateQueryData("getPosts", undefined, (draft) => {
-            const post = draft?.data?.find(
-              (p) => (p._id || p.postId) === postId,
-            );
-            if (post) {
-              if (shouldLike) {
-                post.likes = post.likes.filter(
-                  (id) => id?.toString() !== userId?.toString(),
-                );
-              } else {
-                post.likes.push(userId);
-              }
-            }
-          }),
-        );
-        localHasLiked.current = !shouldLike;
+        // Agar network request fail ho jaye, toh wapas UI states rollback kar dein
+        setLocalHasLiked(!shouldLike);
         setLocalLikesCount((prev) => (shouldLike ? prev - 1 : prev + 1));
       }
     }, 500);
-  }, [likePost, postId, postCreaterId, userId, dispatch]);
+  }, [likePost, postId, postCreaterId, userId]);
 
   const handleLikeClick = () => {
     if (!userId) return;
 
-    const nextLikedState = !localHasLiked.current;
-    localHasLiked.current = nextLikedState;
+    const nextLikedState = !localHasLiked;
+
+    // ✅ STATE GUARD LOCK: Agar state pehle se wahi hai jo hum assign kar rahe hain,
+    // toh return ho jao taaki faltu re-renders aur rapid double-clicks block ho sakein!
+    if (localHasLiked === nextLikedState) {
+      return;
+    }
+
+    // Local UI states ko instantly update karein (Optimistic Update)
+    setLocalHasLiked(nextLikedState);
     setLocalLikesCount((prev) => (nextLikedState ? prev + 1 : prev - 1));
 
-    dispatch(
-      postApi.util.updateQueryData("getPosts", undefined, (draft) => {
-        const post = draft?.data?.find((p) => (p._id || p.postId) === postId);
-        console.log(current(draft));
-        if (post) {
-          if (nextLikedState) {
-            post.likes.push(userId); // Safe extensible operation here
-          } else {
-            post.likes = post.likes.filter(
-              (id) => id?.toString() !== userId?.toString(),
-            );
-          }
-        }
-      }),
-    );
-
+    // Background network API call trigger karein
     debouncedLikePost(nextLikedState);
   };
 
   return {
     handleLikeClick,
     localLikesCount,
-    localHasLiked: localHasLiked.current,
+    localHasLiked,
   };
 };
