@@ -23,6 +23,7 @@ export const LoginPage = () => {
   const [errorMsg, setErrorMsg] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmit, setSubmit] = useState(false);
+  const [isAlreayLogin, setAlreadyLogin] = useState(false);
 
   const navigate = useNavigate();
   const [loginUser, { isLoading }] = useLoginUserMutation();
@@ -37,8 +38,10 @@ export const LoginPage = () => {
           "You are already logged in. To switch accounts, please log out first!",
           true,
         );
-        navigate("/");
+        if (!isAlreayLogin) setAlreadyLogin(true);
       }
+    } else {
+      isAlreayLogin(false);
     }
 
     return () => {
@@ -47,6 +50,9 @@ export const LoginPage = () => {
     };
   }, [userLoading, error, user?._id]);
 
+  useEffect(() => {
+    if (isAlreayLogin) navigate("/");
+  }, [isAlreayLogin]);
   const handleSubmit = async (e) => {
     e.preventDefault();
 
