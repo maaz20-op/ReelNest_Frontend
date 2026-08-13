@@ -16,7 +16,7 @@ export const LoginPage = () => {
 
   const {
     user,
-    setUser,
+    refetch,
     isLoading: userLoading,
     error,
   } = useContext(AuthContext);
@@ -77,7 +77,7 @@ export const LoginPage = () => {
       if (res?.data && res?.success) {
         localStorage.setItem("logout", "false");
         setSubmit(true);
-        setUser(res.data[0]);
+        refetch();
         navigate("/");
         showToast("Login Successful!", true);
       }

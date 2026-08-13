@@ -9,7 +9,7 @@ import { useLogoutUserMutation } from "../../../services/auth/auth";
 import { useNavigate } from "react-router-dom";
 
 export const SecuritySection = () => {
-  const { user, setUser } = useAuth();
+  const { user } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -26,7 +26,7 @@ export const SecuritySection = () => {
 
       if (res?.success && res) {
         localStorage.setItem("logout", true);
-        setUser(null);
+
         navigate("/login");
       }
     } catch (err) {
