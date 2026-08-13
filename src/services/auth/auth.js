@@ -1,4 +1,3 @@
-import { current } from "@reduxjs/toolkit";
 import { apiSlice } from "../baseApi";
 
 export const authApi = apiSlice.injectEndpoints({
@@ -43,23 +42,6 @@ export const authApi = apiSlice.injectEndpoints({
         url: "/auth/local/logout",
         method: "POST",
       }),
-
-      async onQueryStarted(_, { dispatch, queryFulfilled }) {
-        try {
-          const { data } = await queryFulfilled;
-
-          if (data?.success) {
-            dispatch(
-              apiSlice.util.updateQueryData("getAuthMe", undefined, (draft) => {
-                console.log(current(draft));
-                draft.data[0] = null;
-              }),
-            );
-          }
-        } catch (error) {
-          console.log("Logout failed:", error);
-        }
-      },
     }),
 
     signupUser: builder.mutation({
@@ -74,7 +56,7 @@ export const authApi = apiSlice.injectEndpoints({
 });
 
 export const {
-  useLazyGetAuthMeQuery,
+  useGetAuthMeQuery,
   useSignupUserMutation,
   useGetOtpMutation,
   useLogoutUserMutation,

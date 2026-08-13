@@ -2,10 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { Icons } from "../../../assets/icons";
 import { Button } from "../../../components/reusableComponents/Button";
-import {
-  useLazyGetAuthMeQuery,
-  useLoginUserMutation,
-} from "../../../services/auth/auth";
+import { useLoginUserMutation } from "../../../services/auth/auth";
 import { Loader } from "../../../components/reusableComponents/Loader";
 import { useAuth } from "../hooks/useAuth";
 
@@ -16,46 +13,21 @@ import { AuthContext } from "../../../contexts/authContext";
 export const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [getUser, { data, isLoading: userLoading }] = useLazyGetAuthMeQuery();
+
   const {
     user,
-    refetch,
-    isLoading: userDataLoading,
+    setUser,
+    isLoading: userLoading,
     error,
   } = useContext(AuthContext);
   const [errorMsg, setErrorMsg] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmit, setSubmit] = useState(false);
-  const [isAlreayLogin, setAlreadyLogin] = useState(false);
 
   const navigate = useNavigate();
   const [loginUser, { isLoading }] = useLoginUserMutation();
   const { showToast } = useToastContext();
 
-  useEffect(() => {
-    let isMounted = true;
-    console.log(user);
-    if (!userLoading && user?._id && !error) {
-      if (isMounted) {
-        showToast(
-          "You are already logged in. To switch accounts, please log out first!",
-          true,
-        );
-        if (!isAlreayLogin) setAlreadyLogin(true);
-      }
-    } else {
-      setAlreadyLogin(false);
-    }
-
-    return () => {
-      isMounted = false;
-      setSubmit(false);
-    };
-  }, [userLoading, error, user?._id]);
-
-  useEffect(() => {
-    if (isAlreayLogin) navigate("/");
-  }, [isAlreayLogin]);
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -76,16 +48,13 @@ export const LoginPage = () => {
 
     try {
       const res = await loginUser({ email, password }).unwrap();
-      console.log(res);
+
       if (res?.data && res?.success) {
         localStorage.setItem("logout", "false");
         setSubmit(true);
-        const answer = await getUser().unwrap();
-        console.log("this is my res", answer);
-        if (res?.success) {
-          navigate("/");
-          showToast("Login Successful!", true);
-        }
+        setUser(res.data[0]);
+        navigate("/");
+        showToast("Login Successful!", true);
       }
     } catch (err) {
       console.log(err);
@@ -179,17 +148,17 @@ export const LoginPage = () => {
               border="rounded-xl shadow-md shadow-red-600/30 hover:shadow-red-600/50"
               disable={isLoading}
               content={
-                isLoading || userLoading ? (
+                !isLoading ? (
+                  <span className="font-semibold text-white tracking-wide text-xs sm:text-sm py-0.5 inline-block">
+                    Login
+                  </span>
+                ) : (
                   <div className="flex justify-center items-center gap-2 py-0.5">
                     <span className="font-medium text-white text-xs sm:text-sm">
                       Logging In...
                     </span>
                     <Loader size="sm" color="white" />
                   </div>
-                ) : (
-                  <span className="font-semibold text-white tracking-wide text-xs sm:text-sm py-0.5 inline-block">
-                    Login
-                  </span>
                 )
               }
               width="w-full"
