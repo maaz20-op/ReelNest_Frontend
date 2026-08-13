@@ -5,6 +5,18 @@ import { ErrorFallback } from "../utils/ErrorBoundary";
 import { ErrorBoundary } from "react-error-boundary";
 
 function App() {
+  useEffect(() => {
+    const { setUser } = useAuth();
+    const queryParams = new URLSearchParams(window.location.search);
+
+    const user = queryParams.get("user");
+
+    if (user && user?._id) {
+      setUser(user);
+    }
+
+    window.history.replaceState({}, document.title, "/");
+  }, []);
   return (
     <div className="app ">
       {/* All the Routes of App */}
