@@ -6,6 +6,7 @@ import { ForgotPasswordPage } from "../features/forgotPassword/page/forgotPasswo
 import { SocketProvider } from "../contexts/socketContext";
 import { SocketLayout } from "../layouts/SocketLayout";
 import { useIncomingCallPopupContext } from "../utils/useIncomingCallContext";
+import { GoogleCallback } from "../features/auth/pages/Google";
 
 const LoginPage = React.lazy(() =>
   import("../features/auth/pages/Login").then((module) => ({
@@ -100,6 +101,7 @@ export const AppRouting = () => {
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/forgot/password" element={<ForgotPasswordPage />} />
+        <Route path="/google-callback" element={<GoogleCallback />} />
 
         {/* App Routes */}
 
