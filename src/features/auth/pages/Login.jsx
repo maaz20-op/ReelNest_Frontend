@@ -57,7 +57,6 @@ export const LoginPage = () => {
         showToast("Login Successful!", true);
       }
     } catch (err) {
-      console.log(err);
       setSubmit(false);
       showToast(`${err?.data?.error || "Something Went Wrong"}`, false);
     }

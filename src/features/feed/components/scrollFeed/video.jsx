@@ -105,7 +105,7 @@ export const Video = ({
   const videoSrc = currentPost?.mediaUrl;
 
   return (
-    <div className="video-container h-full w-full   flex justify-center gap-2">
+    <div className="video-container h-full w-full flex justify-center gap-2  min-[1025px]:w-[60%] min-[1100px]:w-full">
       <div
         className={` main-video-div relative h-full md:h-[95%] md:w-100 w-full `}
       >

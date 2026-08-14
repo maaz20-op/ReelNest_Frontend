@@ -72,7 +72,7 @@ export const Comments = ({
     },
     isFetching,
   });
-  console.log(createrInfo);
+
   const handleCreateComment = async () => {
     console.log(postId);
     const commentObj = {
@@ -175,7 +175,7 @@ export const Comments = ({
                   {["Top", "Oldest", "Latest"].map((cate, indx) => (
                     <span
                       key={indx}
-                      className={`${isDark ? "bg-black" : "white"} text-xs rounded p-1 xl:p-2 text-(--text-primary)`}
+                      className={`text-white bg-black text-xs rounded p-1 xl:p-2 `}
                     >
                       {cate}
                     </span>

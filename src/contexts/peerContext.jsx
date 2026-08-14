@@ -143,7 +143,6 @@ export const PeerProvider = ({ children }) => {
 
     peer.ontrack = (event) => {
       if (event?.streams?.[0]) {
-        console.log(event.streams[0]);
         setRemoteStream(event.streams[0]);
       }
     };
@@ -201,7 +200,7 @@ export const PeerProvider = ({ children }) => {
   const setRemoteAnswer = useCallback(
     async (answer) => {
       const peer = getActivePeer();
-      console.log("setting rmewote answer", answer);
+
       try {
         await peer.setRemoteDescription(new RTCSessionDescription(answer));
 
