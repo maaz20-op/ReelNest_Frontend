@@ -6,7 +6,7 @@ import { Button } from "../../../components/reusableComponents/Button";
 export const PrivacyPolicy = () => {
   const navigate = useNavigate();
   return (
-    <div className="w-full h-full overflow-y-scroll account-settings bg-[var(--bg-primary)] text-[var(--text-primary)] transition-colors duration-200">
+    <div className="w-full  h-full overflow-y-scroll account-settings bg-[var(--bg-primary)] text-[var(--text-primary)] transition-colors duration-200">
       <div className="max-w-(--breakpoint-screen1100) mx-auto px-[var(--page-x-padding)] py-12 md:pl-[var(--page-left-padding)]">
         {/* Header Section */}
         <div className="border-b flex flex-col gap-6 border-[var(--border-color)] pb-6 mb-8">

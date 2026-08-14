@@ -8,14 +8,18 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    setUser(data?.data[0]);
+    if (data?.data?.[0]) {
+      setUser(data.data[0]);
+    }
   }, [data]);
 
-  console.log(isLoading);
+  const userData = data?.data[0] || null;
 
+  console.log(userData);
   const value = useMemo(
-    () => ({ user: user, isLoading, error, setUser, data }),
-    [data, user?._id, isLoading, error],
+    () => ({ user, userData, isLoading, error, setUser, data }),
+    [user, isLoading, error, data, userData],
   );
+
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
