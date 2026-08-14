@@ -15,7 +15,6 @@ export const AuthProvider = ({ children }) => {
 
   const userData = data?.data[0] || null;
 
-  console.log(userData);
   const value = useMemo(
     () => ({ user, userData, isLoading, error, setUser, data }),
     [user, isLoading, error, data, userData],
