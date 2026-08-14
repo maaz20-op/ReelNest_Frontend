@@ -11,9 +11,11 @@ export const AuthProvider = ({ children }) => {
     setUser(data?.data[0]);
   }, [data]);
 
+  console.log(isLoading);
+
   const value = useMemo(
     () => ({ user: user, isLoading, error, setUser, data }),
-    [data, user?._id],
+    [data, user?._id, isLoading, error],
   );
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
