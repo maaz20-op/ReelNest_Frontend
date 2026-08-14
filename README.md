@@ -12,17 +12,7 @@ The platform is designed with a strong focus on **real-time interactions, secure
 
 Watch ReelNest in action:
 
-## 🎬 ReelNest Demo
-
-
-
-
 https://github.com/user-attachments/assets/1f3a4020-ddcc-4ebf-80fb-0b43fa030a8e
-
-
-
-
-
 
 ## 🌐 Live Demo
 
@@ -30,7 +20,7 @@ https://github.com/user-attachments/assets/1f3a4020-ddcc-4ebf-80fb-0b43fa030a8e
 
 ---
 
-## Github Repositries
+## Related Repository
 
 **Frontend**
 https://github.com/maaz20-op/ReelNest_Frontend
@@ -42,17 +32,18 @@ https://github.com/maaz20-op/ReelNest_Backend
 
 ## ✨ Features
 
+- 💬 Real-Time Chat with Socket.IO
+- 🎥 WebRTC Video Calling
 - 🔐 Local Authentication
 - 🔵 Google OAuth Login
 - 🔑 Forgot / Reset Password
 - 🔒 Private Account System
 - 🚫 Block / Unblock Users
-- 💬 Real-Time Chat with Socket.IO
-- 🎥 WebRTC Video Calling
 - ❤️ Like System
 - 👥 Followers / Following
 - 🎬 Posts & Reels
 - 💭 Comments System
+- 💻 Responsive
 - 🤖 AI-Powered Post Creation
 - ☁️ Cloudinary Media Storage
 - 💳 Stripe Premium Subscription / Payments
@@ -238,6 +229,20 @@ ReelNest_Frontend/
 
 ---
 
+### ScreenShots
+
+**Feed page**
+
+**Profile Page**
+
+**Comments**
+
+**Video Calling**
+
+**Real-Time Messaging**
+
+---
+
 ## ⚡ Performance
 
 ReelNest uses several techniques to keep the feed responsive as the amount of content grows:
@@ -373,12 +378,6 @@ npm run dev
 ```
 
 > The exact setup commands may differ between the frontend and backend repositories.
-
----
-
-## 📸 Screenshots
-
-Screenshots and application previews can be added here.
 
 ---
 
