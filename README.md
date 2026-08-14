@@ -236,12 +236,16 @@ ReelNest_Frontend/
 
 
 **Profile Page**
+<img width="1920" height="1030" alt="client - Google Chrome 8_14_2026 8_11_25 PM" src="https://github.com/user-attachments/assets/fbe1fa24-9f30-421e-909c-e5bd66cf7d4d" />
+
 
 **Comments**
 
 **Video Calling**
 
 **Real-Time Messaging**
+<img width="1920" height="1030" alt="New Tab - Google Chrome 8_14_2026 8_17_02 PM" src="https://github.com/user-attachments/assets/8cedd994-d146-4172-960e-b2f5b7117bcf" />
+
 
 ---
 
