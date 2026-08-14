@@ -6,7 +6,7 @@ export const ProtectedRoute = () => {
   const location = useLocation();
   const logout = localStorage.getItem("logout");
   const parseLogout = JSON.parse(logout);
-  console.log(user, parseLogout);
+
   if (!user || !user?._id || parseLogout) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
