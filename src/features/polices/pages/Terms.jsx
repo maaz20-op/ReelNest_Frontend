@@ -1,17 +1,31 @@
 import React from "react";
+import { Button } from "../../../components/reusableComponents/Button";
+import { useNavigate } from "react-router-dom";
+import { Icons } from "../../../assets/icons";
 
 export const TermsOfService = () => {
+  const navigate = useNavigate();
   return (
     <div className="w-full h-full overflow-y-scroll account-settings bg-[var(--bg-primary)] text-[var(--text-primary)] transition-colors duration-200">
       <div className="max-w-(--breakpoint-screen1100) mx-auto px-[var(--page-x-padding)] py-12 md:pl-[var(--page-left-padding)]">
         {/* Header Section */}
-        <div className="border-b border-[var(--border-color)] pb-6 mb-8">
+        <div className="border-b flex flex-col gap-6 border-[var(--border-color)] pb-6 mb-8">
           <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-[var(--text-primary)]">
             Terms of <span className="text-[var(--accent)]">Service</span>
           </h1>
           <p className="text-sm text-[var(--text-muted)] mt-2 font-mono">
             Last Updated: August 14, 2026
           </p>
+          <Button
+            background="bg-red-800"
+            content={
+              <div className="flex gap-4 justify-center items-center">
+                <Icons.back color="white" />
+                <p>Go to Home</p>
+              </div>
+            }
+            fnc={() => navigate("/")}
+          />
         </div>
 
         {/* Main Content Box */}
