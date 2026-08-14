@@ -232,6 +232,8 @@ ReelNest_Frontend/
 ### ScreenShots
 
 **Feed page**
+<img width="1920" height="1030" alt="New Tab - Google Chrome 8_14_2026 8_08_23 PM" src="https://github.com/user-attachments/assets/45a03dc7-0419-4263-ace8-0680b4d46376" />
+
 
 **Profile Page**
 
