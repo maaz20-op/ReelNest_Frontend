@@ -247,6 +247,9 @@ ReelNest_Frontend/
 **Real-Time Messaging**
 <img width="1920" height="1030" alt="New Tab - Google Chrome 8_14_2026 8_17_02 PM" src="https://github.com/user-attachments/assets/8cedd994-d146-4172-960e-b2f5b7117bcf" />
 
+**ReelNest Responsive**
+<img width="1280" height="1600" alt="WhatsApp Image 2026-08-14 at 8 59 04 PM" src="https://github.com/user-attachments/assets/4a10043f-5039-4e20-9a41-d74f178d1eec" />
+
 
 ---
 
