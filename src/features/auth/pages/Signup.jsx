@@ -4,7 +4,7 @@ import { Icons } from "../../../assets/icons";
 import { Button } from "../../../components/reusableComponents/Button";
 import { useSignupUserMutation } from "../../../services/auth/auth";
 import { Loader } from "../../../components/reusableComponents/Loader";
-import { FaExclamationTriangle } from "react-icons/fa";
+import { FaExclamationTriangle, FaRegEyeSlash, FaRegEye } from "react-icons/fa";
 import { useAuth } from "../hooks/useAuth";
 import { useToastContext } from "../../../contexts/toast";
 
@@ -14,6 +14,7 @@ export const SignupPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const [signupUser, { isLoading, data }] = useSignupUserMutation();
   const navigate = useNavigate();
@@ -204,13 +205,21 @@ export const SignupPage = () => {
               )}
             </div>
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               placeholder="Create a password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
               className="w-full pl-9 sm:pl-10 pr-3 py-2 sm:py-2.5 text-xs sm:text-sm rounded-xl border border-gray-300/40 dark:border-slate-700/60 bg-white/5 text-(--text-primary) placeholder-gray-400 focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition-all duration-200"
             />
+
+            <button
+              type="button"
+              onClick={() => setShowPassword((prev) => !prev)}
+              className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-red-500 transition-colors"
+            >
+              {showPassword ? <FaRegEyeSlash /> : <FaRegEye />}
+            </button>
           </div>
 
           {/*  Primary Action Button */}
