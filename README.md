@@ -40,6 +40,7 @@ https://github.com/maaz20-op/ReelNest_Backend
 - 🔒 Private Account System
 - 🚫 Block / Unblock Users
 - ❤️ Like System
+ - 🌓 Light / Dark Mode
 - 👥 Followers / Following
 - 🎬 Posts & Reels
 - 💭 Comments System
