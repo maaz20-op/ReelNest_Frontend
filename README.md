@@ -356,26 +356,102 @@ git clone https://github.com/maaz20-op/ReelNest_Frontend
 npm install
 ```
 
-### 3. Configure environment variables
+### 3. Configure Environment Variables
 
-**_Important_**
-Must add /api/v1 with base URL eg http://localhost:3000 --> http://localhost:3000/api/v1 for APi Caling, **_but for Websockets write Base_URL http://localhost:3000_**
+Create a `.env` file in the root directory of the ReelNest frontend project.
 
-Create a `.env` file and add the required credentials for:
+> **Important:**
+>
+> - For REST API requests, the backend URL must include `/api/v1`.
+> - For Socket.IO connections, use the backend base URL without `/api/v1`.
+> - Never commit your `.env` file to GitHub.
+> - Never expose secret keys or credentials in the frontend source code.
+
+#### Development Environment
 
 ```env
-**For Development**
-VITE_BACKEND_URL_DEVELOPMENT=YOUR_URL/api/v1
-VITE_BACKEND_DEVELOPMENT_SOCKET_SERVER=YOUR_SERVER_BASE_URL eg http://localhost:3000
+VITE_BACKEND_URL_DEVELOPMENT=http://localhost:3000/api/v1
+VITE_BACKEND_DEVELOPMENT_SOCKET_SERVER=http://localhost:3000
+```
 
-**For Production**
-VITE_BACKEND_SOCKET_SERVER_RAILWAY=YOUR_SERVER_BASE_URL eg https://railway.example.com
-VITE_REELNEST_BACKEND_URL_RAILWAY_SERVER=YOUR_URL/api/v1
+#### Production Environment
 
-**TURN SERVER For Video Call Feature**
+```env
+VITE_REELNEST_BACKEND_URL_RAILWAY_SERVER=https://your-backend-url/api/v1
+VITE_BACKEND_SOCKET_SERVER_RAILWAY=https://your-backend-url
+```
+
+#### TURN Server Configuration
+
+The TURN server is required for WebRTC video calling when a direct peer-to-peer connection cannot be established.
+
+```env
 VITE_TURN_SERVER_USERNAME=YOUR_TURN_SERVER_USERNAME
 VITE_TURN_SERVER_API_KEY=YOUR_TURN_SERVER_API_KEY
 ```
+
+### Complete `.env` Example
+
+```env
+# ==========================================
+# Development
+# ==========================================
+
+VITE_BACKEND_URL_DEVELOPMENT=http://localhost:3000/api/v1
+VITE_BACKEND_DEVELOPMENT_SOCKET_SERVER=http://localhost:3000
+
+# ==========================================
+# Production
+# ==========================================
+
+VITE_REELNEST_BACKEND_URL_RAILWAY_SERVER=https://your-backend-url/api/v1
+VITE_BACKEND_SOCKET_SERVER_RAILWAY=https://your-backend-url
+
+# ==========================================
+# TURN Server - WebRTC Video Calling
+# ==========================================
+
+VITE_TURN_SERVER_USERNAME=YOUR_TURN_SERVER_USERNAME
+VITE_TURN_SERVER_API_KEY=YOUR_TURN_SERVER_API_KEY
+```
+
+### API URL Configuration
+
+For API requests, use:
+
+```text
+http://localhost:3000/api/v1
+```
+
+For example:
+
+```text
+http://localhost:3000/api/v1/auth/login
+```
+
+For production:
+
+```text
+https://your-backend-url/api/v1
+```
+
+### Socket.IO Server Configuration
+
+For Socket.IO connections, do **not** add `/api/v1`.
+
+Development:
+
+```text
+http://localhost:3000
+```
+
+Production:
+
+```text
+https://your-backend-url
+```
+
+> **Note:** `/api/v1` is only used for REST API endpoints. Socket.IO connects directly to the backend server base URL.
 
 ---
 
