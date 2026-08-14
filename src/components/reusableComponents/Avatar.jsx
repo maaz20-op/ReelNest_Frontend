@@ -26,7 +26,7 @@ export const Avatar = ({
       ) : (
         <img
           className="h-full bg-black object-cover w-full rounded-full"
-          src={src ? src : "https://iili.io/BZuCZ57.jpg"}
+          src={src ? src : "https://iili.io/FnrRren.png"}
           alt=""
         />
       )}
