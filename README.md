@@ -12,7 +12,9 @@ The platform is designed with a strong focus on **real-time interactions, secure
 
 Watch ReelNest in action:
 
-[🎬 Watch ReelNest Demo](https://res.cloudinary.com/ddl6cgcbp/video/upload/q_auto:best,f_auto/v1784970755/ReelNest/videos/bih0isxihuxtyzgomho2.mp4)
+## 🎬 ReelNest Demo
+
+https://res.cloudinary.com/ddl6cgcbp/video/upload/q_auto:best,f_auto/v1784970755/ReelNest/videos/bih0isxihuxtyzgomho2.mp4
 
 ## 🌐 Live Demo
 
