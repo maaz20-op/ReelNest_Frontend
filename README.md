@@ -40,7 +40,7 @@ https://github.com/maaz20-op/ReelNest_Backend
 - 🔒 Private Account System
 - 🚫 Block / Unblock Users
 - ❤️ Like System
- - 🌓 Light / Dark Mode
+- 🌓 Light / Dark Mode
 - 👥 Followers / Following
 - 🎬 Posts & Reels
 - 💭 Comments System
@@ -235,10 +235,8 @@ ReelNest_Frontend/
 **Feed page**
 <img width="1920" height="1030" alt="New Tab - Google Chrome 8_14_2026 8_08_23 PM" src="https://github.com/user-attachments/assets/45a03dc7-0419-4263-ace8-0680b4d46376" />
 
-
 **Profile Page**
 <img width="1920" height="1030" alt="client - Google Chrome 8_14_2026 8_11_25 PM" src="https://github.com/user-attachments/assets/fbe1fa24-9f30-421e-909c-e5bd66cf7d4d" />
-
 
 **Comments**
 
@@ -246,7 +244,6 @@ ReelNest_Frontend/
 
 **Real-Time Messaging**
 <img width="1920" height="1030" alt="New Tab - Google Chrome 8_14_2026 8_17_02 PM" src="https://github.com/user-attachments/assets/8cedd994-d146-4172-960e-b2f5b7117bcf" />
-
 
 ---
 
@@ -366,6 +363,7 @@ Must add /api/v1 with base URL eg http://localhost:3000 --> http://localhost:300
 
 Create a `.env` file and add the required credentials for:
 
+```env
 **For Development**
 VITE_BACKEND_URL_DEVELOPMENT=YOUR_URL/api/v1
 VITE_BACKEND_DEVELOPMENT_SOCKET_SERVER=YOUR_SERVER_BASE_URL eg http://localhost:3000
@@ -377,6 +375,9 @@ VITE_REELNEST_BACKEND_URL_RAILWAY_SERVER=YOUR_URL/api/v1
 **TURN SERVER For Video Call Feature**
 VITE_TURN_SERVER_USERNAME=YOUR_TURN_SERVER_USERNAME
 VITE_TURN_SERVER_API_KEY=YOUR_TURN_SERVER_API_KEY
+```
+
+---
 
 ### 4. Start the development server
 
