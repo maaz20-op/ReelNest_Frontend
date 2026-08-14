@@ -7,6 +7,8 @@ import { SocketProvider } from "../contexts/socketContext";
 import { SocketLayout } from "../layouts/SocketLayout";
 import { useIncomingCallPopupContext } from "../utils/useIncomingCallContext";
 import { GoogleCallback } from "../features/auth/pages/Google";
+import { PrivacyPolicy } from "../features/polices/pages/PrivacyPolicy";
+import { TermsOfService } from "../features/polices/pages/Terms";
 
 const LoginPage = React.lazy(() =>
   import("../features/auth/pages/Login").then((module) => ({
@@ -102,6 +104,8 @@ export const AppRouting = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/forgot/password" element={<ForgotPasswordPage />} />
         <Route path="/google-callback" element={<GoogleCallback />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/terms/services" element={<TermsOfService />} />
 
         {/* App Routes */}
 

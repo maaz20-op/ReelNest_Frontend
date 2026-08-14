@@ -13,6 +13,8 @@ const authPaths = [
   "/forgot/password",
   "/videoCall",
   "/google-callback",
+  "/terms/services",
+  "/privacy-policy",
 ];
 const scrollableFeed = ["/feed"];
 const search = ["/search"];
