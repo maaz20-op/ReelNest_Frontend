@@ -460,10 +460,6 @@ https://your-backend-url
 ```
 
 > **Note:** `/api/v1` is only used for REST API endpoints. Socket.IO connects directly to the backend server base URL.
-<<<<<<< HEAD
-=======
-
->>>>>>> 83ff39fb6ec66c1c193473733eba2ded85fd222c
 
 ---
 
