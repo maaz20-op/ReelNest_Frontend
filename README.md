@@ -246,13 +246,13 @@ ReelNest_Frontend/
 **Real-Time Messaging**
 <img width="1920" height="1030" alt="New Tab - Google Chrome 8_14_2026 8_17_02 PM" src="https://github.com/user-attachments/assets/8cedd994-d146-4172-960e-b2f5b7117bcf" />
 
-<<<<<<< HEAD
-=======
+# <<<<<<< HEAD
+
 **ReelNest Responsive**
 <img width="1280" height="1600" alt="WhatsApp Image 2026-08-14 at 8 59 04 PM" src="https://github.com/user-attachments/assets/4a10043f-5039-4e20-9a41-d74f178d1eec" />
 
+> > > > > > > 3d467db0cb7959cff6dd440269610a177e004047
 
->>>>>>> 3d467db0cb7959cff6dd440269610a177e004047
 ---
 
 ## ⚡ Performance
@@ -369,10 +369,7 @@ npm install
 Create a `.env` file in the root directory of the ReelNest frontend project.
 
 > **Important:**
-<<<<<<< HEAD
->
-=======
->>>>>>> 3d467db0cb7959cff6dd440269610a177e004047
+
 > - For REST API requests, the backend URL must include `/api/v1`.
 > - For Socket.IO connections, use the backend base URL without `/api/v1`.
 > - Never commit your `.env` file to GitHub.
@@ -463,9 +460,11 @@ https://your-backend-url
 ```
 
 > **Note:** `/api/v1` is only used for REST API endpoints. Socket.IO connects directly to the backend server base URL.
-<<<<<<< HEAD
+> <<<<<<< HEAD
 
 =======
+
+> > > > > > > 3d467db0cb7959cff6dd440269610a177e004047
 
 ---
 
