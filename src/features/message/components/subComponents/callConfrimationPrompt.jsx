@@ -18,7 +18,7 @@ export const CallConfirmationPrompt = ({
           <h2 className="text-(--text-secondary) text-xs">@{user?.username}</h2>
         </div>
         <h1 className="text-center text-(--text-primary)">
-          You want to Start video Call with Malaika?
+          You want to Start video Call with {user?.fullname}?
         </h1>
         <div className="flex gap-2">
           <Button
