@@ -4,7 +4,7 @@ export function ErrorFallback({ error, resetErrorBoundary }) {
   console.error(error);
   return (
     <div className="bg-black h-screen w-full flex gap-12 flex-col justify-center items-center text-white">
-      <h2>Something went wrong</h2>
+      <h2>Something went wrong, Refresh the Page!</h2>
 
       <Button
         fnc={resetErrorBoundary}
