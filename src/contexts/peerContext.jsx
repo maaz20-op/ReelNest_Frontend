@@ -188,7 +188,7 @@ export const PeerProvider = ({ children }) => {
 
         const ans = await peer.createAnswer();
         await peer.setLocalDescription(ans);
-        console.log("answer", ans);
+
         return ans;
       } catch (err) {
         console.error("error to create answer", err);

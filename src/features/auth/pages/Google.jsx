@@ -11,7 +11,7 @@ export const GoogleCallback = () => {
 
   useEffect(() => {
     const userString = searchParams.get("user");
-    console.log(userString);
+
     if (!userString) {
       setUser(null);
       navigate("/login");
@@ -21,7 +21,6 @@ export const GoogleCallback = () => {
     try {
       const user = JSON.parse(decodeURIComponent(userString));
 
-      console.log("Google User:", user);
       if (user && user?._id) {
         setUser(user);
         showToast("Google Login Success!", true);
