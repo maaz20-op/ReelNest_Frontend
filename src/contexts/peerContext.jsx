@@ -235,7 +235,6 @@ export const PeerProvider = ({ children }) => {
 
   const handleIncomingCallRequest = useCallback(
     async ({ username, offer, from, callingUser }) => {
-      console.log(callingUser);
       setIsCallIncoming(true);
       setCallingUser(callingUser);
     },
