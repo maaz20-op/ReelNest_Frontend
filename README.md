@@ -12,7 +12,20 @@ The platform is designed with a strong focus on **real-time interactions, secure
 
 Watch ReelNest in action:
 
-https://github.com/user-attachments/assets/1f3a4020-ddcc-4ebf-80fb-0b43fa030a8e
+
+https://github.com/user-attachments/assets/c50be7fe-7f79-424f-a6e9-79480903a7b4
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## 🌐 Live Demo
 
