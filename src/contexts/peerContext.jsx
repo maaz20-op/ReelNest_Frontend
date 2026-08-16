@@ -155,7 +155,7 @@ export const PeerProvider = ({ children }) => {
 
   const flushIceQueue = useCallback(async () => {
     const peer = getActivePeer();
-    console.log(iceCandidatesQueue.length, iceCandidatesQueue);
+
     while (iceCandidatesQueue.current.length > 0) {
       const candidate = iceCandidatesQueue.current.shift();
 
@@ -219,7 +219,7 @@ export const PeerProvider = ({ children }) => {
   const handleRemoteCandidate = useCallback(
     async ({ candidate }) => {
       const peer = getActivePeer();
-      console.log("remote coandate", candidate);
+
       try {
         if (peer && peer.remoteDescription && peer.remoteDescription.type) {
           await peer.addIceCandidate(new RTCIceCandidate(candidate));

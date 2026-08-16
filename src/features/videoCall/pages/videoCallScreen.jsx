@@ -132,7 +132,7 @@ export const VideoCallScreenPage = () => {
       if (declined) showToast("Call declined!", false);
 
       setIsCallIncoming(false);
-      console.log("call ended");
+
       cleanUpCall();
 
       navigate("/message");
