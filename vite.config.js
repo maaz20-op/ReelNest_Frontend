@@ -5,9 +5,7 @@ import { analyzer } from "vite-bundle-analyzer";
 
 export default defineConfig({
   plugins: [
-    react({
-      jsxRuntime: "automatic", // Forces automatic JSX transformation across all chunks
-    }),
+    react(),
     tailwindcss(),
     analyzer({ analyzerMode: "static", openAnalyzer: false }),
   ],
