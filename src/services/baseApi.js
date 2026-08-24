@@ -4,8 +4,8 @@ export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
     baseUrl:
-      import.meta.env.VITE_BACKEND_URL_DEVELOPMENT ||
-      import.meta.env.VITE_REELNEST_BACKEND_URL_RAILWAY_SERVER,
+      import.meta.env.Config_BACKEND_URL_DEVELOPMENT ||
+      import.meta.env.Config_REELNEST_BACKEND_URL_RAILWAY_SERVER,
     credentials: "include",
   }),
 

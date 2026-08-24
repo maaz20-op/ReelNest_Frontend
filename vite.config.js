@@ -9,6 +9,7 @@ export default defineConfig({
     tailwindcss(),
     analyzer({ analyzerMode: "static", openAnalyzer: false }),
   ],
+  envPrefix: "Config_",
   optimizeDeps: {
     include: ["react", "react-dom", "react-window"],
   },

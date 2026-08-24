@@ -30,8 +30,8 @@ export const PeerProvider = ({ children }) => {
 
   const getActivePeer = useCallback(() => {
     if (!peerRef.current || peerRef.current.signalingState === "closed") {
-      const username = import.meta.env.VITE_TURN_SERVER_USERNAME;
-      const credential = import.meta.env.VITE_TURN_SERVER_API_KEY;
+      const username = import.meta.env.Config_TURN_SERVER_USERNAME;
+      const credential = import.meta.env.Config_TURN_SERVER_API_KEY;
 
       const temporaryFreshPeer = new RTCPeerConnection({
         iceServers: [

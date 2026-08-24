@@ -5,8 +5,8 @@ const SocketContext = React.createContext(null);
 
 export const SocketProvider = ({ children }) => {
   const socket = io(
-    import.meta.env.VITE_BACKEND_DEVELOPMENT_SOCKET_SERVER ||
-      import.meta.env.VITE_BACKEND_SOCKET_SERVER_RAILWAY,
+    import.meta.env.Config_BACKEND_DEVELOPMENT_SOCKET_SERVER ||
+      import.meta.env.Config_BACKEND_SOCKET_SERVER_RAILWAY,
     {
       transports: ["websocket", "polling"],
       withCredentials: true,
