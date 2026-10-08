@@ -17,8 +17,6 @@ export const SuggestedUsers = () => {
 
   const suggestionContainerRef = useRef(null);
   const isHovered = showScrollBarOnHover(suggestionContainerRef);
-  const redirectToUserProfile = handleRedirectToUserProfile();
-
   return (
     // This says: Hide it by default, show on md, but force hide it strictly between 1024px and 1100px
     <aside className="w-full h-full hidden  md:block max-[1100px]:lg:hidden  lg:pl-4">
@@ -45,9 +43,14 @@ export const SuggestedUsers = () => {
               Followers.map(({ data }) => (
                 <div
                   key={data?._id}
-                  onClick={() =>
-                    redirectToUserProfile(data?._id, data?.fullname, navigate)
-                  }
+                  onClick={() => {
+                    const redirectToProfile = handleRedirectToUserProfile(
+                      data?._id,
+                      data?.fullname,
+                      navigate,
+                    );
+                    redirectToProfile();
+                  }}
                   className="friend-div flex items-center justify-between gap-2 p-2 hover:bg-(--bg-secondary) rounded-xl cursor-pointer transition-colors duration-200"
                 >
                   {/* User Avatar + Info */}

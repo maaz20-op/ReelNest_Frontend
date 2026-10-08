@@ -44,8 +44,6 @@ export const MainLayout = ({ children }) => {
     return () => window.removeEventListener("resize", trackResize);
   }, []);
 
-  if (!user && isLoading) return <ReelnestWelcomePage />;
-  console.log(user);
   return (
     <div className="flex flex-col max-h-screen overflow-x-hidden h-dvh  select-none max-w-screen bg-(--bg-primary)">
       {!isAuthPage && !isScrollablFeed && !mobileWidth && <Header />}
