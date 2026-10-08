@@ -8,6 +8,7 @@ export const ProtectedRoute = () => {
   const location = useLocation();
   const logout = localStorage.getItem("logout");
   const parseLogout = JSON.parse(logout);
+  
   if (!user && !user?._id && isLoading) {
     return <ReelnestWelcomePage />;
   }
