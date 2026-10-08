@@ -111,6 +111,7 @@ export const AppRouting = () => {
 
         <Route element={<ProtectedRoute />}>
           <Route path="/" element={<FeedPage />} />
+
           <Route path="/profile" element={<Profile />} />
 
           <Route path="/settings" element={<AccountSettings />} />

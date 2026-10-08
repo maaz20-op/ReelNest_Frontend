@@ -52,11 +52,8 @@ export const LoginPage = () => {
       if (res?.data && res?.success) {
         localStorage.setItem("logout", "false");
         setSubmit(true);
-
-        setTimeout(() => {
-          navigate("/");
-        }, 0);
-
+        setUser(res.data[0]);
+        navigate("/");
         showToast("Login Successful!", true);
       }
     } catch (err) {

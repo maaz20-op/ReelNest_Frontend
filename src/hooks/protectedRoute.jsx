@@ -3,16 +3,15 @@ import { useAuth } from "../features/auth/hooks/useAuth";
 import { ReelnestWelcomePage } from "../components/reelNestWelcomePage";
 
 export const ProtectedRoute = () => {
-  const { user, isLoading } = useAuth();
+  const { userData: user, isLoading } = useAuth();
   const location = useLocation();
   const logout = localStorage.getItem("logout");
   const parseLogout = JSON.parse(logout);
-
   if (!user && !user?._id && isLoading) {
     return <ReelnestWelcomePage />;
   }
 
-  if (parseLogout || logout === null) {
+  if ((!user && !isLoading) || parseLogout) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
