@@ -35,6 +35,7 @@ export const Media = ({
     postsRawData,
     isPostsEnd,
     setEndOfPosts,
+    isFeedPage: true,
     data,
     isBottomOfContainer,
     queryObject: {},

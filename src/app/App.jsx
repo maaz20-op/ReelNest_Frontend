@@ -6,7 +6,7 @@ import { ErrorBoundary } from "react-error-boundary";
 
 function App() {
   return (
-    <div className="app ">
+    <div className="app">
       {/* All the Routes of App */}
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <MainLayout>

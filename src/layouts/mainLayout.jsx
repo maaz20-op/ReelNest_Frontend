@@ -6,6 +6,8 @@ import { Nav_Actions } from "../components/RedirectNavActionIcons";
 import { LeftFriendsPanelDesktop } from "../components/desktop/LeftFriendsPanel";
 import { FriendSection } from "../components/mobile/FriendsHeaderSection";
 import { useScrollUpAndDownContext } from "../contexts/hideHeaderOnScroll";
+import { useAuth } from "../features/auth/hooks/useAuth";
+import { ReelnestWelcomePage } from "../components/reelNestWelcomePage";
 
 const authPaths = [
   "/login",
@@ -24,6 +26,7 @@ export const MainLayout = ({ children }) => {
   const location = useLocation();
   const { isScrollingDown } = useScrollUpAndDownContext();
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const { user, isLoading } = useAuth();
 
   const isAuthPage = authPaths.includes(location.pathname);
   const isScrollablFeed = scrollableFeed.includes(location.pathname);
@@ -41,6 +44,8 @@ export const MainLayout = ({ children }) => {
     return () => window.removeEventListener("resize", trackResize);
   }, []);
 
+  if (!user && isLoading) return <ReelnestWelcomePage />;
+  console.log(user);
   return (
     <div className="flex flex-col max-h-screen overflow-x-hidden h-dvh  select-none max-w-screen bg-(--bg-primary)">
       {!isAuthPage && !isScrollablFeed && !mobileWidth && <Header />}

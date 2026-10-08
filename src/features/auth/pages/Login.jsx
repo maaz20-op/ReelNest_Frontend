@@ -52,8 +52,11 @@ export const LoginPage = () => {
       if (res?.data && res?.success) {
         localStorage.setItem("logout", "false");
         setSubmit(true);
-        setUser(res.data[0]);
-        navigate("/");
+
+        setTimeout(() => {
+          navigate("/");
+        }, 0);
+
         showToast("Login Successful!", true);
       }
     } catch (err) {

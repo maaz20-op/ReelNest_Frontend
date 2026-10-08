@@ -49,6 +49,7 @@ export const useInfinteScroll = (lastScrollTop, reverseScroll) => {
 
 export const setPagesAndCallApiInfiniteScroll = ({
   hasNextPage,
+  isFeedPage = false,
   setBtmContainer,
   postsRawData,
   data,
@@ -62,14 +63,14 @@ export const setPagesAndCallApiInfiniteScroll = ({
   queryObject,
 }) => {
   const [apiData, setApiData] = useState([]);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(null);
+
+  const isVideo = queryObject?.isVideoTab;
 
   const finalObj = {
     ...queryObject,
     page: page,
   };
-
-  const isVideo = queryObject?.isVideoTab;
 
   let isValid = Object.values(finalObj).every(
     (value) => value !== undefined && value !== null,
