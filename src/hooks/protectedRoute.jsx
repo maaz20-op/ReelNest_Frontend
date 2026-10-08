@@ -4,6 +4,7 @@ import { ReelnestWelcomePage } from "../components/reelNestWelcomePage";
 
 export const ProtectedRoute = () => {
   const { userData: user, isLoading } = useAuth();
+
   const location = useLocation();
   const logout = localStorage.getItem("logout");
   const parseLogout = JSON.parse(logout);
