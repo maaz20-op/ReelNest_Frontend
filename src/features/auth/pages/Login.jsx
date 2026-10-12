@@ -4,28 +4,20 @@ import { Icons } from "../../../assets/icons";
 import { Button } from "../../../components/reusableComponents/Button";
 import { useLoginUserMutation } from "../../../services/auth/auth";
 import { Loader } from "../../../components/reusableComponents/Loader";
-import { useAuth } from "../hooks/useAuth";
-
 import { FaExclamationTriangle, FaRegEyeSlash, FaRegEye } from "react-icons/fa";
 import { useToastContext } from "../../../contexts/toast";
-import { AuthContext } from "../../../contexts/authContext";
 
 export const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const {
-    user,
-    setUser,
-    isLoading: userLoading,
-    error,
-  } = useContext(AuthContext);
   const [errorMsg, setErrorMsg] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmit, setSubmit] = useState(false);
 
   const navigate = useNavigate();
   const [loginUser, { isLoading }] = useLoginUserMutation();
+
   const { showToast } = useToastContext();
 
   const handleSubmit = async (e) => {
@@ -52,11 +44,14 @@ export const LoginPage = () => {
       if (res?.data && res?.success) {
         localStorage.setItem("logout", "false");
         setSubmit(true);
-        setUser(res.data[0]);
-        navigate("/");
-        showToast("Login Successful!", true);
+
+        if (res.data[0]?._id) {
+          showToast("Login Success!", true);
+          window.location.href = "https://reel-nest-frontend.vercel.app/";
+        } else showToast("Failed to Login", false);
       }
     } catch (err) {
+      console.log(err);
       setSubmit(false);
       showToast(`${err?.data?.error || "Something Went Wrong"}`, false);
     }

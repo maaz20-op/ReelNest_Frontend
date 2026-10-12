@@ -8,7 +8,7 @@ import { AuthContext } from "../../../contexts/authContext";
 export const useAuth = () => {
   const { data, userData, isLoading, error, setUser, user } =
     useContext(AuthContext);
-
+  console.log("useAuth feature wala ", user);
   if (isLoading) {
     return { user: null, userData, setUser, isLoading, error };
   }
