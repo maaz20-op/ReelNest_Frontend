@@ -14,6 +14,7 @@ export const GoogleCallback = () => {
 
     if (!userString) {
       setUser(null);
+      showToast("Failed No Account Exists!", false);
       navigate("/login");
       return;
     }
