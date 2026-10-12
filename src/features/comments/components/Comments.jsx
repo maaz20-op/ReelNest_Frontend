@@ -26,6 +26,7 @@ import { TooltipMenu } from "../../../utils/tooltip";
 import { CommentTextInput } from "./subComponents/sendInput";
 import { handleRedirectToUserProfile } from "../../../utils/handleRedirectToUserProfile";
 import { useNavigate } from "react-router-dom";
+import { useScrollUpAndDownContext } from "../../../contexts/hideHeaderOnScroll";
 
 export const Comments = ({
   postId,
@@ -43,6 +44,8 @@ export const Comments = ({
   const [tooltipId, settoolTipId] = useState(null);
 
   const navigate = useNavigate();
+
+  const { setScrollingDown } = useScrollUpAndDownContext();
 
   const [isEndofComments, setEndOfcomments] = useState(false);
   const [fetchComments, { data: commentData, isLoading: loading, isFetching }] =
@@ -72,6 +75,11 @@ export const Comments = ({
     },
     isFetching,
   });
+
+  useEffect(() => {
+    if (isCommentsOpen) setScrollingDown(true);
+    else setScrollingDown(false);
+  }, [isCommentsOpen]);
 
   const handleCreateComment = async () => {
     const commentObj = {
@@ -295,7 +303,7 @@ export const Comments = ({
       ) : (
         <div
           className={`
-    ${isCommentsOpen ? "fixed bottom-0 right-0 left-0 z-120" : "hidden"}
+    ${isCommentsOpen ? "fixed bottom-0 right-0 left-0 z-1000" : "hidden"}
     h-2/3
    ${isDark ? "bg-black" : "bg-white"}
     border-2 border-(--border-color) md:hidden block p-2
