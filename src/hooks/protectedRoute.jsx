@@ -8,14 +8,7 @@ export const ProtectedRoute = () => {
   const location = useLocation();
   const logout = localStorage.getItem("logout");
   const parseLogout = JSON.parse(logout);
-  console.log(
-    "protected ROute wala user =",
-    a,
-    "logout=",
-    logout,
-    " user data is = ",
-    user,
-  );
+
   if (!user && !user?._id && isLoading) {
     return <ReelnestWelcomePage />;
   }

@@ -8,9 +8,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    console.log("runnig", user);
     if (data?.data?.[0] && !user?._id) {
-      console.log("other call maked in if");
       setUser(data.data[0]);
     }
   }, [data]);
