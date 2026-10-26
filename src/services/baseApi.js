@@ -5,7 +5,7 @@ export const apiSlice = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl:
       import.meta.env.Config_BACKEND_URL_DEVELOPMENT ||
-      import.meta.env.Config_REELNEST_BACKEND_URL_RAILWAY_SERVER,
+      import.meta.env.Config_REELNEST_BACKEND_URL_VERCEL_SERVER,
     credentials: "include",
   }),
 
